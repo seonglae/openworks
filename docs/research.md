@@ -35,7 +35,7 @@ where the work really did skip a step.
 ## Entities on a project
 
 Memos, experiments, tables, figures, sections, tex and venues, described in
-[Concepts](/docs/concepts). All writes are upserts: saving the same slug twice
+[Concepts](/docs/concepts/). All writes are upserts: saving the same slug twice
 updates rather than duplicating, so an agent that retries does not litter.
 
 ## Venues

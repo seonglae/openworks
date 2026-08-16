@@ -65,7 +65,7 @@ npx tsx scripts/agent-worker.mts       # agent subscriptions
 
 Both are long-running, and started this way they stay dead once anything stops
 them. For anything but a debugging session install them as supervised jobs
-instead; see [Workers](/docs/workers).
+instead; see [Workers](/docs/workers/).
 
 ## Check it works
 
@@ -76,7 +76,7 @@ if it fails at `summarizing` no agent CLI was reachable on the worker's PATH.
 
 ## Next
 
-- [Concepts](/docs/concepts), for what the entities are and how they refer to
+- [Concepts](/docs/concepts/), for what the entities are and how they refer to
   each other
-- [Agent CLIs](/docs/agent-clis), for how a model call is dispatched
-- [Auth and sharing](/docs/auth), before you expose the deployment
+- [Agent CLIs](/docs/agent-clis/), for how a model call is dispatched
+- [Auth and sharing](/docs/auth/), before you expose the deployment

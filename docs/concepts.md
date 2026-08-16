@@ -58,4 +58,4 @@ said there.
 
 Four event types fan out to subscribed agents: `entity.created`,
 `entity.updated`, `state.transitioned`, `comment.posted`. See
-[Agents](/docs/agents).
+[Agents](/docs/agents/).

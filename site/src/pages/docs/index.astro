@@ -20,7 +20,7 @@ import { DOC_GROUPS } from "../../data/docs";
         <h2>{group.label}</h2>
         <div class="doc-index">
           {group.items.map((item) => (
-            <a class="doc-card" href={`/docs/${item.slug}`}>
+            <a class="doc-card" href={`/docs/${item.slug}/`}>
               <strong>{item.title}</strong>
               <span>{item.blurb}</span>
             </a>
