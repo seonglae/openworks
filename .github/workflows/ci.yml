@@ -29,3 +29,7 @@ jobs:
       # is where a bad import or a missing asset actually shows up. It needs no
       # browser env file: the deployment URL is read at runtime.
       - run: pnpm --filter openworks-browser exec vite build
+      # `astro check` above types the sources; this renders them. getStaticPaths
+      # runs here and nowhere else, so a docs page listed in the sidebar with no
+      # markdown behind it fails on this step.
+      - run: pnpm site:build

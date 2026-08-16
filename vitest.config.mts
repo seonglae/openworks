@@ -38,6 +38,14 @@ export default defineConfig({
       },
       {
         test: {
+          name: "site",
+          root: "./site",
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
+        test: {
           name: "browser",
           root: "./browser",
           include: ["test/**/*.test.{ts,tsx}"],

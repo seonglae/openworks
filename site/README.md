@@ -1,7 +1,27 @@
 # site
 
-The public homepage. Static, no build step, no framework: one `index.html` plus
-its assets. Open the file to work on it.
+`openworksai.app`: the homepage and the docs. Astro, static output, no adapter,
+because nothing on it is dynamic.
+
+```bash
+pnpm --filter openworks-site dev        # localhost:6002
+pnpm --filter openworks-site typecheck  # astro check
+pnpm site:build                         # into site/dist
+```
+
+| path               | what                                                                   |
+| ------------------ | ---------------------------------------------------------------------- |
+| `src/pages`        | `index.astro` is the homepage; `docs/[slug].astro` renders one doc     |
+| `src/layouts`      | `Base.astro` is head, JSON-LD and theme; `Docs.astro` adds the sidebar |
+| `src/data/docs.ts` | the sidebar, which is also the allow-list of what gets a page          |
+| `src/styles`       | one stylesheet, inlined into every page by `build.inlineStylesheets`   |
+| `public`           | images, favicon, `robots.txt`, copied through untouched                |
+
+The docs pages are the markdown in the repo's `docs/`, read as a content
+collection, so a feature and its page change in the same commit. `docs/` also
+holds runbooks that are notes to ourselves; a page is published only once it is
+listed in `src/data/docs.ts`. Listing one whose file does not exist fails the
+build rather than shipping a link to a 404.
 
 ## The screenshots
 
@@ -39,18 +59,15 @@ of an output directory, and leaves `openworksai.app` untouched.
 
 ## Changing the domain
 
-Absolute URLs live in exactly five places, because search engines and link
-unfurlers both reject relative ones:
+Two places, because search engines and link unfurlers both reject relative
+URLs and a static file cannot read the config:
 
-| file                           | field                          |
-| ------------------------------ | ------------------------------ |
-| `index.html`                   | `<link rel="canonical">`       |
-| `index.html`                   | `og:url`                       |
-| `index.html`                   | `og:image` and `twitter:image` |
-| `index.html`                   | the `url` in the JSON-LD block |
-| `robots.txt` and `sitemap.xml` | `Sitemap:` and `<loc>`         |
+| file                | field                                                    |
+| ------------------- | -------------------------------------------------------- |
+| `astro.config.mjs`  | `site`, which canonical, og, JSON-LD and sitemap all use |
+| `public/robots.txt` | the `Sitemap:` line                                      |
 
-Everything else is relative and moves with the site.
+Everything else is relative or derived from `Astro.site`.
 
 ## Regenerating og.png
 

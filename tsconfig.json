@@ -17,5 +17,5 @@
     "tsBuildInfoFile": "./node_modules/.tmp/workers.tsbuildinfo"
   },
   "include": ["scripts/*.mts"],
-  "exclude": ["node_modules", "browser", "convex"]
+  "exclude": ["node_modules", "browser", "convex", "site"]
 }

@@ -1,10 +1,17 @@
 ---
 import { getCollection, render } from "astro:content";
 import Docs from "../../layouts/Docs.astro";
-import { DOC_PAGES } from "../../data/docs";
+import { DOC_PAGES, DOC_SLUGS } from "../../data/docs";
 
 export async function getStaticPaths() {
   const entries = await getCollection("docs");
+
+  // The filter below only narrows `docs/` down to the sidebar. It says nothing
+  // about the other direction, and a sidebar entry with no markdown behind it
+  // ships as a nav link to a 404 rather than failing anything.
+  const missing = DOC_SLUGS.filter((slug) => !entries.some((entry) => entry.id === slug));
+  if (missing.length) throw new Error(`sidebar lists docs that have no file: ${missing.join(", ")}`);
+
   return entries
     .filter((entry) => DOC_PAGES.some((p) => p.slug === entry.id))
     .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));

@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import SiteNav from "../components/SiteNav.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import { PRODUCT_LEDE } from "../data/product";
 
 const faq = [
   { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, antigravity or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
@@ -17,7 +18,7 @@ const schema = [
 
 <Base
   title="Openworks: work in progress, addressable"
-  description="Self-hosted open-source workspace where humans and AI agents work the same research material while it is still moving. No API keys, no metered inference."
+  description={`${PRODUCT_LEDE} No API keys, no metered inference.`}
   path="/"
   schema={schema}
 >
