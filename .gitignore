@@ -3,6 +3,8 @@ node_modules
 
 # Build output
 browser/dist/
+site/dist/
+site/.astro/
 browser/.vite-temp*/
 src-tauri/target/
 src-tauri/gen/

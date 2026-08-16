@@ -1,0 +1,114 @@
+---
+import "../styles/site.css";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path from the site root, for canonical and og:url. */
+  path: string;
+  /** Extra JSON-LD merged into the graph. The site node is always there. */
+  schema?: unknown[];
+}
+
+const { title, description, path, schema = [] } = Astro.props;
+const site = "https://openworksai.app";
+const url = new URL(path, site).href;
+
+// One graph for the whole site, so the app node is declared once and a docs
+// page refers to it by @id rather than describing the product again.
+const graph = [
+  {
+    "@type": "SoftwareApplication",
+    "@id": `${site}/#app`,
+    name: "Openworks",
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "macOS, Linux, Windows",
+    description:
+      "Self-hosted open-source workspace where humans and AI agents work the same research material while it is still moving. Every model call is dispatched to an agent CLI rather than a metered API.",
+    url: `${site}/`,
+    downloadUrl: "https://github.com/seonglae/openworks",
+    license: "https://www.apache.org/licenses/LICENSE-2.0",
+    author: { "@type": "Person", name: "Seonglae Cho" },
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    keywords: "open process, research workspace, AI agents, MCP, self-hosted, no API key",
+  },
+  ...schema,
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="author" content="Seonglae Cho" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Openworks" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={`${site}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Openworks: work in progress, addressable. No API keys, no metered inference, no hosted tier."
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${site}/og.png`} />
+
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-180.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    <!--
+      Theme is set before first paint. Without this the page renders light and
+      then flips, which is worse than either theme on its own. Light is the
+      default even when the OS prefers dark: the page is chosen, not inherited.
+    -->
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem("ow-theme");
+        if (saved === "dark") document.documentElement.dataset.theme = "dark";
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": graph })} />
+  </head>
+
+  <body>
+    <slot />
+
+    <script is:inline>
+      const btn = document.getElementById("theme");
+      const setLabel = () => (btn.textContent = document.documentElement.dataset.theme === "dark" ? "LIGHT" : "DARK");
+      setLabel();
+      btn.addEventListener("click", () => {
+        const dark = document.documentElement.dataset.theme === "dark";
+        if (dark) {
+          delete document.documentElement.dataset.theme;
+          localStorage.setItem("ow-theme", "light");
+        } else {
+          document.documentElement.dataset.theme = "dark";
+          localStorage.setItem("ow-theme", "dark");
+        }
+        setLabel();
+      });
+    </script>
+  </body>
+</html>

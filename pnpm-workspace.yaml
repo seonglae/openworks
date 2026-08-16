@@ -1,6 +1,7 @@
 packages:
   - "packages/*"
   - "browser"
+  - "site"
 
 # pnpm 11 key. Convex, Vite and Tauri all shell out to esbuild's platform
 # binary, which only exists after its postinstall runs.

@@ -1,0 +1,606 @@
+/* Monochrome throughout. The mark carries the only shape interest, so it
+   is drawn in three greys rather than one flat black. */
+:root {
+  --bg: #ffffff;
+  --bg-sub: #fafafa;
+  --ink: #0a0a0a;
+  --ink-2: #4a4a4a;
+  --ink-3: #767676;
+  --line: #e4e4e4;
+  --blade-1: #0a0a0a;
+  --blade-2: #5c5c5c;
+  --blade-3: #333333;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+:root[data-theme="dark"] {
+  --bg: #0b0b0b;
+  --bg-sub: #141414;
+  --ink: #f4f4f4;
+  --ink-2: #b8b8b8;
+  --ink-3: #8a8a8a;
+  --line: #262626;
+  --blade-1: #f4f4f4;
+  --blade-2: #8a8a8a;
+  --blade-3: #c4c4c4;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+a:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* ---- masthead ---- */
+header {
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 62px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+}
+.brand svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+.brand span {
+  font-family: var(--serif);
+  font-size: 23px;
+  letter-spacing: -0.01em;
+}
+/* Scoped to the masthead. A bare `nav` also claimed the docs sidebar, which
+   is a nav too, and laid its three groups out in a row across the prose. */
+header nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+header nav a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 0;
+}
+header nav a:hover {
+  color: var(--ink);
+}
+#theme {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink-3);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 5px 9px;
+}
+#theme:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+/* ---- hero ---- */
+.hero {
+  padding: 84px 0 56px;
+}
+
+/* One figure holds both themes and CSS picks. A <picture> with a
+   prefers-color-scheme source would ignore the toggle, which sets
+   data-theme rather than changing what the OS reports. */
+.shot {
+  margin: 0 0 72px;
+}
+.shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+/* Qualified by the element, because `.shot img` above already sets
+   display and would otherwise win on specificity and show both. */
+.shot img.shot-dark {
+  display: none;
+}
+:root[data-theme="dark"] .shot img.shot-light {
+  display: none;
+}
+:root[data-theme="dark"] .shot img.shot-dark {
+  display: block;
+}
+.shot figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 12px;
+}
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(44px, 8vw, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 22px;
+  font-weight: 400;
+}
+.lede {
+  font-size: clamp(17px, 2.4vw, 20px);
+  color: var(--ink-2);
+  max-width: 40em;
+  margin: 0 0 30px;
+}
+.claims {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 34px;
+  padding: 0;
+  list-style: none;
+}
+.claims li {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 6px 11px;
+  color: var(--ink-2);
+}
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.btn {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.btn:hover {
+  opacity: 0.84;
+  border-bottom-color: var(--ink);
+}
+.btn-ghost {
+  background: none;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn-ghost:hover {
+  border-color: var(--ink);
+  opacity: 1;
+}
+.note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* ---- sections ---- */
+section {
+  padding: 52px 0;
+  border-top: 1px solid var(--line);
+}
+h2 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  margin: 0 0 26px;
+}
+h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+p {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  max-width: 42em;
+}
+p strong,
+li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+figure {
+  margin: 0;
+}
+figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+/* The app has the page's own two themes, so the shot follows the toggle
+   rather than sitting on the wrong ground in one of them. Both files are
+   the same frame, so the swap changes colour and nothing else. */
+figure img.dark-only {
+  display: none;
+}
+:root[data-theme="dark"] figure img.light-only {
+  display: none;
+}
+:root[data-theme="dark"] figure img.dark-only {
+  display: block;
+}
+figcaption {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 11px;
+  max-width: 44em;
+}
+
+.grid {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.cell {
+  background: var(--bg);
+  padding: 20px 22px;
+}
+.cell p {
+  margin: 0;
+  font-size: 14.5px;
+}
+
+pre {
+  background: var(--bg-sub);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+p code,
+li code {
+  background: var(--bg-sub);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+details {
+  border-bottom: 1px solid var(--line);
+  padding: 15px 0;
+}
+details:first-of-type {
+  border-top: 1px solid var(--line);
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15.5px;
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::before {
+  content: "+";
+  font-family: var(--mono);
+  color: var(--ink-3);
+  margin-right: 11px;
+}
+details[open] summary::before {
+  content: "−";
+}
+details p {
+  margin: 12px 0 0 25px;
+  font-size: 15px;
+}
+
+ul.plain {
+  padding-left: 20px;
+  color: var(--ink-2);
+  margin: 0 0 18px;
+  max-width: 42em;
+}
+ul.plain li {
+  margin-bottom: 9px;
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 34px 0 56px;
+}
+footer p {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin: 0 0 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- docs ---------- */
+
+/* Two columns down to tablet, where the nav becomes a strip above the prose
+   rather than disappearing: on a docs page the sibling pages are most of the
+   navigation there is. */
+.docs {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 52px;
+  /* Its own width, not .wrap's 860px: that measure is right for one column of
+     prose and leaves the sidebar nothing once it is subtracted. */
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 52px 24px 0;
+}
+
+.docs-aside {
+  align-self: start;
+  position: sticky;
+  top: 86px;
+}
+
+.docnav-group {
+  margin-bottom: 26px;
+}
+
+.docnav-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.docnav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.docnav a {
+  display: block;
+  margin-left: -10px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.docnav a:hover {
+  color: var(--ink);
+}
+
+.docnav a.on {
+  border-color: var(--line);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose {
+  max-width: 72ch;
+  padding-bottom: 72px;
+}
+
+.prose h1 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0 0 18px;
+}
+
+.prose h2 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 52px 0 14px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.prose h3 {
+  font-size: 16px;
+  margin: 30px 0 8px;
+}
+
+.prose p,
+.prose li {
+  color: var(--ink-2);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 20px;
+}
+
+.prose li {
+  margin: 5px 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 14.5px;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--line);
+  padding: 9px 12px 9px 0;
+  text-align: left;
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+.prose th {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg-sub);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.prose pre {
+  background: var(--bg-sub);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Shiki emits both themes as custom properties with no default colour, so the
+   page picks one instead of the block carrying an inline background that
+   fights the theme. */
+:root[data-theme="dark"] .prose .astro-code,
+:root[data-theme="dark"] .prose .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* ---------- doc index cards ---------- */
+
+.doc-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 22px 0 0;
+}
+
+.doc-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.doc-card:hover {
+  border-color: var(--ink-3);
+}
+
+.doc-card strong {
+  display: block;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.doc-card span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+@media (max-width: 860px) {
+  .docs {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .docs-aside {
+    position: static;
+  }
+  .docnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .docnav-group {
+    margin-bottom: 0;
+  }
+}

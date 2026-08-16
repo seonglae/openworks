@@ -8,7 +8,7 @@
     "test": "vitest run",
     "worker": "tsx scripts/worker.mts",
     "agent-worker": "tsx scripts/agent-worker.mts",
-    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json && pnpm --filter openworks-browser typecheck && tsc -p convex/tsconfig.json && tsc -p convex/tsconfig.test.json && pnpm --filter @openworks/core typecheck && pnpm --filter @openworks/domain typecheck && pnpm --filter @openworks/node typecheck",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json && pnpm --filter openworks-browser typecheck && tsc -p convex/tsconfig.json && tsc -p convex/tsconfig.test.json && pnpm --filter @openworks/core typecheck && pnpm --filter @openworks/domain typecheck && pnpm --filter @openworks/node typecheck && pnpm --filter openworks-site typecheck",
     "tauri": "tauri",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
@@ -16,7 +16,8 @@
     "ios:build": "tauri ios build",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
-    "site:deploy": "wrangler pages deploy site --project-name=openworks --branch=main --commit-dirty=true"
+    "site:deploy": "pnpm --filter openworks-site build && wrangler pages deploy site/dist --project-name=openworks --branch=main --commit-dirty=true",
+    "site:build": "pnpm --filter openworks-site build"
   },
   "repository": {
     "type": "git",

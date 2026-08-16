@@ -16,6 +16,9 @@ agent CLI you are already signed in to.
 **Status: pre-release.** It runs, it is what one person uses daily, and the setup
 below works. Interfaces will still move.
 
+**Docs: [openworksai.app/docs](https://openworksai.app/docs)**, one page per
+surface, written from `docs/` in this repo.
+
 ---
 
 ## Why
@@ -180,7 +183,11 @@ diffs best.
 ```bash
 pnpm typecheck     # every workspace, src and test alike
 pnpm test          # vitest across packages, convex handlers, browser components
+pnpm site:build    # the homepage and docs, into site/dist
 ```
+
+The docs on the site are the markdown in [`docs/`](docs), rendered. Change a
+feature and its page is in the same repository as the change.
 
 ## License
 
