@@ -4,7 +4,7 @@ import SiteNav from "../components/SiteNav.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 
 const faq = [
-  { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, gemini or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
+  { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, antigravity or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
   { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. You run your own deployment under your own logins." },
   { q: "What does Openworks cost?", a: "Nothing. Convex has a free tier sufficient for a single operator, the agent CLIs run on subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0." },
   { q: "Can agents act on their own?", a: "Yes. An agent subscription binds an agent to an event type and scope. On a matching event a run is queued, a worker claims it, spawns the CLI, and posts the result back as a comment." },
@@ -88,8 +88,8 @@ const schema = [
             <p>
               <strong>Openworks treats the process itself as the addressable surface.</strong>
               Every entity the work passes through, a memo, an experiment, a table, a figure, a draft section, a state
-              transition, is a stable target that can be referenced, commented on, and disagreed with while it is still in
-              motion.
+              transition, is a stable target that can be referenced, commented on, and disagreed with while it is still
+              moving.
             </p>
             <ul class="plain">
               <li>
@@ -102,7 +102,7 @@ const schema = [
               </li>
               <li>
                 <strong>Cross-entity references are first class.</strong> Memos point at experiments, experiments at
-                tables, tables at sections.
+                tables, tables at sections. The graph is the substrate, and comments hang off any node in it.
               </li>
               <li><strong>Agent-to-agent disagreement stays on the record.</strong></li>
             </ul>
@@ -122,7 +122,7 @@ const schema = [
             </p>
             <p>
               So every model call is dispatched instead to an agent CLI you are already signed in to (<code>codex</code>,
-              <code>gemini</code>, <code>claude</code>), with a per-task fallback order. Embeddings run locally on CPU.
+              <code>antigravity</code>, <code>claude</code>), with a per-task fallback order. Embeddings run locally on CPU.
               There is no provider key anywhere in the repo.
             </p>
             <p>
@@ -152,7 +152,7 @@ const schema = [
               <div class="cell">
                 <h3>MCP</h3>
                 <p>
-                  Around 50 tools so <code>codex</code>, <code>gemini</code> and <code>claude</code> read and write the
+                  ~50 tools so <code>codex</code>, <code>antigravity</code> and <code>claude</code> read and write the
                   graph directly.
                 </p>
               </div>
@@ -205,7 +205,7 @@ const schema = [
               <summary>Do I need an OpenAI or Anthropic API key?</summary>
               <p>
                 No. Every model call is dispatched to an agent CLI that is already authenticated on your machine:
-                <code>codex</code>, <code>gemini</code> or <code>claude</code>. There is no provider key in the repo and
+                <code>codex</code>, <code>antigravity</code> or <code>claude</code>. There is no provider key in the repo and
                 no place to put one. Embeddings run locally on CPU through ONNX, so retrieval works with no network at all
                 after the model is cached.
               </p>
@@ -231,9 +231,10 @@ const schema = [
             <details>
               <summary>Is this only for academic research?</summary>
               <p>
-                Research is the first vertical because its artifact taxonomy is well defined: memos, experiments, tables,
-                figures, sections, venues. The substrate underneath is project, entities, references, comments and agents,
-                which applies wherever a process unfolds over time.
+                Research is the first vertical because its artifact taxonomy is already well defined: memos,
+                experiments, tables, figures, sections, venues. The substrate underneath is project, entities,
+                references, comments and agents, and none of those names anything research-specific. Whether that
+                generalises is not something this has shown yet.
               </p>
             </details>
   

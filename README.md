@@ -13,8 +13,8 @@ agent CLI you are already signed in to.
 ![No API keys](https://img.shields.io/badge/provider%20API%20keys-zero-333333)
 [![tests](https://github.com/seonglae/openworks/actions/workflows/ci.yml/badge.svg)](https://github.com/seonglae/openworks/actions/workflows/ci.yml)
 
-**Status: pre-release.** It runs, it is what one person uses daily, and the setup
-below works. Interfaces will still move.
+**Status: pre-release.** It runs, I use it daily, and the setup below works.
+Interfaces will still move.
 
 **Docs: [openworksai.app/docs](https://openworksai.app/docs)**, one page per
 surface, written from `docs/` in this repo.
@@ -47,9 +47,10 @@ while it is still moving.
   node in it.
 - **Agent-to-agent disagreement stays on the record.**
 
-Research is the first vertical because its artifact taxonomy is well defined. The
-substrate underneath is project + entities + references + comments + agents, which
-applies wherever a process unfolds over time.
+Research is the first vertical because its artifact taxonomy is already well defined:
+memos, experiments, tables, figures, sections, venues. The substrate underneath is
+project + entities + references + comments + agents, and none of those names anything
+research-specific. Whether that generalises is not something this repo has shown yet.
 
 ## The same argument, from the other end
 
@@ -63,7 +64,7 @@ autonomous reaction becomes a purchase, and a product that spends the operator's
 unprompted has to ask first, or batch, or ration. All three close the process back up.
 
 So every model call is dispatched instead to an agent CLI you are already signed in to
-(`codex`, `gemini`, `claude`), with a per-task fallback order. Embeddings run locally on
+(`codex`, `antigravity`, `claude`), with a per-task fallback order. Embeddings run locally on
 CPU. There is no provider key anywhere in this repo.
 
 That does not make a run free. Subscription plans have rate limits, and the fallback
@@ -82,7 +83,7 @@ product this exists to avoid.
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Research      | projects on a state machine, memos, experiments, tables, figures, sections, tex, venues, cross-references, threaded comments |
 | Agents        | subscriptions that fan out on entity events and queue autonomous runs, results posted back as comments                       |
-| MCP           | ~50 tools so `codex` / `gemini` / `claude` can read and write the graph directly                                             |
+| MCP           | ~50 tools so `codex` / `antigravity` / `claude` can read and write the graph directly                                        |
 | Intake        | newsletters, arXiv papers, articles and RSS distilled and scored, so the queue is triage rather than reading                 |
 | Pull requests | open PRs across your accounts and orgs in one queue                                                                          |
 | Digest        | a daily or weekly email of what moved, what was cleared, and what is due                                                     |
@@ -94,17 +95,17 @@ one line each. The queue is triage, not reading.
 
 ### The digest
 
-A daily and a weekly mail: what you archived, the papers you scored, the first-author
-scores of the voices you follow, where each project sits in the state machine, your open
-PRs, and a few words to study. Styled inline rather than through a stylesheet, because
-most mail clients drop `<style>` blocks, and trimmed to stay inside Gmail's 102KB
-clipping limit.
+A daily and a weekly mail: what you archived, the papers you scored, what to read next
+out of the backlog, where each project sits in the state machine, your open PRs, and a
+few words to study. Styled inline rather than through a stylesheet, because most mail
+clients drop `<style>` blocks, and trimmed to a 72KB body, which is what fits under
+Gmail's 102KB clipping threshold once both MIME parts are base64.
 
 ## Requirements
 
 - Node 22+, pnpm
 - A [Convex](https://convex.dev) account (free tier is enough)
-- At least one agent CLI signed in: `codex`, `gemini`, or `claude`
+- At least one agent CLI signed in: `codex`, `antigravity`, or `claude`
 - Optional: [Clerk](https://clerk.com) for auth, needed only if you expose the
   deployment beyond localhost
 
@@ -175,8 +176,8 @@ node mcp/research-server.mjs      # stdio; register this path in your CLI config
 ```
 
 The dispatch order per task type lives in `ORDERS` in `scripts/actor.mts`. The default chain is
-`gemini -> codex -> claude`; `pr-fix` leads with `codex` because it handles concrete
-diffs best.
+`codex -> antigravity -> claude`; `pr-fix` swaps the last two because it handles a
+concrete diff better than either alternative.
 
 ## Development
 

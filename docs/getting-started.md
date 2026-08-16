@@ -9,7 +9,7 @@ one.
 - Node 22 or newer, and pnpm
 - A [Convex](https://convex.dev) account. The free tier is enough for one
   operator.
-- At least one agent CLI already signed in: `codex`, `gemini` or `claude`.
+- At least one agent CLI already signed in: `codex`, `antigravity` or `claude`.
   This is where every model call goes, so with none of them installed the
   intake queue fills up and nothing leaves it.
 - Optional: a [Clerk](https://clerk.com) application, needed only when the

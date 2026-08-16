@@ -1,7 +1,7 @@
 # MCP server
 
 `mcp/research-server.mjs` exposes the research graph to agent CLIs over stdio:
-around fifty tools covering every entity type, references, comments, reports
+~50 tools covering every entity type, references, comments, reports
 and subscriptions.
 
 ## Registering it
