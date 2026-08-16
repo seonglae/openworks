@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.openworks.worker</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>__ROOT__/node_modules/.bin/tsx</string>
+    <string>scripts/worker.mts</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>__ROOT__</string>
+
+  <!-- launchd starts a job with a near-empty PATH. This worker spawns codex,
+       gemini and claude by name, so an incomplete PATH here fails every job at
+       the provider lookup while the worker itself looks perfectly healthy.
+       __PATH__ must cover node, the agent CLIs, and the usual system dirs. -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__PATH__</string>
+    <key>HOME</key>
+    <string>__HOME__</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <!-- A worker that dies during startup would otherwise respawn as fast as
+       launchd can fork it. This turns a broken deploy into a slow drip. -->
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/openworks-worker.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/openworks-worker.log</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

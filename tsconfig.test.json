@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/workers-test.tsbuildinfo"
+  },
+  "include": ["scripts/*.mts", "test"]
+}

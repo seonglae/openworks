@@ -1,0 +1,67 @@
+{
+  "name": "openworks",
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.15.1",
+  "description": "Open-process: work in progress as an addressable surface that humans and agents can reference, comment on, and disagree about while it is still in motion.",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "worker": "tsx scripts/worker.mts",
+    "agent-worker": "tsx scripts/agent-worker.mts",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json && pnpm --filter openworks-browser typecheck && tsc -p convex/tsconfig.json && tsc -p convex/tsconfig.test.json && pnpm --filter @openworks/core typecheck && pnpm --filter @openworks/domain typecheck && pnpm --filter @openworks/node typecheck",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build",
+    "ios:dev": "tauri ios dev",
+    "ios:build": "tauri ios build",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "site:deploy": "wrangler pages deploy site --project-name=openworks --branch=main --commit-dirty=true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seonglae/openworks.git"
+  },
+  "keywords": [
+    "open-process",
+    "work-in-progress",
+    "research",
+    "agents",
+    "convex",
+    "self-hosted"
+  ],
+  "author": "Seonglae Cho",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/seonglae/openworks/issues"
+  },
+  "homepage": "https://github.com/seonglae/openworks#readme",
+  "dependencies": {
+    "@anthropic-ai/claude-code": "^2.1.163",
+    "@huggingface/transformers": "^4.2.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@openworks/core": "workspace:*",
+    "@openworks/domain": "workspace:*",
+    "@openworks/node": "workspace:*",
+    "convex": "^1.32.0",
+    "onnxruntime-common": "1.24.3",
+    "web-push": "^3.6.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@edge-runtime/vm": "^5.0.0",
+    "@tauri-apps/cli": "^2.11.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^25.7.0",
+    "@types/web-push": "^3.6.4",
+    "@vitest/coverage-v8": "^4.1.10",
+    "convex-test": "^0.0.54",
+    "happy-dom": "^20.11.1",
+    "prettier": "^3.8.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}

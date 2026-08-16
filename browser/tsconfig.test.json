@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    // Kept out of tsconfig.app.json so the vite build never sees test files.
+    // `types` must be restated rather than extended: vitest's globals and
+    // node's are what test/ reaches for, and vite/client is what src/ needs.
+    "types": ["vitest/globals", "node", "vite/client"],
+    "tsBuildInfoFile": "./node_modules/.tmp/browser-test.tsbuildinfo",
+    // The component tests build props inline and discard most of them; the
+    // unused-locals rules that keep src/ tidy only add noise here.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src", "test"]
+}

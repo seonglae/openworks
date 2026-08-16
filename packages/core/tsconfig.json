@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    // Deliberately no "types" and no DOM lib: this package is imported by both
+    // Convex functions and the browser bundle, whose globals do not overlap, so
+    // anything reachable from src must be plain ECMAScript. Adding node or DOM
+    // types here would let a platform API slip in and break the other side.
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    // Consumers import the TypeScript source directly (Convex's bundler, Vite
+    // and tsx all handle it), so there is nothing to emit — but the build info
+    // still lets repeat typechecks skip unchanged files.
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/core.tsbuildinfo"
+  },
+  "include": ["src"]
+}

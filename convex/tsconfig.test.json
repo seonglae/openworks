@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Test files are kept out of the main config so the deploy typecheck never
+    // sees them; Convex bundles every .ts under convex/ except *.test.ts.
+    "types": ["node"],
+    "tsBuildInfoFile": "../node_modules/.tmp/convex-test.tsbuildinfo"
+  },
+  "include": ["./**/*"],
+  "exclude": ["./_generated"]
+}
