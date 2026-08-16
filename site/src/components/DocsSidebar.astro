@@ -1,0 +1,32 @@
+---
+import { DOC_GROUPS } from "../data/docs";
+
+interface Props {
+  current: string;
+}
+
+const { current } = Astro.props;
+---
+
+<nav class="docnav" aria-label="Documentation">
+  {
+    DOC_GROUPS.map((section) => (
+      <div class="docnav-group">
+        <div class="docnav-label">{section.label}</div>
+        <ul>
+          {section.items.map((item) => (
+            <li>
+              <a
+                href={`/docs/${item.slug}`}
+                aria-current={item.slug === current ? "page" : undefined}
+                class={item.slug === current ? "on" : undefined}
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</nav>

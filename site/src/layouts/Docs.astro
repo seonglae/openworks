@@ -1,0 +1,57 @@
+---
+import Base from "./Base.astro";
+import SiteNav from "../components/SiteNav.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import DocsSidebar from "../components/DocsSidebar.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  current: string;
+}
+
+const { title, description, current } = Astro.props;
+const site = "https://openworksai.app";
+const path = Astro.url.pathname;
+
+// A breadcrumb is what puts "openworksai.app > Docs > Intake" in a result
+// rather than a bare URL, which is most of the value of marking a docs page
+// up at all.
+const crumbs = [
+  { name: "Openworks", item: `${site}/` },
+  { name: "Docs", item: `${site}/docs` },
+];
+if (current !== "index") crumbs.push({ name: title, item: new URL(path, site).href });
+
+const schema = [
+  {
+    "@type": "TechArticle",
+    headline: title,
+    description,
+    url: new URL(path, site).href,
+    inLanguage: "en",
+    about: { "@id": `${site}/#app` },
+    author: { "@type": "Person", name: "Seonglae Cho" },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: c.item })),
+    },
+  },
+];
+---
+
+<Base title={`${title} · Openworks docs`} description={description} path={path} schema={schema}>
+  <SiteNav />
+
+  <main class="docs">
+    <aside class="docs-aside">
+      <DocsSidebar current={current} />
+    </aside>
+
+    <article class="prose">
+      <slot />
+    </article>
+  </main>
+
+  <SiteFooter />
+</Base>

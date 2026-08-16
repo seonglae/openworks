@@ -1,0 +1,32 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import { DOC_GROUPS } from "../../data/docs";
+---
+
+<Docs
+  title="Documentation"
+  description="How each part of Openworks works: intake, research projects, agent subscriptions, the MCP surface, the digest, and what it takes to run it."
+  current="index"
+>
+  <h1>Documentation</h1>
+  <p>
+    Openworks is one deployment you run yourself. These pages describe each surface of it, what it needs to work, and
+    what it does when that thing is missing.
+  </p>
+
+  {
+    DOC_GROUPS.map((group) => (
+      <section>
+        <h2>{group.label}</h2>
+        <div class="doc-index">
+          {group.items.map((item) => (
+            <a class="doc-card" href={`/docs/${item.slug}`}>
+              <strong>{item.title}</strong>
+              <span>{item.blurb}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</Docs>

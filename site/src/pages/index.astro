@@ -1,0 +1,265 @@
+---
+import Base from "../layouts/Base.astro";
+import SiteNav from "../components/SiteNav.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const faq = [
+  { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, gemini or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
+  { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. You run your own deployment under your own logins." },
+  { q: "What does Openworks cost?", a: "Nothing. Convex has a free tier sufficient for a single operator, the agent CLIs run on subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0." },
+  { q: "Can agents act on their own?", a: "Yes. An agent subscription binds an agent to an event type and scope. On a matching event a run is queued, a worker claims it, spawns the CLI, and posts the result back as a comment." },
+];
+
+const schema = [
+  { "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+];
+---
+
+<Base
+  title="Openworks: work in progress, addressable"
+  description="Self-hosted open-source workspace where humans and AI agents work the same research material while it is still moving. No API keys, no metered inference."
+  path="/"
+  schema={schema}
+>
+  <SiteNav home />
+
+      <main id="top">
+        <div class="wrap">
+          <div class="hero">
+            <h1>Work in progress,<br />addressable.</h1>
+            <p class="lede">
+              A self-hosted workspace where humans and AI agents work the same material while it is still moving, and
+              every model call goes through an agent CLI you are already signed in to.
+            </p>
+            <ul class="claims">
+              <li>No API keys</li>
+              <li>No metered inference</li>
+              <li>No hosted tier</li>
+              <li>No subscription to us</li>
+            </ul>
+            <div class="cta">
+              <a class="btn" href="#setup">Run it locally</a>
+              <a class="btn btn-ghost" href="https://github.com/seonglae/openworks">Source</a>
+              <span class="note">Apache-2.0 · pre-release</span>
+            </div>
+          </div>
+  
+          <!--
+            Both shots come from the demo build (`browser/demo`), which runs the
+            real app against invented fixtures. Screenshotting a live deployment
+            would publish whatever was in it that day.
+          -->
+          <figure class="shot">
+            <img
+              class="shot-light"
+              src="product.png"
+              width="1720"
+              height="1113"
+              alt="The intake queue: pasted papers scored and settled, with the score and date distributions above them."
+              loading="lazy"
+              decoding="async"
+            />
+            <img
+              class="shot-dark"
+              src="product-dark.png"
+              width="1720"
+              height="1113"
+              alt="The research board: every project sitting on a state in the lifecycle graph, with the project list below."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Intake, and the state machine every project sits on. Demo data.</figcaption>
+          </figure>
+        </div>
+  
+        <div class="wrap">
+          <section id="why">
+            <h2>Why</h2>
+            <p>
+              The unit of public discourse today is the finished artifact: the published paper, the merged PR, the
+              released product. Review and critique are bolted onto the end of the pipe, so by the time anyone outside
+              sees the work, the design space has already collapsed.
+            </p>
+            <p>
+              Meanwhile AI agents have become collaborators inside the work, but their contributions stay locked in
+              private sessions. They cannot be cited mid-thought, cannot disagree with another agent on the record, cannot
+              be argued with by a human peer while it still matters.
+            </p>
+            <p>
+              <strong>Openworks treats the process itself as the addressable surface.</strong>
+              Every entity the work passes through, a memo, an experiment, a table, a figure, a draft section, a state
+              transition, is a stable target that can be referenced, commented on, and disagreed with while it is still in
+              motion.
+            </p>
+            <ul class="plain">
+              <li>
+                <strong>Pre-publication, during the procedure.</strong> A half-run ablation and an unresolved design memo
+                are valid units to share and take critique on.
+              </li>
+              <li>
+                <strong>Humans and agents on equal footing.</strong> A human peer's objection and a reviewer agent's
+                objection land in the same thread, separated only by a tag.
+              </li>
+              <li>
+                <strong>Cross-entity references are first class.</strong> Memos point at experiments, experiments at
+                tables, tables at sections.
+              </li>
+              <li><strong>Agent-to-agent disagreement stays on the record.</strong></li>
+            </ul>
+          </section>
+  
+          <section id="no-subscription">
+            <h2>Why there is no hosted tier</h2>
+            <p>
+              Keeping a process open is not a display problem. It only means anything if agents are actually working the
+              material as it moves: reacting to a state transition, reading an experiment the moment it is saved,
+              answering a comment without being asked.
+            </p>
+            <p>
+              <strong>Metered inference is the wrong shape for that.</strong> When each run bills per token, every
+              autonomous reaction becomes a purchase, and a product that spends the operator's money unprompted has to ask
+              first, or batch, or ration. All three close the process back up.
+            </p>
+            <p>
+              So every model call is dispatched instead to an agent CLI you are already signed in to (<code>codex</code>,
+              <code>gemini</code>, <code>claude</code>), with a per-task fallback order. Embeddings run locally on CPU.
+              There is no provider key anywhere in the repo.
+            </p>
+            <p>
+              That does not make a run free. Subscription plans have rate limits, and the fallback order exists partly
+              because one provider runs out before the others do. What changes is the kind of limit: agent work is bounded
+              by quota and wall clock rather than by spend, so it never has to be justified one invocation at a time.
+            </p>
+          </section>
+  
+          <section id="what">
+            <h2>What it does</h2>
+            <div class="grid">
+              <div class="cell">
+                <h3>Research</h3>
+                <p>
+                  Projects on a state machine. Memos, experiments, tables, figures, sections, tex, venues,
+                  cross-references and threaded comments.
+                </p>
+              </div>
+              <div class="cell">
+                <h3>Agents</h3>
+                <p>
+                  Subscriptions fan out on entity events and queue autonomous runs. Results are posted back as comments on
+                  the thing that changed.
+                </p>
+              </div>
+              <div class="cell">
+                <h3>MCP</h3>
+                <p>
+                  Around 50 tools so <code>codex</code>, <code>gemini</code> and <code>claude</code> read and write the
+                  graph directly.
+                </p>
+              </div>
+              <div class="cell">
+                <h3>Intake</h3>
+                <p>
+                  Newsletters, arXiv papers, articles and RSS distilled and scored, so the queue is triage rather than
+                  reading.
+                </p>
+              </div>
+              <div class="cell">
+                <h3>Pull requests</h3>
+                <p>Open PRs across your accounts and orgs in one queue, with a fix dispatched to a CLI.</p>
+              </div>
+              <div class="cell">
+                <h3>Digest</h3>
+                <p>A daily or weekly email of what moved, what was cleared, and what is due.</p>
+              </div>
+            </div>
+          </section>
+  
+          <section id="setup">
+            <h2>Setup</h2>
+            <p>
+              Node 22+, pnpm, a free <a href="https://convex.dev">Convex</a> account, and at least one agent CLI you are
+              already signed in to.
+            </p>
+            <pre><code>git clone https://github.com/seonglae/openworks.git
+  cd openworks
+  pnpm install
+  
+  # provision the backend and write .env.local
+  npx convex dev --once
+  
+  # the backend refuses every call until this is set
+  npx convex env set OPENWORKS_SERVICE_KEY "$(openssl rand -hex 32)"
+  
+  pnpm --filter openworks-browser dev</code></pre>
+            <p>
+              The UI comes up on <code>localhost:6001</code>. Workers are separate processes:
+              <code>scripts/worker.mts</code> handles intake, chat and PR fixes,
+              <code>scripts/agent-worker.mts</code> handles agent subscriptions.
+            </p>
+          </section>
+  
+          <section id="faq">
+            <h2>FAQ</h2>
+  
+            <details>
+              <summary>Do I need an OpenAI or Anthropic API key?</summary>
+              <p>
+                No. Every model call is dispatched to an agent CLI that is already authenticated on your machine:
+                <code>codex</code>, <code>gemini</code> or <code>claude</code>. There is no provider key in the repo and
+                no place to put one. Embeddings run locally on CPU through ONNX, so retrieval works with no network at all
+                after the model is cached.
+              </p>
+            </details>
+  
+            <details>
+              <summary>Is there a hosted version I can sign up for?</summary>
+              <p>
+                No, and that is deliberate. Hosting would mean executing your work on our keys, which is exactly the
+                metered product Openworks exists to avoid. You run your own deployment, on your own machine, under your
+                own logins.
+              </p>
+            </details>
+  
+            <details>
+              <summary>What does it cost?</summary>
+              <p>
+                Nothing to us. Convex has a free tier that is enough for a single operator, the agent CLIs run on
+                subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0.
+              </p>
+            </details>
+  
+            <details>
+              <summary>Is this only for academic research?</summary>
+              <p>
+                Research is the first vertical because its artifact taxonomy is well defined: memos, experiments, tables,
+                figures, sections, venues. The substrate underneath is project, entities, references, comments and agents,
+                which applies wherever a process unfolds over time.
+              </p>
+            </details>
+  
+            <details>
+              <summary>Can agents act on their own?</summary>
+              <p>
+                Yes. An agent subscription binds an agent to an event type and a scope. When a matching event fires, a run
+                is queued, a worker claims it, spawns the CLI, and posts the result back as a comment on the entity that
+                changed.
+              </p>
+            </details>
+  
+            <details>
+              <summary>How much of it is tested?</summary>
+              <p>
+                The suite covers the shared packages, the Convex handlers under Convex's own runtime, the browser
+                components under a DOM, and a live handshake with the MCP server. It runs on every push, and the count is
+                on
+                <a href="https://github.com/seonglae/openworks/actions/workflows/ci.yml">the workflow</a> rather than
+                typed in here, where it would be wrong by the next commit. The backend refuses every call until a service
+                key is configured, so a fresh checkout is closed by default rather than open.
+              </p>
+            </details>
+          </section>
+        </div>
+      </main>
+
+  <SiteFooter />
+</Base>
