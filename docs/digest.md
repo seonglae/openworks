@@ -32,18 +32,33 @@ leaves a row that has no result but whose mail is already in your inbox.
 Treating that row as "never sent" and retaking the period delivers the digest
 twice.
 
-So the claim protocol is deliberately asymmetric. A skipped digest is
-recoverable; a duplicate in an inbox is not. A row that got as far as attempting
-is never retaken, and a stale claim is only reclaimable after three hours, which
-is longer than the longest observed run.
+So the claim is deliberately one-way. A period whose row exists is never
+claimed again, whatever state that row is in: two workers waking at the same
+hour, one wins and the other mails nothing, and a worker that dies mid-send
+leaves a row that no later run will retake.
+
+That trade is not free. A crash between claiming and sending burns the period,
+and the digest for it never goes out. It is the right way round, because a
+skipped digest is recoverable by looking at the app and a duplicate in an inbox
+is not, but it does mean a missing mail is worth checking the row for rather
+than assuming the send is broken.
 
 ## Styling
 
 Inline styles, not a stylesheet: enough mail clients drop `<style>` blocks that
 a hoisted class arrives as unformatted text. Figures are table cells and
 background colours rather than SVG, because a chart that renders in a browser
-does not survive an inbox. The whole body is trimmed to stay inside Gmail's
-102KB clipping limit.
+does not survive an inbox.
 
-A trend chart suppresses itself under three days of data, since the buckets are
-UTC and a one-day local window straddles two of them.
+Gmail stops rendering near 102KB and hides the rest behind "View entire
+message", so whatever came last would silently vanish. Both MIME parts are
+base64, which inflates the source by about a third, so the body budget is 72KB.
+The digest trims itself to that and says what it dropped, rather than letting
+the mail client decide.
+
+## When it is due
+
+A daily covers yesterday in full, which is why it goes out in the morning
+rather than at midnight: nothing is still being written into the day it
+reports. A Monday morning is both a daily morning and a weekly one, and each is
+claimed separately, so one already sent does not suppress the other.
