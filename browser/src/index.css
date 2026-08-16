@@ -1,0 +1,441 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-paper: #ffffff;
+  --color-paper-warm: #fafafa;
+  --color-ink: #0a0a0a;
+  --color-ink-2: #4a4a4a;
+  --color-ink-3: #8a8a8a;
+  --color-ink-4: #b8b8b8;
+  --color-rule: #e4e4e4;
+  --color-rule-light: #f4f4f4;
+  --color-rust: #333333;
+  --color-rust-deep: #0a0a0a;
+  --color-rust-dim: rgba(51, 51, 51, 0.08);
+  --color-slate: #3d5a80;
+  --color-slate-dim: rgba(61, 90, 128, 0.08);
+  --color-ochre: #5c5c5c;
+  --color-ochre-dim: rgba(92, 92, 92, 0.08);
+  --color-charcoal: #333333;
+  --color-sage: #5a7a5a;
+  --color-sage-dim: rgba(90, 122, 90, 0.08);
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Menlo", monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  html.dark {
+    --color-paper: #0a0a0a;
+    --color-paper-warm: #141414;
+    --color-ink: #f4f4f4;
+    --color-ink-2: #c4c4c4;
+    --color-ink-3: #8a8a8a;
+    --color-ink-4: #5c5c5c;
+    --color-rule: #262626;
+    --color-rule-light: #1c1c1c;
+    --color-rust: #c4c4c4;
+    --color-rust-deep: #f4f4f4;
+    --color-rust-dim: rgba(196, 196, 196, 0.12);
+    --color-slate: #6d8ab0;
+    --color-slate-dim: rgba(109, 138, 176, 0.12);
+    --color-ochre: #8a8a8a;
+    --color-ochre-dim: rgba(138, 138, 138, 0.12);
+    --color-charcoal: #f4f4f4;
+    --color-sage: #7a9a7a;
+    --color-sage-dim: rgba(122, 154, 122, 0.12);
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--color-paper);
+    /* Inset document content past the notch / Dynamic Island / home indicator
+       when running full-screen (iOS WKWebView in the Tauri client, or an
+       installed PWA). The fixed .liquid-bg::before keeps bleeding edge to edge,
+       so only the content shifts. Resolves to 0 on non-notched displays. */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  ::selection {
+    background: var(--color-rust);
+    color: var(--color-paper);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-4);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-3);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-4) transparent;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+  }
+
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Native select chrome is opaque + square: replace with a quiet chevron.
+     Chevron color is fixed per theme (data URIs can't use currentColor). */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%238a8478' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    padding-right: 26px;
+  }
+  select option {
+    background: var(--color-paper-warm);
+    color: var(--color-ink);
+  }
+
+  /* KaTeX: hide mathml from copy, let JS handle latex source */
+  .katex .katex-mathml {
+    display: none;
+  }
+  .katex {
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    font-size: 0.92em;
+  }
+
+  .serif {
+    font-family: var(--font-serif);
+  }
+
+  .ruled {
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .ruled-top {
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .thick-rule {
+    border-bottom: 2px solid var(--color-ink);
+  }
+
+  /* Lucide ships stroke-width=2 on the svg attribute; the CSS property wins
+     over presentation attributes, thinning every icon app-wide to match the
+     light editorial type without per-icon props. */
+  svg.lucide {
+    stroke-width: 1.5;
+  }
+
+  /* ── Liquid glass ─────────────────────────────────────────────────────
+     glass = tint + blur + 1px border + inset top sheen. NEVER a drop
+     shadow: overflow-hidden ancestors hard-clip it into a translucent
+     square halo. Blur+saturate only (WebKit never ships SVG backdrop
+     filters). Apply to floating chrome (tab bars, dialogs, popovers,
+     menus); never to body text or code where readability wins. Pair with
+     a Tailwind radius but NOT bg-*: a bg utility lives in a later cascade
+     layer and would paint over the translucent tint. */
+  :root {
+    --glass-blur: 10px;
+    --glass-saturate: 150%;
+    --glass-tint: color-mix(in srgb, #ffffff 30%, transparent);
+    --glass-tint-strong: color-mix(in srgb, #ffffff 38%, transparent);
+    --glass-border: color-mix(in srgb, var(--color-ink) 12%, transparent);
+    --glass-highlight: rgba(255, 255, 255, 0.22);
+  }
+  html.dark {
+    --glass-tint: color-mix(in srgb, var(--color-paper-warm) 30%, transparent);
+    --glass-tint-strong: color-mix(in srgb, var(--color-paper) 36%, transparent);
+    --glass-border: color-mix(in srgb, #fff 10%, transparent);
+    --glass-highlight: rgba(255, 255, 255, 0.05);
+  }
+
+  .glass,
+  .glass-strong {
+    background: var(--glass-tint);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 0 var(--glass-highlight);
+  }
+  .glass-strong {
+    background: var(--glass-tint-strong);
+  }
+
+  /* Edge bars: translucent + blur but no border/sheen so they read as part
+     of the frame rather than a floating card. */
+  .glass-bar {
+    background: var(--glass-tint);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  }
+
+  /* Content card: glass surface with radius + padding baked in. */
+  .panel {
+    background: var(--glass-tint);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 0 var(--glass-highlight);
+    border-radius: 1rem;
+    padding: 16px 18px;
+  }
+
+  /* Small glass pill for keywords / categories / counts. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 8px;
+    border-radius: 9999px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 0 var(--glass-highlight);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-ink-2);
+  }
+
+  /* Selection droplet: convex transparent water drop. Visibility comes
+     from the radial top reflection + light wash; a colorless wash alone
+     vanishes on this low-chroma palette.
+     One class serves both the sliding tab indicator (JS sets left/width;
+     the overshoot bezier gives the spring) and static selected pills
+     (no inline left/width = transition never fires). */
+  .droplet {
+    border-radius: 9999px;
+    background: radial-gradient(130% 95% at 50% 0%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%);
+    border: 1px solid color-mix(in srgb, #fff 55%, var(--glass-border));
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.4),
+      inset 0 -2px 3px rgba(26, 23, 20, 0.06),
+      0 2px 5px rgba(26, 23, 20, 0.12);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    transition:
+      left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  html.dark .droplet {
+    background:
+      radial-gradient(130% 95% at 50% 0%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 58%),
+      color-mix(in srgb, var(--color-rust) 14%, var(--glass-tint));
+    border: 1px solid color-mix(in srgb, var(--color-rust) 30%, var(--glass-border));
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.1),
+      inset 0 -2px 3px rgba(0, 0, 0, 0.28),
+      0 2px 6px rgba(0, 0, 0, 0.32);
+  }
+  /* When the droplet lands on the first/last tab the spring overshoot would
+     carry it past the container's rounded end-caps (clipped by the nav's
+     overflow, so it visually vanishes mid-flight). Edge targets swap to a
+     smooth non-overshooting ease instead. */
+  .droplet-edge {
+    transition:
+      left 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Vertical variant for the sidebar nav: the droplet glides on top/height
+     instead of left/width as it slides between stacked tabs. */
+  .droplet-v {
+    transition:
+      top 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      height 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* App backdrop: soft color blobs behind the glass surfaces so their
+     translucency + blur actually have something to refract. Blob colors
+     derive from the theme's primary accent (rust) nudged toward different
+     hues, so light/dark both work without per-theme branches. */
+  .liquid-bg {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--color-paper);
+    --grad-1: var(--color-rust);
+    --grad-2: color-mix(in srgb, var(--color-rust) 55%, #b06bd6);
+    --grad-3: color-mix(in srgb, var(--color-rust) 55%, #4fb39a);
+    --grad-4: color-mix(in srgb, var(--color-rust) 55%, #d6a76b);
+  }
+  /* Blob layer on a pseudo-element so its intensity is a single opacity
+     knob (--gradient-strength, 0..1) driven by the Settings slider.
+     position:fixed because this is a scrolling document: the blobs must
+     pin to the viewport or the middle of long pages scrolls past them
+     into flat background. */
+  .liquid-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--gradient-strength, 0.45);
+    background-image:
+      radial-gradient(70% 60% at 10% 2%, color-mix(in srgb, var(--grad-1) 25%, transparent), transparent 62%),
+      radial-gradient(65% 55% at 95% 5%, color-mix(in srgb, var(--grad-2) 22%, transparent), transparent 60%),
+      radial-gradient(72% 66% at 93% 98%, color-mix(in srgb, var(--grad-3) 20%, transparent), transparent 62%),
+      radial-gradient(66% 60% at 3% 98%, color-mix(in srgb, var(--grad-4) 18%, transparent), transparent 62%),
+      radial-gradient(55% 45% at 38% 42%, color-mix(in srgb, var(--grad-2) 12%, transparent), transparent 65%),
+      radial-gradient(50% 42% at 68% 64%, color-mix(in srgb, var(--grad-3) 11%, transparent), transparent 65%);
+  }
+  /* Dark mode renders the blobs at a lower baseline than light: the Settings
+     slider (--gradient-strength) still scales them, just from a fainter floor.
+     Placed before the reflective override so that, when both html.dark and
+     html.reflective are active, the later (equal-specificity) reflective rule
+     wins the tie and keeps its even fainter camera wash. */
+  html.dark .liquid-bg::before {
+    opacity: calc(var(--gradient-strength, 0.45) * 0.5);
+  }
+
+  /* Reflective UI: blurred live front-camera feed behind every glass surface.
+     Painted on body (the .liquid-bg stacking context): body's opaque paper
+     background paints first, the camera at z-index:-2 paints over it, the color
+     blobs (z-index:-1) over that, then content — so glass backdrop-filter chrome
+     refracts the camera. Mirrored + over-scaled so the blur has no hard edges. */
+  #reflective-cam {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    transform: scaleX(-1) scale(1.15);
+    filter: blur(20px) saturate(135%) brightness(1.04);
+    z-index: -2;
+    pointer-events: none;
+    display: none;
+  }
+  html.reflective #reflective-cam {
+    display: block;
+  }
+  /* Let the camera dominate: fade the color blobs to a faint wash and drop the
+     opaque paper fill that would otherwise hide the feed. */
+  html.reflective .liquid-bg::before {
+    opacity: calc(var(--gradient-strength, 0.45) * 0.35);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim {
+  animation: reveal 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.d1 {
+  animation-delay: 50ms;
+}
+.d2 {
+  animation-delay: 100ms;
+}
+.d3 {
+  animation-delay: 150ms;
+}
+.d4 {
+  animation-delay: 200ms;
+}
+.d5 {
+  animation-delay: 250ms;
+}
+.d6 {
+  animation-delay: 300ms;
+}
+
+/* Hide the "Secured by Clerk" badge on the sign-in card. */
+.cl-footer,
+.cl-internalBranding,
+[class*="cl-internal-"][class*="branding" i],
+.cl-badge {
+  display: none !important;
+}
+
+/* Narrow / touch screens. The row-action clusters (job row: re-process /
+   archive / delete; summary: delete) live outside the card on desktop and are
+   revealed on hover. Below the sm breakpoint (or on any hover-less pointer) we
+   pull just those two into flow and show them, which also stops their
+   negative-right offset from forcing horizontal scroll. No blanket opacity
+   override — only these two clusters are touched. */
+@media (hover: none), (max-width: 639px) {
+  [class~="-right-24"],
+  [class~="-right-14"] {
+    position: static;
+    opacity: 1;
+    width: fit-content;
+    margin-left: auto;
+  }
+
+  [class~="-right-24"] {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Offscreen list rows skip layout and paint. This is the cheap half of what a
+   virtualized grid buys, without taking rows out of the DOM — so Cmd+F,
+   expanded state, and anchor links keep working. contain-intrinsic-size gives
+   the skipped rows a placeholder height so the scrollbar stays stable. */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 44px;
+}

@@ -1,0 +1,38 @@
+packages:
+  - "packages/*"
+  - "browser"
+
+# pnpm 11 key. Convex, Vite and Tauri all shell out to esbuild's platform
+# binary, which only exists after its postinstall runs.
+allowBuilds:
+  "@anthropic-ai/claude-code": true
+  "@clerk/shared": true
+  esbuild: true
+  # Embeddings run through this. Without its native binding there is no
+  # on-device inference, and the no-API-key path stops existing.
+  onnxruntime-node: true
+  protobufjs: true
+  sharp: true
+
+# Advisories in transitive dependencies we do not choose ourselves. Every entry
+# is the minimum patched version from the advisory, not the newest release, so
+# the pin moves as little as the fix requires. nanoid is split by major because
+# two different majors are in the tree and forcing either one onto the other
+# breaks the consumer that asked for it.
+overrides:
+  # onnxruntime-node > adm-zip: a crafted zip allocates 4GB
+  adm-zip: "^0.6.0"
+  # @huggingface/transformers > sharp: inherited libvips CVEs
+  sharp: "^0.35.0"
+  # @modelcontextprotocol/sdk > hono: ReDoS in CORS, DoS in language middleware
+  hono: "^4.12.34"
+  # excalidraw > mermaid-to-excalidraw and below
+  mermaid: "^11.16.1"
+  dompurify: "^3.4.13"
+  lodash-es: "^4.17.24"
+  nanoid@3: "^3.3.18"
+  # mermaid-to-excalidraw resolves nanoid 4, which no patched release exists for.
+  # 4 and 5 are both ESM-only and the surface used here (nanoid, customAlphabet)
+  # is unchanged between them, so the fix is to move that path onto 5.
+  nanoid@4: "^5.1.16"
+  nanoid@5: "^5.1.16"

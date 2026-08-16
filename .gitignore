@@ -1,0 +1,40 @@
+node_modules
+.venv/
+
+# Build output
+browser/dist/
+browser/.vite-temp*/
+src-tauri/target/
+src-tauri/gen/
+
+# Secrets and machine-local config. `.env.example` is the tracked template.
+.env.local
+.env*.local
+browser/.env.local
+browser/.env.production
+
+# Convex codegen for the browser bundle
+browser/convex/
+
+# Everything the workers write while a job is in flight: the newsletter or
+# paper text handed to an agent CLI, the PDFs they fetch, the screenshots
+# pasted into an insight.
+tmp/
+
+# Agent and tooling scratch
+.agent-browser/
+agent-browser.json
+.codex-home/
+.playwright-mcp/
+scratch/
+
+# Local browser profiles and captures from headless verification runs
+.chrome-profile/
+browser/*.png
+
+# Deploy provider state
+.vercel/
+.wrangler/
+
+# Agent session state, and the git worktrees it opens inside the repo.
+.claude/

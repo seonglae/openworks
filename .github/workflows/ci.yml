@@ -1,0 +1,31 @@
+name: tests
+
+# No secrets and no services: the suite covers the shared packages, the Convex
+# handlers under Convex's own runtime, the browser components under a DOM, and
+# a live stdio handshake with the MCP server. Every one of those runs against a
+# fresh checkout, which is the point. Nothing here reaches a deployment.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      # Frozen, so a lockfile that disagrees with package.json fails here
+      # rather than resolving to something no one has run.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      # tsc reads the sources; this reads what the bundler makes of them, which
+      # is where a bad import or a missing asset actually shows up. It needs no
+      # browser env file: the deployment URL is read at runtime.
+      - run: pnpm --filter openworks-browser exec vite build

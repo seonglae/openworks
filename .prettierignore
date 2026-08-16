@@ -1,0 +1,5 @@
+convex/_generated
+pnpm-lock.yaml
+src-tauri/Cargo.lock
+LICENSE
+NOTICE
