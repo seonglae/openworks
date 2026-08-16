@@ -1,5 +1,7 @@
-/* Monochrome throughout. The mark carries the only shape interest, so it
-   is drawn in three greys rather than one flat black. */
+/* Two inks on paper, not a repaint: body copy stays near-black and slate,
+   sage and ochre mark structure. The three values are the app's own accents
+   (--color-slate / -sage / -ochre in browser/src/index.css), so the site is
+   not introducing a fourth palette to the product it is describing. */
 :root {
   --bg: #ffffff;
   --bg-sub: #fafafa;
@@ -9,13 +11,20 @@
      text size. The app uses it for chrome; here it sets body copy. */
   --ink-3: #767676;
   --line: #e4e4e4;
-  --blade-1: #0a0a0a;
-  --blade-2: #5c5c5c;
-  --blade-3: #333333;
+  --slate: #3d5a80;
+  --sage: #5a7a5a;
+  --ochre: #5c5c5c;
+  --slate-dim: rgba(61, 90, 128, 0.07);
+  --slate-edge: rgba(61, 90, 128, 0.32);
+  --blade-1: var(--slate);
+  --blade-2: var(--sage);
+  --blade-3: var(--ochre);
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
   --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
 }
+/* The accents lift rather than invert: the same three hues at a lightness
+   that clears 4.5:1 on the dark ground, so nothing has to branch below. */
 :root[data-theme="dark"] {
   --bg: #0b0b0b;
   --bg-sub: #141414;
@@ -23,9 +32,11 @@
   --ink-2: #b8b8b8;
   --ink-3: #8a8a8a;
   --line: #262626;
-  --blade-1: #f4f4f4;
-  --blade-2: #8a8a8a;
-  --blade-3: #c4c4c4;
+  --slate: #8aa9d0;
+  --sage: #8fb08f;
+  --ochre: #a8a8a8;
+  --slate-dim: rgba(138, 169, 208, 0.12);
+  --slate-edge: rgba(138, 169, 208, 0.42);
 }
 
 * {
@@ -49,13 +60,17 @@ body {
   margin: 0 auto;
   padding: 0 24px;
 }
+/* The rule under a link carries the colour and the text does not, so a
+   paragraph with six links in it still reads as a paragraph. Hovering moves
+   the colour up into the word. */
 a {
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--slate-edge);
 }
 a:hover {
-  border-bottom-color: var(--ink);
+  color: var(--slate);
+  border-bottom-color: var(--slate);
 }
 
 /* ---- masthead ---- */
@@ -101,11 +116,23 @@ header nav a {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--slate);
   border: 0;
 }
 header nav a:hover {
   color: var(--ink);
+}
+/* The mark, not the word: at 11px uppercase "GITHUB" reads as one more
+   section anchor, and it is the only link that leaves the site. */
+header nav a.icon {
+  display: flex;
+  align-items: center;
+}
+header nav a.icon svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+  fill: currentColor;
 }
 #theme {
   background: none;
@@ -119,8 +146,8 @@ header nav a:hover {
   padding: 5px 9px;
 }
 #theme:hover {
-  color: var(--ink);
-  border-color: var(--ink-3);
+  color: var(--slate);
+  border-color: var(--slate-edge);
 }
 
 /* ---- hero ---- */
@@ -183,6 +210,9 @@ h1 {
   list-style: none;
 }
 .claims li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -192,6 +222,16 @@ h1 {
   padding: 6px 11px;
   color: var(--ink-2);
 }
+/* The colour is a mark beside the claim rather than the claim itself: sage
+   at this size and weight does not clear AA once it sits on a tint. */
+.claims li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--sage);
+  flex: none;
+}
 .cta {
   display: flex;
   flex-wrap: wrap;
@@ -200,8 +240,8 @@ h1 {
 }
 .btn {
   display: inline-block;
-  border: 1px solid var(--ink);
-  background: var(--ink);
+  border: 1px solid var(--slate);
+  background: var(--slate);
   color: var(--bg);
   padding: 11px 20px;
   border-radius: 4px;
@@ -210,15 +250,17 @@ h1 {
 }
 .btn:hover {
   opacity: 0.84;
-  border-bottom-color: var(--ink);
+  color: var(--bg);
+  border-bottom-color: var(--slate);
 }
 .btn-ghost {
   background: none;
   color: var(--ink);
-  border-color: var(--line);
+  border-color: var(--slate-edge);
 }
 .btn-ghost:hover {
-  border-color: var(--ink);
+  color: var(--slate);
+  border-color: var(--slate);
   opacity: 1;
 }
 .note {
@@ -237,7 +279,7 @@ h2 {
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--slate);
   font-weight: 500;
   margin: 0 0 26px;
 }
@@ -300,9 +342,20 @@ figcaption {
     grid-template-columns: 1fr 1fr;
   }
 }
+/* An inset rule rather than a border-top: the grid draws its own hairlines
+   out of a 1px gap, and a real border would land beside one and read as two.
+   Three hues on a 3n cycle across two columns, so no cell sits next to its
+   own colour in either direction. */
 .cell {
   background: var(--bg);
   padding: 20px 22px;
+  box-shadow: inset 0 2px 0 var(--slate);
+}
+.cell:nth-child(3n + 2) {
+  box-shadow: inset 0 2px 0 var(--sage);
+}
+.cell:nth-child(3n) {
+  box-shadow: inset 0 2px 0 var(--ochre);
 }
 .cell p {
   margin: 0;
@@ -331,6 +384,7 @@ li code {
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 1px 5px;
+  color: var(--slate);
 }
 
 details {
@@ -352,7 +406,7 @@ summary::-webkit-details-marker {
 summary::before {
   content: "+";
   font-family: var(--mono);
-  color: var(--ink-3);
+  color: var(--slate);
   margin-right: 11px;
 }
 details[open] summary::before {
@@ -416,13 +470,21 @@ footer p {
   margin-bottom: 26px;
 }
 
+/* One hue per group, in the order the sidebar runs, so a reader lands on a
+   page and the colour says which of the three parts of the docs it is in. */
 .docnav-label {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--sage);
   margin-bottom: 8px;
+}
+.docnav-group:nth-child(2) .docnav-label {
+  color: var(--slate);
+}
+.docnav-group:nth-child(3) .docnav-label {
+  color: var(--ochre);
 }
 
 .docnav ul {
@@ -442,11 +504,12 @@ footer p {
 }
 
 .docnav a:hover {
-  color: var(--ink);
+  color: var(--slate);
 }
 
 .docnav a.on {
-  border-color: var(--line);
+  border-color: var(--slate-edge);
+  background: var(--slate-dim);
   color: var(--ink);
   font-weight: 600;
 }
@@ -454,6 +517,15 @@ footer p {
 .prose {
   max-width: 72ch;
   padding-bottom: 72px;
+}
+
+/* The docs index groups its cards in <section>s, which the homepage's own
+   section rule was also claiming: its border and 52px padding landed on top
+   of the h2's, drawing two hairlines with an empty band between them. The
+   heading already separates them here. */
+.prose section {
+  border-top: 0;
+  padding: 0;
 }
 
 .prose h1 {
@@ -515,7 +587,7 @@ footer p {
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--slate);
   font-weight: 400;
 }
 
@@ -526,6 +598,7 @@ footer p {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 1px 5px;
+  color: var(--slate);
 }
 
 .prose pre {
@@ -538,11 +611,14 @@ footer p {
   line-height: 1.6;
 }
 
+/* Inline code is slate; a fenced block is not, or the rule would repaint
+   every Shiki token that has no colour of its own. */
 .prose pre code {
   background: none;
   border: 0;
   padding: 0;
   font-size: inherit;
+  color: inherit;
 }
 
 /* Shiki emits both themes as custom properties with no default colour, so the
@@ -571,7 +647,8 @@ footer p {
 }
 
 .doc-card:hover {
-  border-color: var(--ink-3);
+  border-color: var(--slate-edge);
+  background: var(--slate-dim);
 }
 
 .doc-card strong {

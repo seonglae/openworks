@@ -69,12 +69,17 @@ URLs and a static file cannot read the config:
 
 Everything else is relative or derived from `Astro.site`.
 
-## Regenerating og.png
+## Regenerating og.png and the icons
 
-`og.png` is a 1200x630 screenshot of a standalone HTML card, so it stays
-editable as markup rather than as a binary. Render it at that exact viewport
-and save over the file. Both dimensions are also declared in the meta tags, so
-a different size means updating `og:image:width` and `og:image:height` too.
+`og.png` is a 1200x630 screenshot of [`og-card.html`](og-card.html), which sits
+outside `src/pages` and `public/` so nothing builds or serves it. Open it at
+exactly that viewport and save over the png. Both dimensions are declared in
+the meta tags too, so a different size means updating `og:image:width` and
+`og:image:height`.
+
+`icon-180.png` is `favicon.svg` rendered on white at 180. The app's copies
+(`browser/public/`) are the same mark at 180, 192 and 512, and the four move
+together: a product with two colourways of its own mark reads as two products.
 
 ## Theme
 
