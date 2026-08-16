@@ -21,7 +21,7 @@ the same breath**, or the restart lands on a path that no longer exists.
 ## agent-worker.mts
 
 Polls `agentRuns` for pending rows every five seconds, claims one, spawns a CLI
-with the MCP server attached, and completes the run. See [Agents](/docs/agents).
+with the MCP server attached, and completes the run. See [Agents](/docs/agents/).
 
 ```bash
 npx tsx scripts/agent-worker.mts

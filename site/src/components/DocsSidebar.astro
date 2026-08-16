@@ -17,7 +17,7 @@ const { current } = Astro.props;
           {section.items.map((item) => (
             <li>
               <a
-                href={`/docs/${item.slug}`}
+                href={`/docs/${item.slug}/`}
                 aria-current={item.slug === current ? "page" : undefined}
                 class={item.slug === current ? "on" : undefined}
               >

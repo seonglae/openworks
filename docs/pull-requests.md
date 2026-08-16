@@ -20,7 +20,7 @@ occasional bump that broke something.
 
 Dispatching a fix creates a `pr-fix` job. That job type has its own provider
 order, leading with `codex`, because it handles a concrete diff against a real
-checkout better than the alternatives. See [Agent CLIs](/docs/agent-clis).
+checkout better than the alternatives. See [Agent CLIs](/docs/agent-clis/).
 
 The worker runs the fix in a checkout under the PR root, which defaults to
 `../PR` and is configurable with `OPENWORKS_PR_ROOT`.

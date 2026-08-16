@@ -26,7 +26,7 @@ npx convex env set <KEY> <VALUE>
 | `OPENWORKS_OWNER_EMAIL`   | the owner, matched against the JWT's email claim. Preferred.   |
 | `OPENWORKS_OWNER_USER_ID` | the owner as a Clerk subject, if the template carries no email |
 
-See [Auth and sharing](/docs/auth).
+See [Auth and sharing](/docs/auth/).
 
 ## Optional
 
