@@ -5,6 +5,8 @@
   --bg-sub: #fafafa;
   --ink: #0a0a0a;
   --ink-2: #4a4a4a;
+  /* Darker than the app's equivalent grey, which fails AA on white at this
+     text size. The app uses it for chrome; here it sets body copy. */
   --ink-3: #767676;
   --line: #e4e4e4;
   --blade-1: #0a0a0a;

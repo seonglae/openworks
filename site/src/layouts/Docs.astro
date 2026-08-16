@@ -11,26 +11,27 @@ interface Props {
 }
 
 const { title, description, current } = Astro.props;
-const site = "https://openworksai.app";
 const path = Astro.url.pathname;
+const here = new URL(path, Astro.site).href;
 
 // A breadcrumb is what puts "openworksai.app > Docs > Intake" in a result
 // rather than a bare URL, which is most of the value of marking a docs page
-// up at all.
+// up at all. Every crumb carries the trailing slash the page canonicalises to,
+// so a crawler following one is not answered with a redirect.
 const crumbs = [
-  { name: "Openworks", item: `${site}/` },
-  { name: "Docs", item: `${site}/docs` },
+  { name: "Openworks", item: new URL("/", Astro.site).href },
+  { name: "Docs", item: new URL("/docs/", Astro.site).href },
 ];
-if (current !== "index") crumbs.push({ name: title, item: new URL(path, site).href });
+if (current !== "index") crumbs.push({ name: title, item: here });
 
 const schema = [
   {
     "@type": "TechArticle",
     headline: title,
     description,
-    url: new URL(path, site).href,
+    url: here,
     inLanguage: "en",
-    about: { "@id": `${site}/#app` },
+    about: { "@id": new URL("/#app", Astro.site).href },
     author: { "@type": "Person", name: "Seonglae Cho" },
     breadcrumb: {
       "@type": "BreadcrumbList",
