@@ -53,11 +53,6 @@ posts five is an agent nobody reads.
 ## Cost
 
 A run costs a CLI invocation against a subscription you already pay for, not a
-metered API call. This is the whole reason the dispatch layer exists: when each
-autonomous reaction is a purchase, a product that reacts without asking has to
-ask, or batch, or ration, and all three close the process back up. See
-[Agent CLIs](/docs/agent-clis/).
-
-What it does cost is quota and wall clock. A subscription plan has rate limits,
-and the fallback order exists partly because one provider runs out before the
-others do.
+metered API call, and quota and wall clock are what bound it. That is the whole
+reason subscriptions can fire without asking you first;
+[Agent CLIs](/docs/agent-clis/) has the argument.

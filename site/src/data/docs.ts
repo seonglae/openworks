@@ -62,7 +62,7 @@ export const DOC_GROUPS: DocGroup[] = [
       {
         slug: "mcp",
         title: "MCP server",
-        blurb: "Around fifty tools so codex, gemini and claude can read and write the graph directly.",
+        blurb: "~50 tools so codex, antigravity and claude can read and write the graph directly.",
       },
       {
         slug: "workers",
