@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter openworks-browser exec vite build",
+  "buildCommand": "if [ -n \"$CONVEX_DEPLOY_KEY\" ]; then npx convex deploy --cmd-url-env-var-name VITE_CONVEX_URL --cmd 'pnpm build:app'; else pnpm build:app; fi",
   "outputDirectory": "browser/dist",
   "headers": [
     {

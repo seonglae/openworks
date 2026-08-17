@@ -27,7 +27,10 @@ jobs:
       - run: pnpm test
       # tsc reads the sources; this reads what the bundler makes of them, which
       # is where a bad import or a missing asset actually shows up. It needs no
-      # browser env file: the deployment URL is read at runtime.
+      # browser env file: Vite substitutes an unset `VITE_` var with undefined,
+      # so the build is green and only a loaded page would fail. The deployment
+      # URL is compiled in, not read at runtime, which is why a deploy that
+      # changes it has to rebuild rather than restart.
       - run: pnpm --filter openworks-browser exec vite build
       # `astro check` above types the sources; this renders them. getStaticPaths
       # runs here and nowhere else, so a docs page listed in the sidebar with no

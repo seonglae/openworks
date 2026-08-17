@@ -239,7 +239,9 @@ h1 {
   align-items: center;
 }
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--slate);
   background: var(--slate);
   color: var(--bg);
@@ -247,6 +249,15 @@ h1 {
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
+}
+/* The homepage draws a vendor mark inline rather than loading the vendor's own
+   button image: it inherits the theme and costs the landing page no second
+   origin. The docs keep the image, being markdown that GitHub renders too. */
+.btn svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  flex: none;
 }
 .btn:hover {
   opacity: 0.84;

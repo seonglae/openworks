@@ -14,6 +14,11 @@ export const DOC_GROUPS: DocGroup[] = [
         blurb: "Clone, provision a Convex deployment, close the backend, and get the UI and the two workers up.",
       },
       {
+        slug: "deploy",
+        title: "Deploying",
+        blurb: "One click puts the backend and the UI in your own Vercel and Convex accounts. The workers stay local.",
+      },
+      {
         slug: "concepts",
         title: "Concepts",
         blurb: "Projects, entities, references and comments: the substrate every feature is built on.",
