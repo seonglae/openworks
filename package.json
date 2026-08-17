@@ -16,6 +16,7 @@
     "ios:build": "tauri ios build",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
+    "build:app": "pnpm --filter openworks-browser exec vite build",
     "site:deploy": "pnpm --filter openworks-site build && wrangler pages deploy site/dist --project-name=openworks --branch=main --commit-dirty=true",
     "site:build": "pnpm --filter openworks-site build"
   },

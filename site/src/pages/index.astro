@@ -2,11 +2,11 @@
 import Base from "../layouts/Base.astro";
 import SiteNav from "../components/SiteNav.astro";
 import SiteFooter from "../components/SiteFooter.astro";
-import { PRODUCT_LEDE } from "../data/product";
+import { DEPLOY_URL, PRODUCT_LEDE } from "../data/product";
 
 const faq = [
   { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, antigravity or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
-  { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. You run your own deployment under your own logins." },
+  { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. That is a claim about whose keys run the work, not about how much setup you deserve: the deploy button provisions into a Vercel project and a Convex project that are yours, and the workers stay where your agent CLIs are signed in." },
   { q: "What does Openworks cost?", a: "Nothing. Convex has a free tier sufficient for a single operator, the agent CLIs run on subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0." },
   { q: "Can agents act on their own?", a: "Yes. An agent subscription binds an agent to an event type and scope. On a matching event a run is queued, a worker claims it, spawns the CLI, and posts the result back as a comment." },
 ];
@@ -39,7 +39,13 @@ const schema = [
               <li>No subscription to us</li>
             </ul>
             <div class="cta">
-              <a class="btn" href="#setup">Run it locally</a>
+              <a class="btn" href={DEPLOY_URL}>
+                <svg viewBox="0 0 76 65" aria-hidden="true" focusable="false">
+                  <path d="M37.53 0 75.05 65H0Z"></path>
+                </svg>
+                Deploy to Vercel
+              </a>
+              <a class="btn btn-ghost" href="#setup">Run it locally</a>
               <a class="btn btn-ghost" href="https://github.com/seonglae/openworks">Source</a>
               <span class="note">Apache-2.0 · pre-release</span>
             </div>
@@ -178,20 +184,42 @@ const schema = [
           <section id="setup">
             <h2>Setup</h2>
             <p>
+              Two halves, and they are provisioned separately. The page and the database can sit anywhere. The workers
+              run where your agent CLIs are already signed in, which is your own machine, and that is the architecture
+              rather than a limitation of the button.
+            </p>
+
+            <h3>Hosted, in one click</h3>
+            <p>
+              <a class="btn" href={DEPLOY_URL}>
+                <svg viewBox="0 0 76 65" aria-hidden="true" focusable="false">
+                  <path d="M37.53 0 75.05 65H0Z"></path>
+                </svg>
+                Deploy to Vercel
+              </a>
+            </p>
+            <p>
+              Clones the repository into your own account, provisions a Convex project through the Vercel Marketplace,
+              and builds the backend and the UI in a single command. Three variables on the Convex deployment afterwards
+              and it is yours. <a href="/docs/deploy/">What that flow does, step by step</a>.
+            </p>
+
+            <h3>Local</h3>
+            <p>
               Node 22+, pnpm, a free <a href="https://convex.dev">Convex</a> account, and at least one agent CLI you are
               already signed in to.
             </p>
             <pre><code>git clone https://github.com/seonglae/openworks.git
-  cd openworks
-  pnpm install
-  
-  # provision the backend and write .env.local
-  npx convex dev --once
-  
-  # the backend refuses every call until this is set
-  npx convex env set OPENWORKS_SERVICE_KEY "$(openssl rand -hex 32)"
-  
-  pnpm --filter openworks-browser dev</code></pre>
+cd openworks
+pnpm install
+
+# provision the backend and write .env.local
+npx convex dev --once
+
+# the backend refuses every call until this is set
+npx convex env set OPENWORKS_SERVICE_KEY "$(openssl rand -hex 32)"
+
+pnpm --filter openworks-browser dev</code></pre>
             <p>
               The UI comes up on <code>localhost:6001</code>. Workers are separate processes:
               <code>scripts/worker.mts</code> handles intake, chat and PR fixes,
@@ -216,8 +244,13 @@ const schema = [
               <summary>Is there a hosted version I can sign up for?</summary>
               <p>
                 No, and that is deliberate. Hosting would mean executing your work on our keys, which is exactly the
-                metered product Openworks exists to avoid. You run your own deployment, on your own machine, under your
-                own logins.
+                metered product Openworks exists to avoid.
+              </p>
+              <p>
+                That is a claim about whose keys run the work, not about how much setup you deserve. The
+                <a href="#setup">deploy button</a> provisions a Vercel project and a Convex project that are yours, and
+                what it leaves behind is the honest split: the page and the database can sit anywhere, while the
+                processes that spend your agent quota stay where your logins already are.
               </p>
             </details>
   
