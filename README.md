@@ -19,6 +19,15 @@ Interfaces will still move.
 **Docs: [openworksai.app/docs](https://openworksai.app/docs)**, one page per
 surface, written from `docs/` in this repo.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20humans%20and%20AI%20agents%20work%20the%20same%20material%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
+
+Clones this repo into your account, provisions a Convex project through the
+Vercel Marketplace, and builds the backend and the UI in one command. Three
+variables on the Convex deployment and it is yours:
+[deploying](https://openworksai.app/docs/deploy/). The workers stay on your
+machine either way, because every model call goes to an agent CLI signed in as
+you.
+
 ---
 
 ## Why
@@ -77,6 +86,11 @@ your jobs on your machine under your own logins. There is no hosted tier, becaus
 hosting would mean executing someone else's work on our own keys, which is the metered
 product this exists to avoid.
 
+That is a claim about whose keys run the work, not about how much setup you deserve.
+The deploy button above provisions into accounts that are yours, and the split it
+leaves behind is the honest one: the page and the database can sit anywhere, while the
+processes that spend your agent quota stay where your logins already are.
+
 ## What it does
 
 | Surface       |                                                                                                                              |
@@ -110,6 +124,9 @@ Gmail's 102KB clipping threshold once both MIME parts are base64.
   deployment beyond localhost
 
 ## Setup
+
+Everything below is the local path, which is also what you run alongside a hosted
+deployment. For the hosted half, see [deploying](https://openworksai.app/docs/deploy/).
 
 ```bash
 git clone https://github.com/seonglae/openworks.git
