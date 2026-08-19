@@ -156,13 +156,13 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
   return (
     <div className="panel anim d2">
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <span className="mono text-[11px] uppercase tracking-wider text-rust">
+        <span className="mono text-[11px] tracking-wider text-rust">
           {dueData?.dueCount ?? 0} due · {dueData?.total ?? 0} total
         </span>
         <button
           onClick={toggleRemind}
           title="Notify when expressions are due (PWA / home-screen app)"
-          className={`mono text-[10px] uppercase tracking-wider ${remind ? "text-rust" : "text-ink-4 hover:text-rust"}`}
+          className={`mono text-[10px] tracking-wider ${remind ? "text-rust" : "text-ink-4 hover:text-rust"}`}
         >
           {remind ? "🔔 reminders on" : "remind me"}
         </button>
@@ -173,14 +173,14 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
               setFlipped(false);
             }}
             disabled={(dueData?.dueCount ?? 0) === 0}
-            className="droplet ml-auto px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40"
+            className="droplet ml-auto px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
           >
             start review
           </button>
         ) : (
           <button
             onClick={() => setReviewing(false)}
-            className="ml-auto mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+            className="ml-auto mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
           >
             end review
           </button>
@@ -205,7 +205,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
                       <button
                         key={g}
                         onClick={() => grade(g)}
-                        className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust"
+                        className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust"
                       >
                         {g}
                       </button>
@@ -215,7 +215,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
               ) : (
                 <button
                   onClick={() => setFlipped(true)}
-                  className="mt-4 mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                  className="mt-4 mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                 >
                   show answer
                 </button>
@@ -260,13 +260,13 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
       <button
         onClick={submit}
         disabled={!form.en.trim()}
-        className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40 mb-4"
+        className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40 mb-4"
       >
         + add expression
       </button>
 
       <details className="mb-6">
-        <summary className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+        <summary className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
           bulk import
         </summary>
         <textarea
@@ -280,7 +280,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
           <button
             onClick={bulkImport}
             disabled={!bulk.trim()}
-            className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
+            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
           >
             import
           </button>
@@ -289,7 +289,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
       </details>
 
       <details className="mb-6">
-        <summary className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+        <summary className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
           import from notion
         </summary>
         <input
@@ -302,7 +302,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
           <button
             onClick={doNotionImport}
             disabled={!notionPage.trim()}
-            className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
+            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
           >
             import
           </button>
@@ -330,7 +330,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
             <span className="mono text-[9px] text-ink-4 ml-auto shrink-0">due {x.due.slice(5)}</span>
             <button
               onClick={() => removeExpr({ id: x._id })}
-              className="mono text-[9px] uppercase tracking-wider text-ink-4 hover:text-rust opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+              className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
             >
               del
             </button>
@@ -339,7 +339,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
       </ul>
 
       <div className="mt-6 pt-4 border-t border-rule-light flex items-center gap-2 flex-wrap">
-        <span className="mono text-[9px] uppercase tracking-wider text-ink-4">Notion DB</span>
+        <span className="mono text-[9px] tracking-wider text-ink-4">Notion DB</span>
         <input
           className={`${field} flex-1 min-w-[180px]`}
           placeholder="Notion database id"
@@ -349,7 +349,7 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
         <button
           onClick={doExport}
           disabled={!dbId.trim()}
-          className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
+          className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
         >
           export to Notion
         </button>

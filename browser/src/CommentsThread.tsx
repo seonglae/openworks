@@ -171,7 +171,7 @@ export function CommentsThread({ researchSlug, targetType, targetKey, targetVenu
 
   return (
     <div className="mt-3 pt-3 border-t border-rule-light">
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-1">
+      <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">
         Comments {total > 0 && <span className="text-ink-3">({total})</span>}
       </div>
       {tree.length === 0 && <div className="mono text-[10px] text-ink-4 py-1">no comments yet</div>}
@@ -199,7 +199,7 @@ export function CommentsThread({ researchSlug, targetType, targetKey, targetVenu
             <button
               type="submit"
               disabled={posting || !body.trim()}
-              className="mono text-[10px] uppercase tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 disabled:hover:bg-transparent transition-colors rounded-full"
+              className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 disabled:hover:bg-transparent transition-colors rounded-full"
             >
               {posting ? "posting..." : "post"}
             </button>

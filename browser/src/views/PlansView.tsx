@@ -39,7 +39,8 @@ export function PlansView() {
   if (allPlans.length === 0) {
     return (
       <div className="text-ink-4 mono text-xs py-8">
-        No plans found. Run <code className="text-ink-2">node scripts/sync-plans.mjs</code> to sync from ../PR/**/plan.md
+        No plans found. Run <code className="text-ink-2">node scripts/sync-plans.mjs</code> to sync from
+        ../PR/**/plan.md
       </div>
     );
   }
@@ -110,7 +111,7 @@ function TripsSidebar({
   const fmt = (d: string | null) => (d ? d.slice(5).replace("-", "/") : "");
   return (
     <div className="shrink-0 w-full sm:w-44">
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2 px-1">Itineraries</div>
+      <div className="mono text-[10px] tracking-wider text-ink-4 mb-2 px-1">Itineraries</div>
       <div className="flex flex-row flex-wrap sm:flex-col gap-1">
         {plans.map((p) => {
           const active = p.slug === selectedSlug;
@@ -177,7 +178,7 @@ function PlanDetail({
   const toggleBtn = (v: "calendar" | "list" | "map", label: string) => (
     <button
       onClick={() => setView(v)}
-      className={`mono text-[10px] uppercase tracking-wider px-3 py-0.5 rounded-full transition-colors relative z-10 ${view === v ? "droplet text-rust" : "text-ink-3 hover:text-ink"}`}
+      className={`mono text-[10px] tracking-wider px-3 py-0.5 rounded-full transition-colors relative z-10 ${view === v ? "droplet text-rust" : "text-ink-3 hover:text-ink"}`}
     >
       {label}
     </button>
@@ -746,7 +747,7 @@ function PlanCalendar({
               </button>
               <div className="flex items-center gap-1 mb-1.5 flex-wrap">
                 {isMonthStart && (
-                  <span className="mono text-[8px] uppercase tracking-wider text-rust mr-0.5">
+                  <span className="mono text-[8px] tracking-wider text-rust mr-0.5">
                     {MONTH_ABBR[monthIndex(date)]}
                   </span>
                 )}
@@ -798,7 +799,7 @@ function PlanCalendar({
       <div className="flex justify-center mt-3">
         <button
           onClick={() => setWeeks((w) => w + 5)}
-          className="mono text-[10px] uppercase tracking-wider px-3 py-1 text-ink-4 hover:text-rust transition-colors rounded-full"
+          className="mono text-[10px] tracking-wider px-3 py-1 text-ink-4 hover:text-rust transition-colors rounded-full"
         >
           load more weeks
         </button>
@@ -813,13 +814,13 @@ function PlanCalendar({
           >
             <div className="panel max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-3">
-                <span className="mono text-[11px] uppercase tracking-wider text-rust">
+                <span className="mono text-[11px] tracking-wider text-rust">
                   {modalDates[0]?.replace(/-/g, "/")}
                   {modalDates.length > 1 ? ` → ${modalDates[modalDates.length - 1].replace(/-/g, "/")}` : ""}
                 </span>
                 <button
                   onClick={() => setModal(null)}
-                  className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                  className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                 >
                   close
                 </button>
@@ -841,7 +842,7 @@ function PlanCalendar({
                         <button
                           title="add event"
                           onClick={() => setEditor({ date, slug: its[0]?.planSlug ?? defaultSlug })}
-                          className="ml-auto mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                          className="ml-auto mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                         >
                           + add
                         </button>
@@ -866,14 +867,14 @@ function PlanCalendar({
                                   <button
                                     title="edit"
                                     onClick={() => setEditor({ date: it.date, slug: it.planSlug, item: it })}
-                                    className="mono text-[9px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
                                   >
                                     edit
                                   </button>
                                   <button
                                     title={arch ? "restore" : "archive"}
                                     onClick={() => setArchived({ itemId: it._id, archived: !arch })}
-                                    className="mono text-[9px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
                                   >
                                     {arch ? "restore" : "archive"}
                                   </button>
@@ -971,8 +972,8 @@ function EventEditor({
     >
       <div className="panel max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-3">
-          <span className="mono text-[11px] uppercase tracking-wider text-rust">{it ? "edit event" : "new event"}</span>
-          <button onClick={onClose} className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust">
+          <span className="mono text-[11px] tracking-wider text-rust">{it ? "edit event" : "new event"}</span>
+          <button onClick={onClose} className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust">
             close
           </button>
         </div>
@@ -1011,7 +1012,7 @@ function EventEditor({
           <button
             onClick={save}
             disabled={!title.trim() || busy}
-            className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40"
+            className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
           >
             {it ? "save" : "add"}
           </button>
@@ -1022,7 +1023,7 @@ function EventEditor({
                   await onArchive({ itemId: it._id, archived: !archived });
                   onClose();
                 }}
-                className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
               >
                 {archived ? "restore" : "archive"}
               </button>
@@ -1031,7 +1032,7 @@ function EventEditor({
                   await onDelete({ itemId: it._id });
                   onClose();
                 }}
-                className="ml-auto mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                className="ml-auto mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
               >
                 delete
               </button>
@@ -1209,7 +1210,7 @@ function PlanMap({ items, plans }: { items: Doc<"planItems">[]; plans: { locatio
 
       {flights.length > 0 && (
         <div className="mt-5">
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">
             travel records · {flights.length} flights
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -1345,7 +1346,7 @@ function DayBlock({
       <div className="flex items-baseline gap-3 mb-2">
         <h2 className="font-serif text-lg text-ink">{day.date}</h2>
         {day.dayLabel && <span className="mono text-xs text-ink-3">{day.dayLabel}</span>}
-        {city && <span className="mono text-[10px] uppercase tracking-wide text-ink-3">{city}</span>}
+        {city && <span className="mono text-[10px] tracking-wide text-ink-3">{city}</span>}
         {wx && (
           <span className="mono text-[10px] text-ink-3">
             {wx.icon} {wx.hi}°/{wx.lo}°
@@ -1377,7 +1378,7 @@ function DayBlock({
         <div>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1.5 mono text-[10px] text-ink-4 hover:text-ink-2 uppercase tracking-wider mb-1 transition-colors"
+            className="flex items-center gap-1.5 mono text-[10px] text-ink-4 hover:text-ink-2 tracking-wider mb-1 transition-colors"
           >
             {expanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
             <span>

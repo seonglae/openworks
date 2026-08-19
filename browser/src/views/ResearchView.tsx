@@ -98,7 +98,7 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
             const r = await requestPhaseInferAll({ kind });
             console.log(`queued ${r.queued} phase-infer runs`);
           }}
-          className="ml-auto mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-ink-4 hover:text-rust transition-colors rounded-full"
+          className="ml-auto mono text-[10px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-rust transition-colors rounded-full"
           title="Spawn one subagent per project: analyses folder + git log and rewrites phase + timeline"
         >
           infer phases all
@@ -369,7 +369,7 @@ function ResearchRow({
       {expanded && (
         <div className="pl-8 pb-3 space-y-3">
           <div>
-            <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5 flex items-center gap-2">
+            <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5 flex items-center gap-2">
               <span>keywords</span>
               <button onClick={() => setEditingKeywords(!editingKeywords)} className="text-ink-4 hover:text-ink-2">
                 {editingKeywords ? "cancel" : "edit"}
@@ -417,7 +417,7 @@ function ResearchRow({
 
           {timeline && timeline.length > 0 && (
             <div>
-              <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">timeline</div>
+              <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">timeline</div>
               <div className="space-y-0.5 max-h-48 overflow-y-auto">
                 {timeline.map((t) => (
                   <div key={t._id} className="flex items-center gap-2 text-[11px]">
@@ -445,9 +445,7 @@ function ResearchRow({
 
           {fileSummary && (
             <div>
-              <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">
-                files ({fileSummary.total})
-              </div>
+              <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">files ({fileSummary.total})</div>
               <div className="flex flex-wrap gap-1">
                 {Object.entries(fileSummary.byType).map(([t, n]) => (
                   <span key={t} className="mono text-[10px] text-ink-3 bg-paper-warm px-1.5 py-0.5 rounded">
@@ -460,7 +458,7 @@ function ResearchRow({
 
           {arxivPapers && arxivPapers.length > 0 && (
             <div>
-              <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">
+              <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">
                 arxiv papers ({arxivPapers.length})
               </div>
               <div className="space-y-0.5">
@@ -506,7 +504,7 @@ function ResearchRow({
           <CitationsPanel researchSlug={project.slug} />
 
           <div>
-            <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">
+            <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">
               related ({relatedJobs?.filter((rj) => rj.type === "paper" || rj.type === "article").length ?? "..."})
             </div>
             {relatedJobs && relatedJobs.length === 0 ? (
@@ -525,7 +523,7 @@ function ResearchRow({
                     >
                       <span className="mono text-[11px] text-ink-3 w-[40px]">{(rj.score * 100).toFixed(0)}%</span>
                       <span
-                        className={`mono text-[10px] uppercase tracking-wider w-[60px] shrink-0 ${
+                        className={`mono text-[10px] tracking-wider w-[60px] shrink-0 ${
                           rj.type === "paper" ? "text-rust" : "text-ink-3"
                         }`}
                       >
@@ -539,7 +537,7 @@ function ResearchRow({
           </div>
 
           <div>
-            <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">
+            <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">
               related plan items (
               {relatedPlans?.filter((rp) => rp.score > (usingEmbedding ? 0.25 : 0.02)).length ?? "..."})
             </div>
@@ -560,7 +558,7 @@ function ResearchRow({
             )}
           </div>
           <div>
-            <div className="mono text-xs font-bold text-ink-2 uppercase tracking-wide mb-1.5">visibility</div>
+            <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">visibility</div>
             <div className="flex items-center gap-2">
               <select
                 value={project.visibility ?? "private"}

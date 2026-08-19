@@ -118,7 +118,7 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
               <button
                 onClick={handleProcessAll}
                 disabled={processingAll}
-                className="mono text-[10px] uppercase tracking-wider text-rust hover:bg-rust-dim disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
+                className="mono text-[10px] tracking-wider text-rust hover:bg-rust-dim disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
               >
                 {processingAll ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
                 process all ({visible.length})
@@ -127,7 +127,7 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
             <button
               onClick={refresh}
               disabled={loading}
-              className="mono text-[10px] uppercase tracking-wider text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
+              className="mono text-[10px] tracking-wider text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
             >
               {loading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
               refresh
@@ -159,7 +159,7 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
                 <button
                   onClick={() => handleAdd(entry)}
                   disabled={adding.has(entry.id)}
-                  className="mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 shrink-0 rounded-full"
+                  className="mono text-[10px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 shrink-0 rounded-full"
                 >
                   {adding.has(entry.id) ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
                   read &amp; process

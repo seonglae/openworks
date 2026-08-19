@@ -210,7 +210,7 @@ function Masthead({
           <>
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="mono text-[10px] uppercase tracking-wider text-ink-3 hover:text-ink px-2 py-0.5 rounded-full">
+                <button className="mono text-[10px] tracking-wider text-ink-3 hover:text-ink px-2 py-0.5 rounded-full">
                   Sign in
                 </button>
               </SignInButton>
@@ -286,7 +286,7 @@ function SortableTab({
         onSelect(m.key);
       }}
       data-tabkey={m.key}
-      className={`relative z-10 flex w-full items-center gap-2.5 px-3 py-2 mono text-xs uppercase tracking-wider transition-colors cursor-pointer select-none outline-none rounded-xl whitespace-nowrap
+      className={`relative z-10 flex w-full items-center gap-2.5 px-3 py-2 mono text-xs tracking-wider transition-colors cursor-pointer select-none outline-none rounded-xl whitespace-nowrap
         ${isActive ? "text-rust" : "text-ink-3 hover:text-ink"}
       `}
     >
@@ -998,7 +998,7 @@ export default function App() {
                     onClick={() => {
                       setSearchContent((v) => !v);
                     }}
-                    className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors ${searchContent ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
+                    className={`mono text-[10px] tracking-wider px-2 py-0.5 transition-colors ${searchContent ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
                     title={
                       searchContent
                         ? "Filter scope: title + summary + chat + full content"
@@ -1011,7 +1011,7 @@ export default function App() {
                   {mode === "newsletter" && (
                     <button
                       onClick={() => setShowMailbox(true)}
-                      className="mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-ink-4 hover:text-ink-3 transition-colors rounded-full"
+                      className="mono text-[10px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-ink-3 transition-colors rounded-full"
                       title="Open inbox of unread newsletters"
                     >
                       <Mail size={10} className="inline mr-1" />
@@ -1022,7 +1022,7 @@ export default function App() {
                     onClick={() => {
                       toggleArchived(!showArchived);
                     }}
-                    className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors ${showArchived ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
+                    className={`mono text-[10px] tracking-wider px-2 py-0.5 transition-colors ${showArchived ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
                   >
                     <Archive size={10} className="inline mr-1" />
                     {showArchived ? "Viewing archived" : "Archived"}
@@ -1063,10 +1063,7 @@ export default function App() {
                     ))}
                   </div>
                   {!isDateFiltered && !isSearching && (
-                    <div
-                      ref={jobsSentinelRef}
-                      className="py-6 text-center mono text-[10px] uppercase tracking-wider text-ink-4"
-                    >
+                    <div ref={jobsSentinelRef} className="py-6 text-center mono text-[10px] tracking-wider text-ink-4">
                       {jobsStatus === "LoadingMore"
                         ? "loading…"
                         : jobsStatus === "Exhausted"
