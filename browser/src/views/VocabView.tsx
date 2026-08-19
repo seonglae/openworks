@@ -3,28 +3,16 @@ import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { localDate } from "../shared/date";
 
-// Running inside the native Tauri shell (iOS/desktop) vs a plain browser/PWA.
-const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-
-// Request notification permission via the native plugin when in Tauri, else
-// the Web Notifications API. Returns whether permission is granted.
+// The browser reaches for the Web Notifications API and nothing else. There
+// used to be a second branch here for the Tauri shell; the phone client is a
+// native app now (ios/), so the shell and its plugin are gone.
 async function ensureNotifyPermission(): Promise<boolean> {
-  if (isTauri) {
-    const n = await import("@tauri-apps/plugin-notification");
-    if (await n.isPermissionGranted()) return true;
-    return (await n.requestPermission()) === "granted";
-  }
   if (typeof Notification === "undefined") return false;
   if (Notification.permission === "granted") return true;
   return (await Notification.requestPermission()) === "granted";
 }
 
 async function fireNotification(title: string, body: string): Promise<void> {
-  if (isTauri) {
-    const n = await import("@tauri-apps/plugin-notification");
-    if (await n.isPermissionGranted()) n.sendNotification({ title, body });
-    return;
-  }
   if (typeof Notification !== "undefined" && Notification.permission === "granted") {
     new Notification(title, { body, tag: "vocab-due" });
   }

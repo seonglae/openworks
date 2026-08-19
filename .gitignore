@@ -45,3 +45,9 @@ browser/*.png
 # by `pnpm site:build`. 10MB of build output, rebuilt every time, so it is not
 # the repo's to carry.
 browser/dist-demo/
+
+# iOS: the signing config, the generated project, and the generated plist.
+ios/**/Secrets.xcconfig
+ios/**/*.xcodeproj/
+ios/**/Info.plist
+ios/**/build/
