@@ -17,6 +17,9 @@ final class AppState: ObservableObject {
 @main
 struct OpenworksApp: App {
     @StateObject private var state = AppState.shared
+    // APNs calls back on a UIApplicationDelegate and SwiftUI has none, so one
+    // is adapted in for the token handoff.
+    @UIApplicationDelegateAdaptor(PushDelegate.self) private var pushDelegate
 
     var body: some Scene {
         WindowGroup {
@@ -36,6 +39,7 @@ struct OpenworksApp: App {
             }
             .tint(Theme.slate)
             .environmentObject(state)
+            .task { await Push.shared.refreshState() }
         }
     }
 }

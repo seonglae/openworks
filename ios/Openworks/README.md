@@ -65,8 +65,30 @@ App/SettingsView.swift    connection
 
 Deployment target iOS 17. No third-party dependencies.
 
-## Not here yet
+## Push
 
-Push. The backend's `convex/push.ts` is Web Push (VAPID), which a native app
-cannot subscribe to; it needs an APNs path of its own before the phone can be
-woken by anything.
+The phone registers an APNs token with the deployment, and the same broadcast
+that already sends Web Push on a summary landing sends to it. The app does not
+ask on launch: a notification prompt before the app has shown anything worth
+being notified about is the one that gets denied, and iOS only asks once, so
+the switch is on the Settings screen.
+
+Three values on the deployment, from an APNs auth key:
+
+```bash
+npx convex env set APNS_KEY_ID   ABC123DEFG
+npx convex env set APNS_TEAM_ID  YOURTEAMID
+npx convex env set APNS_AUTH_KEY "$(cat AuthKey_ABC123DEFG.p8)"
+```
+
+The key is one `.p8` for the whole team, made once at
+**developer.apple.com → Certificates, Identifiers & Profiles → Keys → +**, with
+Apple Push Notifications service (APNs) ticked. Apple lets you download it
+exactly once; the key id is in the filename. Unset, the backend sends Web Push
+and skips the phones rather than failing, which is the right behaviour for a
+deployment nobody has built this app for.
+
+The bundle id needs Push Notifications enabled on its App ID, and
+`aps-environment` is in `project.yml` as `development`: a build installed from
+Xcode gets a sandbox token, and the app reads the entitlement back out of its
+own provisioning profile so the backend knows which APNs host to send to.

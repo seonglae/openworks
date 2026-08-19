@@ -1,9 +1,77 @@
 "use node";
 
+import http2 from "node:http2";
 import { v } from "convex/values";
 import webpush from "web-push";
 import { internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { providerToken } from "./apnsToken";
+
+// --- APNs ------------------------------------------------------------------
+//
+// Token-based auth, which is one .p8 signing key for the whole team rather than
+// a per-app certificate that expires every year. The provider token is a JWT
+// this signs itself: no dependency, because ES256 is exactly what
+// `crypto.sign` does when told to emit the raw r||s pair JOSE wants instead of
+// the DER wrapper OpenSSL defaults to.
+//
+// APNs is HTTP/2 only, and there is no HTTP/1.1 fallback to degrade to, so this
+// opens a session per broadcast. One session carries every device.
+const APNS_HOST = {
+  sandbox: "https://api.sandbox.push.apple.com",
+  production: "https://api.push.apple.com",
+} as const;
+
+type ApnsResult = { token: string; status: number; reason?: string };
+
+// One HTTP/2 session, one request per device, resolved together. The session is
+// closed in a finally so a throw mid-flight cannot leak it into the runtime.
+async function sendApns(
+  host: string,
+  jwt: string,
+  topic: string,
+  devices: { token: string }[],
+  payload: unknown,
+): Promise<ApnsResult[]> {
+  const client = http2.connect(host);
+  try {
+    return await Promise.all(
+      devices.map(
+        (d) =>
+          new Promise<ApnsResult>((resolve) => {
+            const req = client.request({
+              ":method": "POST",
+              ":path": `/3/device/${d.token}`,
+              authorization: `bearer ${jwt}`,
+              "apns-topic": topic,
+              "apns-push-type": "alert",
+              "apns-priority": "10",
+            });
+            let status = 0;
+            let raw = "";
+            req.on("response", (headers) => {
+              status = Number(headers[":status"] ?? 0);
+            });
+            req.setEncoding("utf8");
+            req.on("data", (chunk: string) => (raw += chunk));
+            req.on("error", (e) => resolve({ token: d.token, status: 0, reason: String(e?.message ?? e) }));
+            req.on("end", () => {
+              let reason: string | undefined;
+              try {
+                reason = raw ? JSON.parse(raw).reason : undefined;
+              } catch {
+                reason = raw.slice(0, 120) || undefined;
+              }
+              resolve({ token: d.token, status, reason });
+            });
+            req.end(JSON.stringify(payload));
+          }),
+      ),
+    );
+  } finally {
+    client.close();
+  }
+}
 
 // Encrypt + deliver one Web Push payload to every stored subscription. Runs in
 // the Node runtime because web-push uses Node crypto/https. Dead subscriptions
@@ -37,6 +105,74 @@ export const broadcast = internalAction({
         }
       }
     }
-    return { sent, failed };
+    const apns = await deliverApns(ctx, args);
+    return { sent: sent + apns.sent, failed: failed + apns.failed };
   },
 });
+
+// The phones, delivered from the same broadcast so every existing caller
+// reaches them with no new call site: a summary landing already schedules this,
+// and the settings test button already runs it.
+//
+// Unconfigured is not a failure. A deployment with no APNs key is the normal
+// state for anyone who has not built the iOS app, and throwing here would take
+// the Web Push half down with it.
+async function deliverApns(
+  ctx: { runQuery: (ref: any, args: any) => Promise<any>; runMutation: (ref: any, args: any) => Promise<any> },
+  args: { title: string; body: string; url: string },
+): Promise<{ sent: number; failed: number }> {
+  const keyId = process.env.APNS_KEY_ID;
+  const teamId = process.env.APNS_TEAM_ID;
+  const p8 = process.env.APNS_AUTH_KEY;
+  if (!keyId || !teamId || !p8) return { sent: 0, failed: 0 };
+
+  const devices: { token: string; environment: "sandbox" | "production"; bundleId: string }[] = await ctx.runQuery(
+    internal.push.listDeviceTokens,
+    {},
+  );
+  if (devices.length === 0) return { sent: 0, failed: 0 };
+
+  const jwt = providerToken(keyId, teamId, p8);
+  const payload = {
+    aps: { alert: { title: args.title, body: args.body }, sound: "default" },
+    url: args.url,
+  };
+
+  let sent = 0;
+  let failed = 0;
+  // Grouped by host and topic: one session cannot serve both APNs environments,
+  // and the topic is the bundle id the token was issued for.
+  const groups = new Map<string, typeof devices>();
+  for (const d of devices) {
+    const key = `${d.environment}\u0000${d.bundleId}`;
+    groups.set(key, [...(groups.get(key) ?? []), d]);
+  }
+
+  for (const [key, group] of groups) {
+    const [environment, bundleId] = key.split("\u0000");
+    const host = APNS_HOST[environment as keyof typeof APNS_HOST];
+    let results: ApnsResult[];
+    try {
+      results = await sendApns(host, jwt, bundleId, group, payload);
+    } catch (e) {
+      console.warn(`[apns] ${environment} session failed: ${String(e)}`);
+      failed += group.length;
+      continue;
+    }
+    for (const r of results) {
+      if (r.status === 200) {
+        sent++;
+        continue;
+      }
+      failed++;
+      // 410 is APNs saying the app is gone from that device, which is the one
+      // answer that means the row is dead rather than the config being wrong.
+      if (r.status === 410 || r.reason === "Unregistered") {
+        await ctx.runMutation(internal.push.removeDeviceToken, { token: r.token });
+      } else {
+        console.warn(`[apns] ${r.status} ${r.reason ?? ""} for ${r.token.slice(0, 8)}…`);
+      }
+    }
+  }
+  return { sent, failed };
+}
