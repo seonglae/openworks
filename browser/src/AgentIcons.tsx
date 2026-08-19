@@ -46,7 +46,7 @@ export function AgentIcon({ provider, size = 12 }: { provider?: string; size?: n
   return (
     <span
       style={{ width: size, height: size, fontSize: size * 0.65 }}
-      className="inline-flex items-center justify-center rounded-full bg-ink-4/20 text-ink-3 mono uppercase leading-none"
+      className="inline-flex items-center justify-center rounded-full bg-ink-4/20 text-ink-3 mono leading-none"
     >
       {provider[0]}
     </span>

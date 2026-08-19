@@ -93,7 +93,7 @@ export function SummaryView({ jobId, jobType }: { jobId: Id<"jobs">; jobType?: s
                         throw err;
                       }
                     }}
-                    className={`shrink-0 self-center mono text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors flex items-center gap-1 ${
+                    className={`shrink-0 self-center mono text-[10px] tracking-wider px-2 py-0.5 transition-colors flex items-center gap-1 ${
                       pushed ? "text-ink-4 cursor-default" : "text-rust hover:bg-rust-dim"
                     } rounded-full`}
                     title={pushed ? "Queued in Paper tab" : "Queue as paper job (downloads PDF + extracts full text)"}
@@ -126,7 +126,7 @@ export function SummaryView({ jobId, jobType }: { jobId: Id<"jobs">; jobType?: s
                       throw err;
                     }
                   }}
-                  className={`shrink-0 self-center mono text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors flex items-center gap-1 ${
+                  className={`shrink-0 self-center mono text-[10px] tracking-wider px-2 py-0.5 transition-colors flex items-center gap-1 ${
                     pushed ? "text-ink-4 cursor-default" : "text-slate hover:bg-slate-dim"
                   } rounded-full`}
                   title={
@@ -256,13 +256,13 @@ function PeerReviewBlock({ s }: { s: Doc<"summaries"> }) {
     <div className="mt-2 mb-3 border-t border-rule-light pt-2 space-y-2">
       {s.researchLevel && (
         <div className="flex items-baseline gap-2">
-          <span className="mono text-[10px] uppercase tracking-wider text-ink-4">Research Level</span>
+          <span className="mono text-[10px] tracking-wider text-ink-4">Research Level</span>
           <span className="mono text-xs text-rust">{s.researchLevel}</span>
         </div>
       )}
       {aScores?.verdict && (
         <div className="flex items-baseline gap-2">
-          <span className="mono text-[10px] uppercase tracking-wider text-ink-4">Verdict</span>
+          <span className="mono text-[10px] tracking-wider text-ink-4">Verdict</span>
           <span className="mono text-xs text-rust">{aScores.verdict}</span>
         </div>
       )}
@@ -347,7 +347,7 @@ function PeerReviewBlock({ s }: { s: Doc<"summaries"> }) {
       )}
       {s.priorWork && s.priorWork.length > 0 && (
         <div>
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-1">Prior work</div>
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">Prior work</div>
           <ul className="space-y-0.5">
             {s.priorWork.map((p, i) => (
               <li key={i} className="text-xs text-ink-2">
@@ -360,7 +360,7 @@ function PeerReviewBlock({ s }: { s: Doc<"summaries"> }) {
       )}
       {s.reasoning && (
         <div>
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-1">Reasoning</div>
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">Reasoning</div>
           <div className="text-xs text-ink-2 leading-relaxed">{s.reasoning}</div>
         </div>
       )}

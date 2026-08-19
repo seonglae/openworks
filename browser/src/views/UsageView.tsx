@@ -23,7 +23,7 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="pr-8">
       <div className="serif text-[34px] leading-none text-ink">{value}</div>
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4 pt-1.5">{label}</div>
+      <div className="mono text-[10px] tracking-wider text-ink-4 pt-1.5">{label}</div>
     </div>
   );
 }
@@ -55,9 +55,7 @@ export function UsageView() {
           <button
             key={r}
             onClick={() => setDays(r)}
-            className={`mono text-[10px] uppercase tracking-wider ${
-              days === r ? "text-rust" : "text-ink-4 hover:text-ink"
-            }`}
+            className={`mono text-[10px] tracking-wider ${days === r ? "text-rust" : "text-ink-4 hover:text-ink"}`}
           >
             {r}d
           </button>
@@ -66,9 +64,7 @@ export function UsageView() {
         {data.devCount > 0 && (
           <button
             onClick={() => setIncludeDev((v) => !v)}
-            className={`mono text-[10px] uppercase tracking-wider ${
-              includeDev ? "text-rust" : "text-ink-4 hover:text-ink"
-            }`}
+            className={`mono text-[10px] tracking-wider ${includeDev ? "text-rust" : "text-ink-4 hover:text-ink"}`}
             title="Sessions served from localhost are usually you building the app, not using it"
           >
             {includeDev ? "with" : "without"} dev ({data.devCount})
@@ -89,7 +85,7 @@ export function UsageView() {
             <Stat value={String(data.totals.browsers)} label="browsers" />
           </div>
 
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">time by tab</div>
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">time by tab</div>
           <div className="mb-7">
             {data.tabs.map((t) => (
               <div key={t.tab} className="flex items-center gap-3 py-[3px]">
@@ -103,7 +99,7 @@ export function UsageView() {
             ))}
           </div>
 
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">per day</div>
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">per day</div>
           <div className="flex items-end gap-[3px] h-[72px] mb-1">
             {data.days.map((d) => (
               <div
@@ -119,7 +115,7 @@ export function UsageView() {
             <span>{data.days[data.days.length - 1]?.day ?? ""}</span>
           </div>
 
-          <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">moves between tabs</div>
+          <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">moves between tabs</div>
           {flow === undefined ? (
             <BlockSkeleton rows={3} />
           ) : flow.edges.length === 0 ? (

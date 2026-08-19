@@ -203,7 +203,7 @@ export function HostSetup({ researchSlug }: { researchSlug: string }) {
             <button
               onClick={onSave}
               disabled={saving || !machineId.trim() || !rootPath.trim()}
-              className="mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4"
+              className="mono text-[10px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4"
             >
               {saving ? "..." : "save"}
             </button>

@@ -36,7 +36,7 @@ export function DaySyncButton({ planSlug, date }: { planSlug: string; date: stri
     <button
       onClick={onClick}
       disabled={inFlight}
-      className={`mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 flex items-center gap-1 transition-colors ${
+      className={`mono text-[10px] tracking-wider px-1.5 py-0.5 flex items-center gap-1 transition-colors ${
         errored ? "text-red-500 hover:text-red-600" : "text-ink-4 hover:text-ink-2 disabled:text-ink-3"
       }`}
       title={tooltip}

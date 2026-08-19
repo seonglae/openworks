@@ -22,7 +22,7 @@ export function PaginationFooter({
   sentinelRef: React.Ref<HTMLDivElement>;
 }) {
   return (
-    <div ref={sentinelRef} className="py-6 text-center mono text-[10px] uppercase tracking-wider text-ink-4">
+    <div ref={sentinelRef} className="py-6 text-center mono text-[10px] tracking-wider text-ink-4">
       {status === "LoadingFirstPage" || status === "LoadingMore"
         ? "loading…"
         : status === "Exhausted" && count > 0
