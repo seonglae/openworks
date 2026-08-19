@@ -207,6 +207,11 @@ pnpm site:build    # the homepage and docs, into site/dist
 The docs on the site are the markdown in [`docs/`](docs), rendered. Change a
 feature and its page is in the same repository as the change.
 
+The phone client is a native SwiftUI app in [`ios/`](ios/Openworks), talking to
+the same Convex backend over the owner service key. It is not a wrapper around
+the web app: the desktop keeps the surfaces that need a keyboard and a canvas,
+and the phone gets reading, the plan, and the research timelines.
+
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE).
