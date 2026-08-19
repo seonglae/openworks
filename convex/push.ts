@@ -60,8 +60,9 @@ export const status = query({
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
     const all = await ctx.db.query("pushSubscriptions").collect();
+    const devices = await ctx.db.query("deviceTokens").collect();
     const subscribed = args.endpoint ? all.some((s) => s.endpoint === args.endpoint) : false;
-    return { subscribed, total: all.length };
+    return { subscribed, total: all.length, devices: devices.length };
   },
 });
 
@@ -75,6 +76,58 @@ export const sendTest = action({
       body: "Notifications are on — recommended reads will land here.",
       url: "/",
     });
+  },
+});
+
+// --- the native client ---
+
+// The phone hands over its APNs token after the user allows notifications.
+// Keyed by token so a relaunch refreshing the same token updates the row
+// instead of growing the table; iOS reissues tokens on restore and reinstall,
+// and the stale one is dropped when APNs answers Unregistered.
+export const registerDevice = mutation({
+  args: {
+    token: v.string(),
+    environment: v.union(v.literal("sandbox"), v.literal("production")),
+    bundleId: v.string(),
+    label: v.optional(v.string()),
+    serviceKey: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.serviceKey);
+    const existing = await ctx.db
+      .query("deviceTokens")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .unique();
+    const row = {
+      token: args.token,
+      environment: args.environment,
+      bundleId: args.bundleId,
+      label: args.label,
+      createdAt: Date.now(),
+    };
+    if (existing) await ctx.db.patch(existing._id, row);
+    else await ctx.db.insert("deviceTokens", row);
+    return { ok: true };
+  },
+});
+
+export const listDeviceTokens = internalQuery({
+  args: {},
+  handler: async (ctx) => await ctx.db.query("deviceTokens").collect(),
+});
+
+// APNs answers 410 Unregistered when the app is gone from the device. Anything
+// else (including BadDeviceToken on a first send) is left alone, because a
+// misconfigured environment would otherwise delete every token it touched.
+export const removeDeviceToken = internalMutation({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("deviceTokens")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .unique();
+    if (existing) await ctx.db.delete(existing._id);
   },
 });
 

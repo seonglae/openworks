@@ -10,6 +10,7 @@ struct SettingsView: View {
     @State private var msg: String?
     @State private var reached: Int?
     @State private var checking = false
+    @StateObject private var push = Push.shared
 
     var body: some View {
         NavigationStack {
@@ -45,6 +46,30 @@ struct SettingsView: View {
                     Text("Connection")
                 } footer: {
                     Text("Ends in .convex.cloud. The key is OPENWORKS_SERVICE_KEY on that deployment; it is stored on this device and sent nowhere else.")
+                }
+
+                Section {
+                    switch push.state {
+                    case .registered:
+                        LabeledContent("Notifications") { Text("On").foregroundStyle(Theme.sage) }
+                    case .asking:
+                        Text("Asking…").font(.caption).foregroundStyle(.secondary)
+                    case .denied:
+                        // Once iOS has a denial it will not ask again, so the
+                        // only way back is Settings, and saying so beats a
+                        // button that silently does nothing.
+                        Text("Denied. Turn them back on in iOS Settings → Openworks → Notifications.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    case let .failed(reason):
+                        Text(reason).font(.caption).foregroundStyle(Theme.rust)
+                    case .off, .unknown:
+                        Button("Turn on notifications") { Task { await push.enable() } }
+                            .disabled(!Convex.configured)
+                    }
+                } header: {
+                    Text("Notifications")
+                } footer: {
+                    Text("A push when a summary lands. The phone registers with this deployment, which needs an APNs key configured on it.")
                 }
 
                 if let msg {
