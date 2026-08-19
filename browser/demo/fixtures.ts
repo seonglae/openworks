@@ -138,6 +138,26 @@ const articleScores = [7.8, 6.2, 5.4, 7.1, 6.9];
 
 const dateSeries = (counts: number[]) => counts.map((count, i) => ({ date: iso(counts.length - 1 - i), count }));
 
+// One row per issue-date: [tldr, alphasignal, alphaxiv, paste] item counts.
+// `elements` is their sum, which is the bar's height, and `total` counts the
+// issues that landed that day rather than the items in them.
+const NL_SOURCES = ["tldr", "alphasignal", "alphaxiv", "paste"] as const;
+const newsletterDays = (rows: number[][]) =>
+  rows.map((row, i) => {
+    const srcElements: Record<string, number> = {};
+    row.forEach((n, s) => {
+      if (n > 0) srcElements[NL_SOURCES[s]] = n;
+    });
+    const total = Object.keys(srcElements).length;
+    return {
+      date: iso(rows.length - 1 - i),
+      total,
+      done: total,
+      elements: row.reduce((a, b) => a + b, 0),
+      srcElements,
+    };
+  });
+
 export const queries: Record<string, unknown> = {
   "jobs:count": 11,
   "settings:get": { tabs: ["newsletter", "paper", "article", "pr", "research", "vocab"] },
@@ -146,7 +166,27 @@ export const queries: Record<string, unknown> = {
     created: dateSeries([2, 5, 3, 8, 6, 4, 7, 9, 5, 3, 6, 8, 4, 7]),
     published: dateSeries([1, 4, 2, 6, 5, 3, 6, 7, 4, 2, 5, 6, 3, 5]),
   },
-  "jobs:newsletterStats": { total: 41, bySource: { "Weekly roundup": 22, "Papers digest": 12, Other: 7 } },
+  // Shaped as NlStats, not as it reads: the old value had `total` where the
+  // component wants `count` and no `byDate` at all, so NewsletterDistribution
+  // threw on `stats.byDate.length` and took the whole demo down with it. The
+  // source keys are the ones NL_SRC_ORDER stacks and colours; anything else
+  // falls through to the grey "other" band.
+  "jobs:newsletterStats": {
+    count: 41,
+    done: 38,
+    elements: 214,
+    bySource: { tldr: 18, alphasignal: 12, alphaxiv: 7, paste: 4 },
+    byDate: newsletterDays([
+      [3, 6, 2, 1],
+      [2, 4, 3, 0],
+      [4, 5, 1, 2],
+      [3, 3, 2, 1],
+      [5, 7, 3, 1],
+      [2, 4, 2, 0],
+      [4, 6, 4, 2],
+      [3, 5, 2, 1],
+    ]),
+  },
   "research:listByKind": own,
   "research:listByKindReview": review,
   "summaries:listByJob": [],

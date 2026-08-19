@@ -1,0 +1,240 @@
+---
+// The three CLIs, loose on the page.
+//
+// The product's claim is that agents subscribe to what changes and act on it
+// without being asked, and the page made that claim in prose. Here they do it:
+// each cursor is a pointer wearing one CLI's name, and it moves to a real
+// heading on this page, waits as if reading it, and now and then leaves a
+// comment on it.
+//
+// The targets are queried elements, not fractions of the viewport. That is the
+// whole point of the piece rather than an implementation detail: the site says
+// every entity is an addressable surface, so the agents address the ones this
+// page actually has, and the motion stays right when a section is added or the
+// copy reflows.
+//
+// The roster is the real fallback chain from `ORDERS` in scripts/actor.mts.
+// Naming a model nobody dispatches to would be the one detail a reader of this
+// repo would catch.
+const AGENTS = [
+  { id: "codex", name: "codex", hue: "var(--slate)" },
+  { id: "antigravity", name: "antigravity", hue: "var(--sage)" },
+  { id: "claude", name: "claude", hue: "var(--ochre)" },
+];
+---
+
+<div id="agents" aria-hidden="true">
+  {
+    AGENTS.map((a) => (
+      <div class="agent" data-agent={a.id} style={`--hue:${a.hue}`}>
+        <svg viewBox="0 0 40 70" width="17" height="24" fill="none">
+          <path
+            d="M 1.5 1.5 L 1.5 53.5 L 15.5 56.5 L 21.5 67.5 L 29.5 67.5 L 28.5 46.5 L 38.5 39.5 Z"
+            stroke-width="3"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="tag">{a.name}</span>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  /* Fixed, so a cursor tracks the heading it is reading while the page
+     scrolls under it, the way a reader's own pointer does. */
+  #agents {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    pointer-events: none;
+    display: none;
+  }
+  #agents.on {
+    display: block;
+  }
+  .agent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+    transition: opacity 0.4s ease;
+  }
+  .agent svg path {
+    fill: var(--hue);
+    stroke: var(--bg);
+  }
+  .tag {
+    position: absolute;
+    left: 15px;
+    top: 21px;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    color: var(--bg);
+    background: var(--hue);
+  }
+  /* What the agent left behind. Rises off the tip and fades, because a note
+     that stayed would be litter within three sections of scrolling. */
+  .note {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 7px;
+    color: var(--ink);
+    background: var(--glass-tint-strong);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 0 var(--glass-highlight);
+    animation: note 3.4s ease-out forwards;
+  }
+  @keyframes note {
+    0% {
+      opacity: 0;
+      transform: translate3d(var(--nx), var(--ny), 0) scale(0.94);
+    }
+    12% {
+      opacity: 1;
+      transform: translate3d(var(--nx), calc(var(--ny) - 8px), 0) scale(1);
+    }
+    78% {
+      opacity: 1;
+      transform: translate3d(var(--nx), calc(var(--ny) - 12px), 0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(var(--nx), calc(var(--ny) - 22px), 0) scale(1);
+    }
+  }
+</style>
+
+<script>
+  const field = document.getElementById("agents");
+  const fine = matchMedia("(pointer: fine)").matches;
+  const motion = matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+  // Three conditions, three reasons: a touch screen has no cursor to explain
+  // this, a reader who asked for less motion asked for this too, and under
+  // 1000px the pointers land on top of the prose instead of beside it.
+  if (field && fine && motion && innerWidth >= 1000) {
+    field.classList.add("on");
+
+    // What an agent reads. Headings and card titles are the addressable things
+    // on this page, which is what the piece is about.
+    const TARGETS = "h2, .cell h3, .demo figcaption, .claims li";
+    const LINES: Record<string, string[]> = {
+      codex: ["reading", "referenced this", "left a comment", "disagrees"],
+      antigravity: ["subscribed", "watching this", "queued a run", "noted"],
+      claude: ["commented", "reading", "linked an experiment", "flagged"],
+    };
+
+    type Agent = {
+      el: HTMLElement;
+      id: string;
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      tx: number;
+      ty: number;
+      until: number;
+    };
+
+    const pointer = { x: -1e5, y: -1e5 };
+    addEventListener(
+      "mousemove",
+      (e) => {
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+      },
+      { passive: true },
+    );
+
+    // Only what is on screen: an agent aiming at a heading three screens down
+    // parks against the edge of the viewport and reads as stuck.
+    const visible = (): HTMLElement[] =>
+      [...document.querySelectorAll<HTMLElement>(TARGETS)].filter((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top > 70 && r.bottom < innerHeight - 40;
+      });
+
+    const aim = (a: Agent, now: number) => {
+      const spots = visible();
+      if (spots.length === 0) {
+        a.until = now + 700;
+        return;
+      }
+      const el = spots[Math.floor(Math.random() * spots.length)];
+      const r = el.getBoundingClientRect();
+      // Land inside the text, past the first few characters, the way a reader
+      // rests a pointer on a word rather than on the box around it.
+      a.tx = r.left + 14 + Math.random() * Math.min(180, r.width * 0.55);
+      a.ty = r.top + r.height * 0.62;
+      a.until = now + 1800 + Math.random() * 2800;
+    };
+
+    const leaveNote = (a: Agent) => {
+      const lines = LINES[a.id] ?? ["reading"];
+      const note = document.createElement("span");
+      note.className = "note";
+      note.textContent = lines[Math.floor(Math.random() * lines.length)];
+      note.style.setProperty("--nx", `${a.x + 12}px`);
+      note.style.setProperty("--ny", `${a.y + 14}px`);
+      field.appendChild(note);
+      note.addEventListener("animationend", () => note.remove());
+    };
+
+    const agents: Agent[] = [...field.querySelectorAll<HTMLElement>(".agent")].map((el, i) => ({
+      el,
+      id: el.dataset.agent ?? "",
+      x: innerWidth * (0.3 + i * 0.2),
+      y: innerHeight * 0.5,
+      vx: 0,
+      vy: 0,
+      tx: innerWidth * (0.3 + i * 0.2),
+      ty: innerHeight * 0.5,
+      // Staggered, so the three do not move on one clock and read as a
+      // decoration rather than as three processes.
+      until: performance.now() + 900 + i * 800,
+    }));
+
+    let last = performance.now();
+    const step = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      for (const a of agents) {
+        if (now > a.until && Math.hypot(a.tx - a.x, a.ty - a.y) < 40) {
+          if (Math.random() < 0.45) leaveNote(a);
+          aim(a, now);
+        }
+        // Spring, damped just short of critical so it settles without
+        // overshooting into a bounce.
+        let ax = (a.tx - a.x) * 2.4 - a.vx * 3.0;
+        let ay = (a.ty - a.y) * 2.4 - a.vy * 3.0;
+        // The reader has right of way: three pointers crowding the one the
+        // reader is actually moving is the version of this that annoys.
+        const dx = a.x - pointer.x;
+        const dy = a.y - pointer.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 150 && d > 0.01) {
+          const push = ((150 - d) / 150) * 950;
+          ax += (dx / d) * push;
+          ay += (dy / d) * push;
+        }
+        a.vx += ax * dt;
+        a.vy += ay * dt;
+        a.x += a.vx * dt;
+        a.y += a.vy * dt;
+        a.el.style.transform = `translate3d(${a.x}px, ${a.y}px, 0)`;
+      }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+</script>

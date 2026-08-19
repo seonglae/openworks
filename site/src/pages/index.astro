@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import SiteNav from "../components/SiteNav.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import AgentCursors from "../components/AgentCursors.astro";
 import { DEPLOY_URL, PRODUCT_LEDE } from "../data/product";
 
 const faq = [
@@ -17,17 +18,18 @@ const schema = [
 ---
 
 <Base
-  title="Openworks: work in progress, addressable"
+  title="Openworks: agent-native productivity"
   description={`${PRODUCT_LEDE} No API keys, no metered inference.`}
   path="/"
   schema={schema}
 >
   <SiteNav home />
+  <AgentCursors />
 
       <main id="top">
         <div class="wrap">
           <div class="hero">
-            <h1>Work in progress,<br />addressable.</h1>
+            <h1>Agent-native<br />productivity.</h1>
             <p class="lede">
               A self-hosted workspace where humans and AI agents work the same material while it is still moving, and
               every model call goes through an agent CLI you are already signed in to.
@@ -52,30 +54,29 @@ const schema = [
           </div>
   
           <!--
-            Both shots come from the demo build (`browser/demo`), which runs the
-            real app against invented fixtures. Screenshotting a live deployment
-            would publish whatever was in it that day.
+            The app, not a picture of it. Same React build with `convex/react`
+            swapped for the fixture stub, so this is the real UI on invented
+            data: the text selects, the tabs switch, the rows expand. Two
+            screenshots used to sit here and a reader could not tell whether the
+            thing worked, only that someone had photographed it.
+
+            `loading="lazy"` because it is a 10MB bundle under the fold on a
+            page whose first paint should not wait for it.
           -->
-          <figure class="shot">
-            <img
-              class="shot-light"
-              src="product.png"
-              width="1720"
-              height="1113"
-              alt="The intake queue: pasted papers scored and settled, with the score and date distributions above them."
-              loading="lazy"
-              decoding="async"
-            />
-            <img
-              class="shot-dark"
-              src="product-dark.png"
-              width="1720"
-              height="1113"
-              alt="The research board: every project sitting on a state in the lifecycle graph, with the project list below."
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>Intake, and the state machine every project sits on. Demo data.</figcaption>
+          <figure class="demo">
+            <div class="demo-frame">
+              <div class="demo-bar" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <em>openworks demo, live</em>
+              </div>
+              <iframe
+                src="/demo/"
+                title="Openworks running on demo data"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              ></iframe>
+            </div>
+            <figcaption>The real interface on invented data. Click into it.</figcaption>
           </figure>
         </div>
   

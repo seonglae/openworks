@@ -40,3 +40,8 @@ browser/*.png
 
 # Agent session state, and the git worktrees it opens inside the repo.
 .claude/
+
+# The demo bundle, built from browser/demo fixtures and copied into site/dist
+# by `pnpm site:build`. 10MB of build output, rebuilt every time, so it is not
+# the repo's to carry.
+browser/dist-demo/

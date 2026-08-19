@@ -19,6 +19,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: { port: 6009, open: "/demo/index.html" },
+  // The site serves this build from /demo/, and the default base of "/" makes
+  // the bundle ask for /assets/, which is the marketing site's own build.
+  base: "/demo/",
+  // Its own outDir, because the root stays at browser/ and a default `dist`
+  // would overwrite the real app's build with a fixture one. The entry is named
+  // here for the same reason: rooted at browser/, vite would otherwise pick up
+  // index.html, which is the app.
+  build: {
+    outDir: "dist-demo",
+    emptyOutDir: true,
+    rollupOptions: { input: path.resolve(__dirname, "demo/index.html") },
+    // public/ is the real app's: its sw.js would install a service worker on
+    // the marketing origin the moment the embed loads, and its manifest would
+    // offer the fixture app for install.
+    copyPublicDir: false,
+  },
   cacheDir: path.resolve(__dirname, ".vite-temp-demo"),
   resolve: {
     alias: [
