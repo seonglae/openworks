@@ -88,7 +88,22 @@ exactly once; the key id is in the filename. Unset, the backend sends Web Push
 and skips the phones rather than failing, which is the right behaviour for a
 deployment nobody has built this app for.
 
-The bundle id needs Push Notifications enabled on its App ID, and
 `aps-environment` is in `project.yml` as `development`: a build installed from
 Xcode gets a sandbox token, and the app reads the entitlement back out of its
 own provisioning profile so the backend knows which APNs host to send to.
+
+This is what makes the push build different from the one before it. A team's
+wildcard profile (`TEAM.*`) signs any bundle id in the team and is what an app
+with no capabilities gets for free, but it carries no `aps-environment`, so an
+app that declares one cannot use it. The bundle needs an App ID of its own with
+Push Notifications enabled. `xcodebuild -allowProvisioningUpdates` creates both
+the App ID and the profile, given a team with a signed-in account:
+
+```bash
+xcodebuild -project Openworks.xcodeproj -scheme Openworks \
+  -destination 'generic/platform=iOS' -allowProvisioningUpdates build
+```
+
+`OPENWORKS_TEAM_ID` in `Secrets.xcconfig` has to be the team whose account is
+in Xcode. A machine can hold a signing certificate for a team it has no account
+for, and the error for that is "No Account for Team", not a signing failure.
