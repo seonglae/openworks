@@ -9,7 +9,8 @@
     "build:native": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b && tsc -p tsconfig.test.json",
-    "demo": "vite --config vite.demo.config.ts"
+    "demo": "vite --config vite.demo.config.ts",
+    "build:demo": "vite build --config vite.demo.config.ts && mv dist-demo/demo/index.html dist-demo/index.html && rmdir dist-demo/demo"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.6",

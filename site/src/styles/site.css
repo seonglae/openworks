@@ -19,6 +19,16 @@
   --blade-1: var(--slate);
   --blade-2: var(--sage);
   --blade-3: var(--ochre);
+  /* Frosted tiers. The tint derives from the page ground rather than being a
+     colour of its own, so only the ambient wash underneath supplies hue and a
+     theme flip carries the whole system along. Same shape the app uses. */
+  --glass-blur: 20px;
+  --glass-saturate: 180%;
+  --glass-tint: color-mix(in srgb, var(--bg) 62%, transparent);
+  --glass-tint-strong: color-mix(in srgb, var(--bg) 84%, transparent);
+  --glass-border: color-mix(in srgb, var(--ink) 12%, transparent);
+  --glass-highlight: rgba(255, 255, 255, 0.5);
+  --wash: 0.55;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
   --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
@@ -37,6 +47,11 @@
   --ochre: #a8a8a8;
   --slate-dim: rgba(138, 169, 208, 0.12);
   --slate-edge: rgba(138, 169, 208, 0.42);
+  --glass-tint: color-mix(in srgb, var(--bg) 52%, transparent);
+  --glass-tint-strong: color-mix(in srgb, var(--bg) 78%, transparent);
+  --glass-border: color-mix(in srgb, #fff 11%, transparent);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --wash: 0.4;
 }
 
 * {
@@ -55,6 +70,24 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
+/* Glass over a flat white is just a grey box: the tiers need something with
+   hue in it to blur. A fixed wash of the three accents, well under the text,
+   at an opacity that leaves body copy at full contrast. Fixed rather than
+   scrolling so it reads as light in the room rather than a decorated page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--wash);
+  background:
+    radial-gradient(62% 55% at 12% 0%, color-mix(in srgb, var(--slate) 34%, transparent), transparent 62%),
+    radial-gradient(58% 50% at 96% 6%, color-mix(in srgb, var(--sage) 26%, transparent), transparent 60%),
+    radial-gradient(64% 58% at 88% 96%, color-mix(in srgb, var(--slate) 22%, transparent), transparent 62%),
+    radial-gradient(54% 46% at 4% 92%, color-mix(in srgb, var(--ochre) 20%, transparent), transparent 62%);
+}
+
 .wrap {
   max-width: 860px;
   margin: 0 auto;
@@ -74,11 +107,15 @@ a:hover {
 }
 
 /* ---- masthead ---- */
+/* Translucent and blurred with no sheen, so it reads as part of the frame
+   rather than a card floating on it. Opaque, it cut a hard band across the
+   wash every time the page scrolled under it. */
 header {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   z-index: 10;
 }
 .bar {
@@ -114,16 +151,15 @@ header nav {
 header nav a {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--slate);
   border: 0;
 }
 header nav a:hover {
   color: var(--ink);
 }
-/* The mark, not the word: at 11px uppercase "GITHUB" reads as one more
-   section anchor, and it is the only link that leaves the site. */
+/* The mark, not the word: at 11px "github" reads as one more section anchor,
+   and it is the only link that leaves the site. */
 header nav a.icon {
   display: flex;
   align-items: center;
@@ -155,35 +191,55 @@ header nav a.icon svg {
   padding: 84px 0 56px;
 }
 
-/* One figure holds both themes and CSS picks. A <picture> with a
-   prefers-color-scheme source would ignore the toggle, which sets
-   data-theme rather than changing what the OS reports. */
-.shot {
+.demo {
   margin: 0 0 72px;
 }
-.shot img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+/* The embed sits on the frosted tier rather than a hairline box, so the app
+   inside reads as a running window and not a figure. No drop shadow: the
+   frame is overflow-hidden for its radius, which clips one into a square
+   halo on WebKit. */
+.demo-frame {
+  border-radius: 11px;
+  overflow: hidden;
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 0 var(--glass-highlight);
 }
-/* Qualified by the element, because `.shot img` above already sets
-   display and would otherwise win on specificity and show both. */
-.shot img.shot-dark {
-  display: none;
+/* A window chrome, drawn rather than screenshotted, so the iframe below it
+   reads as an application and the reader knows to click into it. */
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--glass-border);
 }
-:root[data-theme="dark"] .shot img.shot-light {
-  display: none;
+.demo-bar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--slate-edge);
 }
-:root[data-theme="dark"] .shot img.shot-dark {
-  display: block;
-}
-.shot figcaption {
+.demo-bar em {
+  margin-left: 6px;
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+.demo-frame iframe {
+  display: block;
+  width: 100%;
+  height: min(74vh, 660px);
+  border: 0;
+  background: var(--bg);
+}
+.demo figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
   color: var(--ink-3);
   margin-top: 12px;
 }
@@ -216,7 +272,6 @@ h1 {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 6px 11px;
@@ -288,8 +343,7 @@ section {
 h2 {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--slate);
   font-weight: 500;
   margin: 0 0 26px;
@@ -343,10 +397,11 @@ figcaption {
 .grid {
   display: grid;
   gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  background: var(--glass-border);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
   overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 @media (min-width: 640px) {
   .grid {
@@ -358,7 +413,7 @@ figcaption {
    Three hues on a 3n cycle across two columns, so no cell sits next to its
    own colour in either direction. */
 .cell {
-  background: var(--bg);
+  background: var(--glass-tint-strong);
   padding: 20px 22px;
   box-shadow: inset 0 2px 0 var(--slate);
 }
@@ -374,9 +429,10 @@ figcaption {
 }
 
 pre {
-  background: var(--bg-sub);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  background: var(--glass-tint-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
   padding: 16px 18px;
   overflow-x: auto;
   font-family: var(--mono);
@@ -486,8 +542,7 @@ footer p {
 .docnav-label {
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--sage);
   margin-bottom: 8px;
 }
@@ -597,7 +652,6 @@ footer p {
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--slate);
   font-weight: 400;
 }
