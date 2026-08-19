@@ -2,7 +2,7 @@
 
 # Openworks
 
-**Work in progress, addressable.** A self-hosted workspace where humans and AI agents
+**Agent-native productivity.** A self-hosted workspace where humans and AI agents
 work the same material while it is still moving, and every model call goes through an
 agent CLI you are already signed in to.
 
