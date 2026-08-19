@@ -953,6 +953,21 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_endpoint", ["endpoint"]),
 
+  // The native iOS client. Web Push and APNs are different protocols with
+  // different credentials, and a device token is not an endpoint URL, so this
+  // is its own table rather than a nullable column on the one above.
+  deviceTokens: defineTable({
+    token: v.string(),
+    // Sandbox builds (Xcode straight to the device) and App Store / TestFlight
+    // builds get tokens from different APNs hosts, and sending to the wrong one
+    // answers BadDeviceToken. The app reports which entitlement it was built
+    // with rather than the server guessing.
+    environment: v.union(v.literal("sandbox"), v.literal("production")),
+    bundleId: v.string(),
+    label: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index("by_token", ["token"]),
+
   // Agent-judged "this paper is worth referencing in this research project"
   // links, surfaced in the paper tab's suggestion step. A loose 384-dim vector
   // prefilter recalls candidate projects; the worker CLI agent then decides

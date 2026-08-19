@@ -10,6 +10,7 @@
 
 import type * as agentSubscriptions from "../agentSubscriptions.js";
 import type * as agentTriggers from "../agentTriggers.js";
+import type * as apnsToken from "../apnsToken.js";
 import type * as auth from "../auth.js";
 import type * as authors from "../authors.js";
 import type * as calendar from "../calendar.js";
@@ -68,6 +69,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   agentSubscriptions: typeof agentSubscriptions;
   agentTriggers: typeof agentTriggers;
+  apnsToken: typeof apnsToken;
   auth: typeof auth;
   authors: typeof authors;
   calendar: typeof calendar;

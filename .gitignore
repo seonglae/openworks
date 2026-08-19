@@ -50,4 +50,6 @@ browser/dist-demo/
 ios/**/Secrets.xcconfig
 ios/**/*.xcodeproj/
 ios/**/Info.plist
+# xcodegen writes this from project.yml alongside the pbxproj
+ios/**/*.entitlements
 ios/**/build/

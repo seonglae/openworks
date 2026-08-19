@@ -25,6 +25,14 @@ targets:
       - App
       - Shared
       - Assets.xcassets
+    # APNs. `development` is the sandbox host, which is what a build installed
+    # from Xcode gets a token for; an App Store build is re-signed to
+    # `production` automatically, and the app reads this back at runtime so it
+    # tells the backend which host issued its token rather than guessing.
+    entitlements:
+      path: Openworks.entitlements
+      properties:
+        aps-environment: development
     settings:
       base:
         PRODUCT_NAME: Openworks
