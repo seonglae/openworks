@@ -69,7 +69,7 @@ export const status = query({
 // Owner-triggered test push (used by the Settings "send test" button).
 export const sendTest = action({
   args: { serviceKey: v.optional(v.string()) },
-  handler: async (ctx, args): Promise<{ sent: number; failed: number }> => {
+  handler: async (ctx, args): Promise<{ sent: number; failed: number; apns: string[] }> => {
     await requireOwner(ctx, args.serviceKey);
     return await ctx.runAction(internal.pushNode.broadcast, {
       title: "Openworks",

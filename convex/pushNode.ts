@@ -78,7 +78,7 @@ async function sendApns(
 // (404/410 from the push service) are pruned so the list stays clean.
 export const broadcast = internalAction({
   args: { title: v.string(), body: v.string(), url: v.string() },
-  handler: async (ctx, args): Promise<{ sent: number; failed: number }> => {
+  handler: async (ctx, args): Promise<{ sent: number; failed: number; apns: string[] }> => {
     const publicKey = process.env.VAPID_PUBLIC_KEY;
     const privateKey = process.env.VAPID_PRIVATE_KEY;
     // The subject is the contact a push service complains to, so it has to be
@@ -106,7 +106,7 @@ export const broadcast = internalAction({
       }
     }
     const apns = await deliverApns(ctx, args);
-    return { sent: sent + apns.sent, failed: failed + apns.failed };
+    return { sent: sent + apns.sent, failed: failed + apns.failed, apns: apns.reasons };
   },
 });
 
@@ -120,17 +120,17 @@ export const broadcast = internalAction({
 async function deliverApns(
   ctx: { runQuery: (ref: any, args: any) => Promise<any>; runMutation: (ref: any, args: any) => Promise<any> },
   args: { title: string; body: string; url: string },
-): Promise<{ sent: number; failed: number }> {
+): Promise<{ sent: number; failed: number; reasons: string[] }> {
   const keyId = process.env.APNS_KEY_ID;
   const teamId = process.env.APNS_TEAM_ID;
   const p8 = process.env.APNS_AUTH_KEY;
-  if (!keyId || !teamId || !p8) return { sent: 0, failed: 0 };
+  if (!keyId || !teamId || !p8) return { sent: 0, failed: 0, reasons: [] };
 
   const devices: { token: string; environment: "sandbox" | "production"; bundleId: string }[] = await ctx.runQuery(
     internal.push.listDeviceTokens,
     {},
   );
-  if (devices.length === 0) return { sent: 0, failed: 0 };
+  if (devices.length === 0) return { sent: 0, failed: 0, reasons: [] };
 
   const jwt = providerToken(keyId, teamId, p8);
   const payload = {
@@ -140,6 +140,10 @@ async function deliverApns(
 
   let sent = 0;
   let failed = 0;
+  // What APNs actually said, returned rather than only logged: "failed: 1"
+  // does not tell you whether the key is wrong or the token is stale, and that
+  // is the whole question when this is being set up.
+  const reasons: string[] = [];
   // Grouped by host and topic: one session cannot serve both APNs environments,
   // and the topic is the bundle id the token was issued for.
   const groups = new Map<string, typeof devices>();
@@ -156,6 +160,7 @@ async function deliverApns(
       results = await sendApns(host, jwt, bundleId, group, payload);
     } catch (e) {
       console.warn(`[apns] ${environment} session failed: ${String(e)}`);
+      reasons.push(`session: ${String(e)}`);
       failed += group.length;
       continue;
     }
@@ -171,8 +176,9 @@ async function deliverApns(
         await ctx.runMutation(internal.push.removeDeviceToken, { token: r.token });
       } else {
         console.warn(`[apns] ${r.status} ${r.reason ?? ""} for ${r.token.slice(0, 8)}…`);
+        reasons.push(`${r.status} ${r.reason ?? ""}`.trim());
       }
     }
   }
-  return { sent, failed };
+  return { sent, failed, reasons };
 }
