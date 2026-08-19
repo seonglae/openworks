@@ -60,7 +60,7 @@ export function DietView() {
         />
         <button
           onClick={() => setDate(localDate(new Date()))}
-          className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+          className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
         >
           today
         </button>
@@ -82,14 +82,14 @@ export function DietView() {
         <button
           onClick={logByName}
           disabled={!nameInput.trim()}
-          className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
+          className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust disabled:opacity-40"
         >
           + log
         </button>
         <button
           onClick={() => fileRef.current?.click()}
           disabled={busy}
-          className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40"
+          className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
         >
           {busy ? "uploading..." : "+ photo"}
         </button>
@@ -106,7 +106,7 @@ export function DietView() {
         ).map(([k, val, label]) => (
           <div key={k} className="flex-1 min-w-[100px] border border-rule-light rounded p-3 bg-paper-warm/30">
             <div className="text-[22px] font-bold text-ink leading-none">{loading ? "…" : val}</div>
-            <div className="mono text-[9px] uppercase tracking-wider text-ink-4 mt-1">{label}</div>
+            <div className="mono text-[9px] tracking-wider text-ink-4 mt-1">{label}</div>
           </div>
         ))}
       </div>
@@ -121,7 +121,7 @@ export function DietView() {
         )}
       </ul>
 
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">last 14 days · kcal</div>
+      <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">last 14 days · kcal</div>
       <div className="flex items-end gap-1 h-24">
         {trendLoading ? (
           <BlockSkeleton rows={2} className="w-full self-center" />
@@ -159,7 +159,7 @@ function DietEntryRow({ entry, onRemove }: { entry: Doc<"foodEntries">; onRemove
       <div className="flex-1 min-w-0">
         <div className="text-[12px] font-bold text-ink truncate">
           {entry.name ?? (entry.status === "done" ? "Unknown food" : "…")}
-          {entry.status !== "done" && <span className="mono text-[9px] text-sage ml-2 uppercase">{entry.status}</span>}
+          {entry.status !== "done" && <span className="mono text-[9px] text-sage ml-2">{entry.status}</span>}
         </div>
         <div className="text-[11px] text-ink-2">
           {entry.kcal != null ? `${Math.round(entry.kcal)} kcal` : "analyzing…"}
@@ -171,7 +171,7 @@ function DietEntryRow({ entry, onRemove }: { entry: Doc<"foodEntries">; onRemove
       </div>
       <button
         onClick={onRemove}
-        className="mono text-[9px] uppercase tracking-wider text-ink-4 hover:text-rust opacity-0 group-hover:opacity-100 transition-opacity"
+        className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust opacity-0 group-hover:opacity-100 transition-opacity"
       >
         delete
       </button>

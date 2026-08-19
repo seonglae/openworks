@@ -214,7 +214,7 @@ export function UniversalInput({
         <button
           type="submit"
           disabled={(!input.trim() && images.length === 0) || submitting}
-          className="droplet flex items-center gap-1.5 px-3 py-1.5 text-rust mono text-xs uppercase tracking-wider disabled:opacity-30 hover:brightness-105 transition-all shrink-0 rounded-full"
+          className="droplet flex items-center gap-1.5 px-3 py-1.5 text-rust mono text-xs tracking-wider disabled:opacity-30 hover:brightness-105 transition-all shrink-0 rounded-full"
         >
           <Send size={12} />
           {submitting ? "Uploading" : "Process"}
@@ -346,7 +346,7 @@ export function NewsletterDistribution({
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] uppercase tracking-wider text-ink-4">Newsletter distribution</span>
+        <span className="mono text-[9px] tracking-wider text-ink-4">Newsletter distribution</span>
         <span className="mono text-[9px] text-ink-4">
           {selected ? (
             <button onClick={() => onSelect(null)} className="text-rust hover:underline">
@@ -478,7 +478,7 @@ export function DateDistribution({
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] uppercase tracking-wider text-ink-4">Date distribution</span>
+        <span className="mono text-[9px] tracking-wider text-ink-4">Date distribution</span>
         <div className="flex items-center gap-2">
           {kind === "paper" && (
             <div className="flex items-center gap-0.5 mono text-[8px]">
@@ -486,7 +486,7 @@ export function DateDistribution({
                 <button
                   key={b}
                   onClick={() => onBasisChange(b)}
-                  className={`px-1.5 py-0.5 rounded uppercase tracking-wider transition-colors ${
+                  className={`px-1.5 py-0.5 rounded tracking-wider transition-colors ${
                     basis === b ? "bg-rust/15 text-rust" : "text-ink-4 hover:text-ink-3"
                   }`}
                 >
@@ -566,7 +566,7 @@ export function FeedsButton() {
       <div className="mb-3 flex justify-end">
         <button
           onClick={() => setOpen(true)}
-          className="mono inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-ink-3 hover:text-ink border border-ink/10 hover:border-ink/30 rounded-full px-2.5 py-1 transition-colors"
+          className="mono inline-flex items-center gap-1 text-[10px] tracking-wider text-ink-3 hover:text-ink border border-ink/10 hover:border-ink/30 rounded-full px-2.5 py-1 transition-colors"
         >
           <Rss size={11} /> Feeds
         </button>
@@ -626,7 +626,7 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-1">
-          <h2 className="mono text-xs uppercase tracking-wider text-ink flex items-center gap-1.5">
+          <h2 className="mono text-xs tracking-wider text-ink flex items-center gap-1.5">
             <Rss size={13} /> RSS Feeds
           </h2>
           <button onClick={onClose} className="text-ink-3 hover:text-ink">
@@ -654,7 +654,7 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
             <button
               onClick={submit}
               disabled={busy || !url.trim()}
-              className="mono text-[10px] uppercase tracking-wider text-paper bg-ink hover:bg-ink-2 rounded-md px-4 disabled:opacity-30 transition-colors"
+              className="mono text-[10px] tracking-wider text-paper bg-ink hover:bg-ink-2 rounded-md px-4 disabled:opacity-30 transition-colors"
             >
               Add
             </button>
@@ -700,7 +700,7 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
           <button
             onClick={poll}
             disabled={busy}
-            className="mono text-[10px] uppercase tracking-wider text-ink hover:text-paper hover:bg-ink border border-ink/30 rounded-full px-3 py-1 disabled:opacity-30 transition-colors shrink-0"
+            className="mono text-[10px] tracking-wider text-ink hover:text-paper hover:bg-ink border border-ink/30 rounded-full px-3 py-1 disabled:opacity-30 transition-colors shrink-0"
           >
             Poll now
           </button>
@@ -797,7 +797,7 @@ export function ScoreDistribution({ kind, archived }: { kind: "paper" | "article
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] uppercase tracking-wider text-ink-4">Score distribution</span>
+        <span className="mono text-[9px] tracking-wider text-ink-4">Score distribution</span>
         <span className="mono text-[9px] text-ink-4">
           n {stats.count} · avg <span className="text-rust">{stats.avg.toFixed(1)}</span> · p50{" "}
           <span className="text-rust">{q50.toFixed(1)}</span> · {stats.min.toFixed(1)} to {stats.max.toFixed(1)}
@@ -915,7 +915,7 @@ function StepNav({
             key={s.key}
             data-tabkey={s.key}
             onClick={() => isReachable && onSelect(s.key)}
-            className={`flex flex-1 items-center justify-center gap-1.5 px-4 py-2 mono text-xs uppercase tracking-wider transition-colors relative z-10 rounded-full whitespace-nowrap
+            className={`flex flex-1 items-center justify-center gap-1.5 px-4 py-2 mono text-xs tracking-wider transition-colors relative z-10 rounded-full whitespace-nowrap
               ${isActive ? "text-rust" : isReachable ? "text-ink-2 hover:text-ink" : "text-ink-4 cursor-default"}
             `}
           >
@@ -952,9 +952,7 @@ function StatusBadge({ status }: { status: string }) {
   const spinning = status === "summarizing" || status === "suggesting" || status === "executing";
 
   return (
-    <span
-      className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 ${colors[status] ?? "text-ink-3"} rounded-full`}
-    >
+    <span className={`mono text-[10px] tracking-wider px-2 py-0.5 ${colors[status] ?? "text-ink-3"} rounded-full`}>
       {spinning ? (
         <span className="inline-flex items-center gap-1">
           <Loader2 size={10} className="animate-spin" />
@@ -1080,7 +1078,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
   return (
     <div className="space-y-8 py-2">
       <section>
-        <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-3">Related research</div>
+        <div className="mono text-[10px] tracking-wider text-ink-4 mb-3">Related research</div>
         {links === undefined ? (
           <BlockSkeleton rows={2} />
         ) : links.length === 0 ? (
@@ -1102,7 +1100,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                   <div className="flex items-center gap-1 shrink-0">
                     <span className="mono text-[10px] text-ink-4">{scorePct(l.score)}</span>
                     {l.status === "linked" ? (
-                      <span className="mono text-[9px] uppercase tracking-wider text-sage px-1.5 py-0.5">linked</span>
+                      <span className="mono text-[9px] tracking-wider text-sage px-1.5 py-0.5">linked</span>
                     ) : (
                       <>
                         <button
@@ -1130,7 +1128,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
       </section>
 
       <section>
-        <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-3">Related papers</div>
+        <div className="mono text-[10px] tracking-wider text-ink-4 mb-3">Related papers</div>
         {related === null ? (
           <BlockSkeleton rows={3} />
         ) : related.length === 0 ? (
@@ -1157,7 +1155,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  {p.type && <span className="mono text-[9px] uppercase tracking-wider text-ink-4">{p.type}</span>}
+                  {p.type && <span className="mono text-[9px] tracking-wider text-ink-4">{p.type}</span>}
                   <span className="mono text-[10px] text-ink-4">{scorePct(p.score)}</span>
                 </div>
               </div>
@@ -1228,14 +1226,14 @@ function SuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
         <div className="flex gap-2 mb-4 anim">
           <button
             onClick={() => approveAllAndExecute({ jobId })}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate text-paper mono text-xs uppercase tracking-wider hover:opacity-90 transition-opacity rounded-full"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate text-paper mono text-xs tracking-wider hover:opacity-90 transition-opacity rounded-full"
           >
             <CheckCheck size={12} />
             Approve All
           </button>
           <button
             onClick={() => rejectAll({ jobId })}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-paper-warm text-ink-2 mono text-xs uppercase tracking-wider hover:bg-rule-light transition-colors rounded-full"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-paper-warm text-ink-2 mono text-xs tracking-wider hover:bg-rule-light transition-colors rounded-full"
           >
             <XCircle size={12} />
             Reject All
@@ -1329,7 +1327,7 @@ function ExecutionView({ jobId }: { jobId: Id<"jobs"> }) {
       ))}
       {rejected.length > 0 && (
         <div className="pt-4">
-          <p className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-2">Rejected</p>
+          <p className="mono text-[10px] tracking-wider text-ink-4 mb-2">Rejected</p>
           {rejected.map((s) => (
             <div key={s._id} className="py-2 flex items-center gap-2 text-ink-4">
               <Minus size={12} />
@@ -1483,16 +1481,14 @@ export function JobRow({
             onMouseEnter={openTldr}
             onMouseLeave={scheduleCloseTldr}
           >
-            <div className="mono text-[9px] uppercase tracking-wider text-ink-4 mb-1">TL;DR</div>
+            <div className="mono text-[9px] tracking-wider text-ink-4 mb-1">TL;DR</div>
             {(job.tldr ?? []).slice(0, 3).map((line, i) => {
               const newsletterLabels = ["research", "industry", "science"];
               const labelText = job.type === "newsletter" ? newsletterLabels[i] : null;
               return (
                 <div key={i} className="text-xs text-ink-2 leading-relaxed flex gap-1.5">
                   {labelText ? (
-                    <span className="mono text-[9px] uppercase tracking-wider text-ink-4 shrink-0 w-14 mt-0.5">
-                      {labelText}
-                    </span>
+                    <span className="mono text-[9px] tracking-wider text-ink-4 shrink-0 w-14 mt-0.5">{labelText}</span>
                   ) : (
                     <span className="text-ink-4 shrink-0">•</span>
                   )}
@@ -1608,7 +1604,7 @@ export function JobRow({
         </span>
         {job.source && (
           <span
-            className="mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-sage bg-sage/10 shrink-0 rounded-full max-w-[28%] truncate flex items-center gap-1"
+            className="mono text-[9px] tracking-wider px-1.5 py-0.5 text-sage bg-sage/10 shrink-0 rounded-full max-w-[28%] truncate flex items-center gap-1"
             title={`source: ${job.source}`}
           >
             <Rss size={8} />
@@ -1625,7 +1621,7 @@ export function JobRow({
         </span>
         <StatusBadge status={job.status} />
         {job.tldrPending && (
-          <span className="mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-ochre bg-ochre-dim shrink-0 flex items-center gap-1 rounded-full">
+          <span className="mono text-[9px] tracking-wider px-1.5 py-0.5 text-ochre bg-ochre-dim shrink-0 flex items-center gap-1 rounded-full">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-ochre animate-pulse" />
             TL;DR
           </span>

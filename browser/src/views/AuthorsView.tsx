@@ -38,7 +38,7 @@ export function PaperSubNav({ active, hrefFor }: { active: "paper" | "authors"; 
             window.history.pushState(null, "", hrefFor(k));
             window.dispatchEvent(new PopStateEvent("popstate"));
           }}
-          className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+          className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
             active === k ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
           }`}
         >
@@ -62,7 +62,7 @@ function AuthorPapers({ authorId }: { authorId: string }) {
     <div className="pl-6 pb-3 space-y-1">
       {papers.map((p) => (
         <div key={p.jobId} className="flex items-baseline gap-2 text-[12px]">
-          <span className="mono text-[9px] uppercase tracking-wider text-ink-4 w-12 shrink-0">{p.position}</span>
+          <span className="mono text-[9px] tracking-wider text-ink-4 w-12 shrink-0">{p.position}</span>
           {p.url ? (
             <a href={p.url} target="_blank" rel="noreferrer" className="flex-1 min-w-0 text-rust hover:underline">
               {p.title}
@@ -70,11 +70,11 @@ function AuthorPapers({ authorId }: { authorId: string }) {
           ) : (
             <span className="flex-1 min-w-0 text-ink-2">{p.title}</span>
           )}
-          {p.archived && <span className="mono text-[9px] uppercase tracking-wider text-ink-4">archived</span>}
+          {p.archived && <span className="mono text-[9px] tracking-wider text-ink-4">archived</span>}
           {p.overall !== undefined && <span className="mono text-[10px] text-rust shrink-0">{p.overall}</span>}
         </div>
       ))}
-      <div ref={ref} className="mono text-[9px] uppercase tracking-wider text-ink-4 pt-1">
+      <div ref={ref} className="mono text-[9px] tracking-wider text-ink-4 pt-1">
         {status === "LoadingFirstPage" || status === "LoadingMore" ? "loading…" : ""}
       </div>
     </div>
@@ -124,7 +124,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
               setOpenId(null);
             }}
             title={m.hint}
-            className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+            className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
               position === m.key ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
             }`}
           >
@@ -140,7 +140,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
               setOpenId(null);
             }}
             title={m.hint}
-            className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+            className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
               metric === m.key ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
             }`}
           >
@@ -150,7 +150,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
         {progress && progress.pending > 0 && (
           <button
             onClick={() => void startSweep({})}
-            className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust ml-auto"
+            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust ml-auto"
           >
             resolve {progress.pending} pending
           </button>

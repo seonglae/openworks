@@ -296,7 +296,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
       <div className="space-y-4">
         {Object.entries(byOwner).map(([owner, ownerRepos]) => (
           <div key={owner}>
-            <div className="mono text-[10px] text-ink-4 uppercase tracking-wider pb-1 mb-1 border-b border-rule-light flex items-center gap-2">
+            <div className="mono text-[10px] text-ink-4 tracking-wider pb-1 mb-1 border-b border-rule-light flex items-center gap-2">
               {owner}
               <span>{ownerRepos.reduce((s, [, p]) => s + p.length, 0)}</span>
               {(() => {

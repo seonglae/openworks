@@ -15,8 +15,8 @@
   --color-rust-dim: rgba(51, 51, 51, 0.08);
   --color-slate: #3d5a80;
   --color-slate-dim: rgba(61, 90, 128, 0.08);
-  --color-ochre: #5c5c5c;
-  --color-ochre-dim: rgba(92, 92, 92, 0.08);
+  --color-ochre: #b8863b;
+  --color-ochre-dim: rgba(184, 134, 59, 0.1);
   --color-charcoal: #333333;
   --color-sage: #5a7a5a;
   --color-sage-dim: rgba(90, 122, 90, 0.08);
@@ -56,8 +56,8 @@
     --color-rust-dim: rgba(196, 196, 196, 0.12);
     --color-slate: #6d8ab0;
     --color-slate-dim: rgba(109, 138, 176, 0.12);
-    --color-ochre: #8a8a8a;
-    --color-ochre-dim: rgba(138, 138, 138, 0.12);
+    --color-ochre: #d0a355;
+    --color-ochre-dim: rgba(208, 163, 85, 0.14);
     --color-charcoal: #f4f4f4;
     --color-sage: #7a9a7a;
     --color-sage-dim: rgba(122, 154, 122, 0.12);
@@ -246,7 +246,6 @@
     box-shadow: inset 0 1px 0 0 var(--glass-highlight);
     font-family: var(--font-mono);
     font-size: 10px;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--color-ink-2);
   }

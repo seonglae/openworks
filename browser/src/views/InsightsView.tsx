@@ -26,7 +26,7 @@ type InsightStatus = Doc<"insights">["status"];
 function InsightStatusPill({ status }: { status: string }) {
   return (
     <span
-      className={`mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full shrink-0 ${INSIGHT_STATUS_STYLE[status] ?? "text-ink-4"}`}
+      className={`mono text-[9px] tracking-wider px-1.5 py-0.5 rounded-full shrink-0 ${INSIGHT_STATUS_STYLE[status] ?? "text-ink-4"}`}
     >
       {status}
     </span>
@@ -151,11 +151,11 @@ export function InsightsView() {
           <button
             onClick={doAdd}
             disabled={!raw.trim()}
-            className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40"
+            className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
           >
             + add insight
           </button>
-          <label className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+          <label className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
             + image
             <input
               type="file"
@@ -171,7 +171,7 @@ export function InsightsView() {
           {msg && <span className="mono text-[10px] text-sage">{msg}</span>}
         </div>
         <details className="mt-2">
-          <summary className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+          <summary className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
             import from notion
           </summary>
           <div className="flex gap-2 mt-2">
@@ -184,7 +184,7 @@ export function InsightsView() {
             <button
               onClick={doImport}
               disabled={!notionPage.trim()}
-              className="droplet px-3 py-1.5 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40 shrink-0"
+              className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40 shrink-0"
             >
               import
             </button>
@@ -200,7 +200,7 @@ export function InsightsView() {
             <button
               key={s ?? "all"}
               onClick={() => pickFilter(s)}
-              className={`mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+              className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
                 statusFilter === s ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
               }`}
             >
@@ -243,7 +243,7 @@ export function InsightsView() {
                       {it.tags.map((t) => (
                         <span
                           key={t}
-                          className="mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-paper-warm/60 text-ink-4"
+                          className="mono text-[9px] tracking-wider px-1.5 py-0.5 rounded-full bg-paper-warm/60 text-ink-4"
                         >
                           {t}
                         </span>
@@ -256,7 +256,7 @@ export function InsightsView() {
                       <span className="mono text-[10px] text-rust break-words">{it.error}</span>
                       <button
                         onClick={() => setStatus({ id: it._id, status: "new" })}
-                        className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                        className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                       >
                         retry
                       </button>
@@ -284,13 +284,13 @@ export function InsightsView() {
                           <button
                             onClick={() => doPlace(it._id)}
                             disabled={busy === it._id}
-                            className="droplet px-3 py-1 mono text-[10px] uppercase tracking-wider text-rust disabled:opacity-40"
+                            className="droplet px-3 py-1 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
                           >
                             {busy === it._id ? "placing…" : "place"}
                           </button>
                           <button
                             onClick={() => setStatus({ id: it._id, status: "dismissed" })}
-                            className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                           >
                             dismiss
                           </button>
@@ -303,7 +303,7 @@ export function InsightsView() {
                         </span>
                         <button
                           onClick={() => setStatus({ id: it._id, status: "dismissed" })}
-                          className="mono text-[10px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                          className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                         >
                           dismiss
                         </button>
@@ -326,7 +326,7 @@ export function InsightsView() {
 
                   <button
                     onClick={() => removeInsight({ id: it._id })}
-                    className="mono text-[9px] uppercase tracking-wider text-ink-4 hover:text-rust"
+                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
                   >
                     delete
                   </button>

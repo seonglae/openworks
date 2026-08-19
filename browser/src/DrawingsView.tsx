@@ -68,9 +68,7 @@ function DrawingsList({ onOpen }: { onOpen: (id: Id<"drawings">) => void }) {
           className="aspect-[4/3] border-2 border-dashed border-rule hover:border-ink-3 rounded-2xl flex flex-col items-center justify-center gap-2 transition-colors group"
         >
           <Plus size={24} className="text-ink-4 group-hover:text-ink-2" />
-          <span className="mono text-[10px] uppercase tracking-wider text-ink-4 group-hover:text-ink-2">
-            New Drawing
-          </span>
+          <span className="mono text-[10px] tracking-wider text-ink-4 group-hover:text-ink-2">New Drawing</span>
         </button>
         {drawings.map((d) => (
           <div

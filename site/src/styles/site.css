@@ -1,7 +1,8 @@
-/* Two inks on paper, not a repaint: body copy stays near-black and slate,
-   sage and ochre mark structure. The three values are the app's own accents
+/* Two inks on paper, not a repaint: body copy stays near-black, and slate,
+   sage and ochre mark structure. The three are the app's own accents
    (--color-slate / -sage / -ochre in browser/src/index.css), so the site is
-   not introducing a fourth palette to the product it is describing. */
+   not introducing a fourth palette to the product it is describing. Ochre
+   used to be #5c5c5c in both, which is a grey wearing a colour's name. */
 :root {
   --bg: #ffffff;
   --bg-sub: #fafafa;
@@ -13,12 +14,17 @@
   --line: #e4e4e4;
   --slate: #3d5a80;
   --sage: #5a7a5a;
-  --ochre: #5c5c5c;
+  --ochre: #b8863b;
   --slate-dim: rgba(61, 90, 128, 0.07);
   --slate-edge: rgba(61, 90, 128, 0.32);
+  /* One hue at three tints rather than three hues. Slate, sage and a grey
+     called ochre had no relationship to each other, and a six-blade pinwheel
+     is where that shows worst: every blade argued with its neighbour. Tints
+     of the one accent the rest of the page already uses read as rotation and
+     depth instead. */
   --blade-1: var(--slate);
-  --blade-2: var(--sage);
-  --blade-3: var(--ochre);
+  --blade-2: #7089ab;
+  --blade-3: #a9bcd4;
   /* Frosted tiers. The tint derives from the page ground rather than being a
      colour of its own, so only the ambient wash underneath supplies hue and a
      theme flip carries the whole system along. Same shape the app uses. */
@@ -44,9 +50,12 @@
   --line: #262626;
   --slate: #8aa9d0;
   --sage: #8fb08f;
-  --ochre: #a8a8a8;
+  --ochre: #d0a355;
   --slate-dim: rgba(138, 169, 208, 0.12);
   --slate-edge: rgba(138, 169, 208, 0.42);
+  --blade-1: var(--slate);
+  --blade-2: #6d89b0;
+  --blade-3: #43607f;
   --glass-tint: color-mix(in srgb, var(--bg) 52%, transparent);
   --glass-tint-strong: color-mix(in srgb, var(--bg) 78%, transparent);
   --glass-border: color-mix(in srgb, #fff 11%, transparent);

@@ -449,7 +449,7 @@ function NotificationRow() {
           <button
             onClick={test}
             disabled={busy}
-            className="mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full text-ink-4 hover:text-ink-3 disabled:opacity-40"
+            className="mono text-[10px] tracking-wider px-2 py-0.5 rounded-full text-ink-4 hover:text-ink-3 disabled:opacity-40"
           >
             Test
           </button>
@@ -457,7 +457,7 @@ function NotificationRow() {
         <button
           onClick={endpoint ? disable : enable}
           disabled={!supported || busy}
-          className={`mono text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
+          className={`mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
             endpoint ? "droplet text-rust" : "text-ink-3 hover:text-ink border border-ink/15"
           }`}
         >
@@ -503,7 +503,7 @@ function ReflectiveRow() {
       <button
         onClick={toggle}
         disabled={busy}
-        className={`mono text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
+        className={`mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
           on ? "droplet text-rust" : "text-ink-3 hover:text-ink border border-ink/15"
         }`}
       >
@@ -762,7 +762,7 @@ function InfoPanel({
           <div className="space-y-3 mb-5">
             {tab.requirements.map((r) => (
               <div key={r.label}>
-                <div className="mono text-[10px] uppercase tracking-wider text-rust mb-0.5">{r.label}</div>
+                <div className="mono text-[10px] tracking-wider text-rust mb-0.5">{r.label}</div>
                 <div className="text-sm text-ink-2">{r.detail}</div>
               </div>
             ))}
@@ -831,7 +831,7 @@ function TextSetting({
   const dirty = value !== initial;
   return (
     <div className="border-t border-ink/10 pt-3 mb-4">
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4 mb-1">{label}</div>
+      <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">{label}</div>
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -846,7 +846,7 @@ function TextSetting({
             onSave(value.trim());
             setSavedAt(Date.now());
           }}
-          className="mono text-[10px] uppercase tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 rounded-full"
+          className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 rounded-full"
         >
           {savedAt && !dirty ? "saved" : "save"}
         </button>
@@ -887,12 +887,12 @@ function SetupActions({
       : null;
   return (
     <div className="border-t border-ink/10 pt-3 space-y-3">
-      <div className="mono text-[10px] uppercase tracking-wider text-ink-4">{cli} setup</div>
+      <div className="mono text-[10px] tracking-wider text-ink-4">{cli} setup</div>
       <div className="flex flex-wrap gap-2">
         <button
           onClick={onInstall}
           disabled={running}
-          className="mono text-[10px] uppercase tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
+          className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
         >
           {running ? <Loader2 size={10} className="animate-spin" /> : <Download size={10} />}
           install {cli}
@@ -900,7 +900,7 @@ function SetupActions({
         <button
           onClick={onVerify}
           disabled={running}
-          className="mono text-[10px] uppercase tracking-wider px-2 py-1 text-ink-2 hover:text-ink disabled:text-ink-4 flex items-center gap-1 rounded-full"
+          className="mono text-[10px] tracking-wider px-2 py-1 text-ink-2 hover:text-ink disabled:text-ink-4 flex items-center gap-1 rounded-full"
         >
           {running ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
           verify
@@ -909,7 +909,7 @@ function SetupActions({
           <button
             onClick={onOauth}
             disabled={running}
-            className="mono text-[10px] uppercase tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
+            className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
           >
             {running ? <Loader2 size={10} className="animate-spin" /> : <Download size={10} />}
             login (browser)
@@ -918,7 +918,7 @@ function SetupActions({
       </div>
       {oauthDevice && (
         <div className="bg-paper-warm/40 border border-rust/30 px-3 py-2 space-y-1">
-          <div className="mono text-[10px] uppercase tracking-wider text-rust">github oauth</div>
+          <div className="mono text-[10px] tracking-wider text-rust">github oauth</div>
           <div className="text-sm text-ink-2">
             Open{" "}
             <a
