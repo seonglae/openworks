@@ -49,7 +49,7 @@ struct ReadingView: View {
                     }
                 }
                 .listStyle(.plain)
-                .contentMargins(.bottom, 28, for: .scrollContent)
+                .tabBarGap()
             }
             .navigationTitle("Reading")
             .safeAreaInset(edge: .top) {
@@ -228,7 +228,7 @@ struct JobDetail: View {
             }
             if let error { Section { Text(error).font(.caption).foregroundStyle(.red) } }
         }
-        .contentMargins(.bottom, 28, for: .scrollContent)
+        .tabBarGap()
         .navigationTitle(job.type.capitalized)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }

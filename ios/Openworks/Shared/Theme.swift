@@ -202,3 +202,20 @@ struct CardSurface: ViewModifier {
 extension View {
     func cardSurface() -> some View { modifier(CardSurface()) }
 }
+
+
+// Air between the last row and the floating tab bar.
+//
+// Measured, not assumed: a list inside this TabView reports
+// safeAreaInsets.bottom = 83 on an iPhone 17 Pro, 34 of it the home indicator
+// and the rest the bar. The system already reserves it, so no row is ever
+// hidden and this is not a fix for anything. It is one list gap of air, so the
+// bar reads as the next thing after the last row rather than a wall the list
+// stops an arbitrary distance short of.
+private let ROW_GAP: CGFloat = 8
+
+extension View {
+    func tabBarGap() -> some View {
+        contentMargins(.bottom, ROW_GAP, for: .scrollContent)
+    }
+}
