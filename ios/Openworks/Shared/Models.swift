@@ -22,7 +22,11 @@ struct Job: Identifiable {
         guard let id = d["_id"] as? String else { return nil }
         self.id = id
         url = d["url"] as? String ?? ""
-        title = d["title"] as? String ?? (d["url"] as? String ?? "")
+        // A ?? chain finds a value in the empty string convex stores for an
+        // absent url, which drew a row with no text on it at all.
+        title = [d["title"] as? String, d["url"] as? String]
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty } ?? "Untitled"
         source = d["source"] as? String
         type = d["type"] as? String ?? "newsletter"
         status = d["status"] as? String ?? ""
@@ -50,6 +54,11 @@ struct Summary: Identifiable {
     let url: String
     let researchLevel: String?
     let overall: Double?
+    // The whole rubric, not just its headline: papers score on six criteria
+    // and articles on their own six, and only one of the two is ever present.
+    let scores: [String: Any]?
+    let articleScores: [String: Any]?
+    let tldr: [String]
 
     init?(_ d: [String: Any]) {
         guard let id = d["_id"] as? String, let title = d["title"] as? String else { return nil }
@@ -61,7 +70,10 @@ struct Summary: Identifiable {
         keywords = (d["keywords"] as? [String]) ?? []
         url = d["url"] as? String ?? ""
         researchLevel = d["researchLevel"] as? String
-        overall = num(d["scores"] as? [String: Any] ?? [:], "overall")
+        scores = d["scores"] as? [String: Any]
+        articleScores = d["articleScores"] as? [String: Any]
+        tldr = (d["tldr"] as? [String]) ?? []
+        overall = num(scores ?? articleScores ?? [:], "overall")
     }
 }
 
