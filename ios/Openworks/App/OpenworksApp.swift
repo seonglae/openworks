@@ -24,6 +24,14 @@ struct OpenworksApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // The bar floats over its tabs, and reserving room for it is this
+            // view's job, not theirs. Measured: a plain List under a
+            // NavigationStack in here reports safeAreaInsets.bottom = 83 on an
+            // iPhone 17 Pro, 34 of it the home indicator and the rest the bar,
+            // and the same 83 from a differently-shaped list in another app, so
+            // it comes from the TabView and not from any list's own shape.
+            // Nothing below has to clear the bar by hand; tabBarGap() adds air
+            // on top of this, and says how much.
             TabView(selection: $state.tab) {
                 ReadingView()
                     .tabItem { Label("Reading", systemImage: "text.book.closed") }
