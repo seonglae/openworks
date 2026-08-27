@@ -20,6 +20,7 @@ struct OpenworksApp: App {
     // APNs calls back on a UIApplicationDelegate and SwiftUI has none, so one
     // is adapted in for the token handoff.
     @UIApplicationDelegateAdaptor(PushDelegate.self) private var pushDelegate
+    @AppStorage(ThemeChoice.storageKey) private var appearance = ThemeChoice.system.rawValue
 
     var body: some Scene {
         WindowGroup {
@@ -38,6 +39,7 @@ struct OpenworksApp: App {
                     .tag(Tab.settings)
             }
             .tint(Theme.slate)
+            .preferredColorScheme(ThemeChoice(rawValue: appearance)?.colorScheme)
             .environmentObject(state)
             .task { await Push.shared.refreshState() }
         }

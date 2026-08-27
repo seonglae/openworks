@@ -1,11 +1,32 @@
 import SwiftUI
+import UIKit
 
 // The browser's palette: ink on paper, slate as the one accent, sage for done.
 // Monochrome on purpose, so the only colour on a screen means something.
 enum Theme {
-    static let slate = Color(red: 0x3d / 255, green: 0x5a / 255, blue: 0x80 / 255)
-    static let sage = Color(red: 0x5a / 255, green: 0x7a / 255, blue: 0x5a / 255)
-    static let rust = Color(red: 0x33 / 255, green: 0x33 / 255, blue: 0x33 / 255)
+    // Each accent is a pair. The single values these replaced were picked for
+    // white paper, so on a dark screen the near-black one used for newsletters
+    // was a pill you could not see, and slate on dark lost most of its
+    // contrast. The light half is unchanged, so nothing moves in light mode.
+    static let slate = pair(light: 0x3d_5a_80, dark: 0x8a_a9_d0)
+    static let sage = pair(light: 0x5a_7a_5a, dark: 0x8f_b0_8f)
+    static let rust = pair(light: 0x33_33_33, dark: 0xc4_c4_c4)
+    // A link should not be the system's cornflower blue, which belongs to no
+    // palette here, nor slate, which already means "structure".
+    static let link = pair(light: 0x5b_4b_8a, dark: 0xb0_a0_e0)
+
+    static func pair(light: Int, dark: Int) -> Color {
+        Color(UIColor { $0.userInterfaceStyle == .dark ? rgb(dark) : rgb(light) })
+    }
+
+    private static func rgb(_ hex: Int) -> UIColor {
+        UIColor(
+            red: CGFloat((hex >> 16) & 0xff) / 255,
+            green: CGFloat((hex >> 8) & 0xff) / 255,
+            blue: CGFloat(hex & 0xff) / 255,
+            alpha: 1
+        )
+    }
 
     // Job type -> its one word, and the colour the browser gives it.
     static func typeColor(_ type: String) -> Color {
@@ -108,4 +129,76 @@ struct LoadState<Content: View>: View {
             content()
         }
     }
+}
+
+
+// Light / dark / follow the phone. Stored rather than derived because the
+// point of the setting is to disagree with the system when the reader wants to.
+enum ThemeChoice: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    static let storageKey = "appearance"
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
+
+// A link the reader can tell where it goes before tapping it, in a colour
+// that belongs to this palette.
+struct LinkRow: View {
+    let url: URL
+
+    private var host: String {
+        (url.host ?? url.absoluteString).replacingOccurrences(of: "www.", with: "")
+    }
+
+    private var trailing: String? {
+        var rest = url.path
+        if let query = url.query, !query.isEmpty { rest += "?" + query }
+        return rest.isEmpty || rest == "/" ? nil : rest
+    }
+
+    var body: some View {
+        Link(destination: url) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(host).font(.caption.weight(.medium)).underline()
+                if let trailing {
+                    Text(trailing).font(.caption2).lineLimit(2).truncationMode(.middle)
+                }
+            }
+        }
+        .foregroundStyle(Theme.link)
+    }
+}
+
+
+// The panel these two stats screens draw on. The rest of the app uses plain
+// list sections, so this is the one place that needs a surface of its own.
+struct CardSurface: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.secondarySystemGroupedBackground),
+                        in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+extension View {
+    func cardSurface() -> some View { modifier(CardSurface()) }
 }
