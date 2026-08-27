@@ -95,6 +95,16 @@ struct Convex {
     static func summaries(jobId: String) async throws -> [Summary] {
         rows(try await query("summaries:listByJob", ["jobId": jobId])).compactMap(Summary.init)
     }
+    // The two figures the browser draws: the overall-score distribution for
+    // papers and articles, and the newsletter arrival split.
+    static func scoreStats(archived: Bool) async throws -> [String: Any] {
+        (try await query("summaries:scoreStats", ["archived": archived]) as? [String: Any]) ?? [:]
+    }
+
+    static func newsletterStats(archived: Bool) async throws -> [String: Any] {
+        (try await query("jobs:newsletterStats", ["archived": archived]) as? [String: Any]) ?? [:]
+    }
+
     static func archive(jobId: String) async throws { try await mutation("jobs:archive", ["jobId": jobId]) }
     static func unarchive(jobId: String) async throws { try await mutation("jobs:unarchive", ["jobId": jobId]) }
 

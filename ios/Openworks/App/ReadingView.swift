@@ -16,6 +16,7 @@ struct ReadingView: View {
     @State private var total = 0
     @State private var error: String?
     @State private var loading = false
+    @State private var showingStats = false
 
     var body: some View {
         NavigationStack {
@@ -48,6 +49,7 @@ struct ReadingView: View {
                     }
                 }
                 .listStyle(.plain)
+                .contentMargins(.bottom, 28, for: .scrollContent)
             }
             .navigationTitle("Reading")
             .safeAreaInset(edge: .top) {
@@ -60,10 +62,20 @@ struct ReadingView: View {
                 .background(.bar)
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button { showingStats = true } label: { Image(systemName: "chart.bar") }
                     Button { archived.toggle() } label: {
                         Image(systemName: archived ? "archivebox.fill" : "archivebox")
                     }
+                }
+            }
+            .sheet(isPresented: $showingStats) {
+                // Newsletters have no scores to distribute; their two questions
+                // are how much arrived and where it came from.
+                if type == "newsletter" {
+                    NewsletterStatsView(archived: archived)
+                } else {
+                    ScoreStatsView(archived: archived)
                 }
             }
             .refreshable { await reload() }
@@ -160,12 +172,13 @@ struct JobDetail: View {
     @State private var summaries: [Summary] = []
     @State private var error: String?
     @State private var loading = false
+    @State private var showingStats = false
 
     var body: some View {
         List {
             Section {
                 Text(job.title).font(.headline)
-                if let url = URL(string: job.url) { Link(job.host.isEmpty ? job.url : job.host, destination: url) }
+                if let url = URL(string: job.url) { LinkRow(url: url) }
                 if let err = job.error, !err.isEmpty {
                     Text(err).font(.caption).foregroundStyle(.red)
                 }
@@ -173,13 +186,29 @@ struct JobDetail: View {
             if !job.tldr.isEmpty {
                 Section("TLDR") {
                     ForEach(Array(job.tldr.enumerated()), id: \.offset) { _, line in
-                        Text(line).font(.subheadline)
+                        RichText(source: line)
                     }
                 }
             }
             ForEach(summaries) { s in
                 Section {
-                    Text(s.summary).font(.subheadline)
+                    if let scores = s.scores {
+                        ScoreGrid(scores: scores, extra: s.researchLevel)
+                    } else if let scores = s.articleScores {
+                        ScoreGrid(scores: scores, extra: scores["verdict"] as? String)
+                    }
+                    if !s.tldr.isEmpty {
+                        VStack(alignment: .leading, spacing: 3) {
+                            ForEach(Array(s.tldr.enumerated()), id: \.offset) { _, line in
+                                HStack(alignment: .top, spacing: 6) {
+                                    Text("·").font(.subheadline).foregroundStyle(Theme.slate)
+                                    RichText(source: line)
+                                }
+                            }
+                        }
+                    }
+                    RichText(source: s.summary)
+                    if let url = URL(string: s.url), !s.url.isEmpty { LinkRow(url: url) }
                     if !s.keywords.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 6) {
@@ -199,6 +228,7 @@ struct JobDetail: View {
             }
             if let error { Section { Text(error).font(.caption).foregroundStyle(.red) } }
         }
+        .contentMargins(.bottom, 28, for: .scrollContent)
         .navigationTitle(job.type.capitalized)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }

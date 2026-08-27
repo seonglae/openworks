@@ -4,6 +4,7 @@ import SwiftUI
 // key are baked in at build time from Secrets.xcconfig; anything entered here
 // overrides on this device only and never leaves it.
 struct SettingsView: View {
+    @AppStorage(ThemeChoice.storageKey) private var appearance = ThemeChoice.system.rawValue
     @EnvironmentObject var state: AppState
     @State private var url = Convex.cloudURL
     @State private var key = Convex.serviceKey
@@ -15,6 +16,14 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+            Section("Appearance") {
+                Picker("Theme", selection: $appearance) {
+                    ForEach(ThemeChoice.allCases) { choice in
+                        Text(choice.label).tag(choice.rawValue)
+                    }
+                }
+            }
+
                 Section("Deployment") {
                     if let reached {
                         LabeledContent("Status") {
