@@ -46,7 +46,7 @@ struct OpenworksApp: App {
                     .tabItem { Label("Settings", systemImage: "gearshape") }
                     .tag(Tab.settings)
             }
-            .tint(Theme.slate)
+            .tint(Theme.rust)
             .preferredColorScheme(ThemeChoice(rawValue: appearance)?.colorScheme)
             .environmentObject(state)
             .task { await Push.shared.refreshState() }

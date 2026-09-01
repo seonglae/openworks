@@ -943,7 +943,7 @@ function FsmGraph({
       >
         <defs>
           <marker id="arrow-fwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8a8a" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8478" />
           </marker>
           <marker id="arrow-bwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-rust)" />
@@ -959,7 +959,7 @@ function FsmGraph({
               ? "var(--color-rust-deep)"
               : e.kind === "backward"
                 ? "var(--color-rust)"
-                : "#8a8a8a";
+                : "#8a8478";
             return (
               <path
                 key={i}
@@ -1000,7 +1000,7 @@ function FsmGraph({
                     y={-3}
                     rx={6}
                     fill="none"
-                    stroke="#8a8a8a"
+                    stroke="#8a8478"
                     strokeWidth={1}
                   />
                 )}
@@ -1021,8 +1021,8 @@ function FsmGraph({
                   width={NODE_W}
                   height={NODE_H}
                   rx={4}
-                  fill={isVisited ? "var(--color-rust-deep)" : hasProjects ? "var(--color-rust)" : "#f4f4f4"}
-                  stroke={isVisited ? "#2d4566" : "#8a8a8a"}
+                  fill={isVisited ? "var(--color-rust-deep)" : hasProjects ? "var(--color-rust)" : "#f5f0e8"}
+                  stroke={isVisited ? "#2d4566" : "#8a8478"}
                   strokeWidth={1}
                 />
                 <text
@@ -1031,7 +1031,7 @@ function FsmGraph({
                   textAnchor="middle"
                   fontFamily="IBM Plex Mono, monospace"
                   fontSize={10}
-                  fill={isVisited || hasProjects ? "#f4f4f4" : "#4a4a4a"}
+                  fill={isVisited || hasProjects ? "#f5f0e8" : "#4a4540"}
                   style={{ pointerEvents: "none" }}
                 >
                   {n.label}

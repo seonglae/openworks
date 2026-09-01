@@ -22,9 +22,9 @@ bootReflective();
 // otherwise, near-black while the sign-in screen is up. A MutationObserver makes
 // every theme toggle (and the post-login transition) update it automatically,
 // so it is correct on the main view, not just the login screen.
-const THEME_DARK = "#0a0a0a";
-const THEME_LIGHT = "#ffffff";
-const THEME_LOGIN = "#0a0a0a";
+const THEME_DARK = "#1a1714";
+const THEME_LIGHT = "#faf8f4";
+const THEME_LOGIN = "#0e0c08";
 let loginActive = false;
 function applyThemeColor() {
   const dark = document.documentElement.classList.contains("dark");
@@ -119,35 +119,35 @@ const inner = isAutomation ? (
 // near-black gradient under the Openworks wordmark + pipeline tagline.
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#e4e4e4",
+    colorPrimary: "#ece3cf",
     // Dark text ON the (light/cream) primary button. Without this Clerk auto-
     // picks white, which is invisible on the cream button (iOS Safari bug).
-    colorTextOnPrimaryBackground: "#141414",
-    colorBackground: "#141414",
-    colorText: "#f4f4f4",
-    colorTextSecondary: "#767676",
-    colorInputBackground: "#1f1f1f",
-    colorInputText: "#f4f4f4",
-    colorNeutral: "#f4f4f4",
+    colorTextOnPrimaryBackground: "#1a1710",
+    colorBackground: "#1a1710",
+    colorText: "#f5efe0",
+    colorTextSecondary: "#a89f86",
+    colorInputBackground: "#221e15",
+    colorInputText: "#f5efe0",
+    colorNeutral: "#f5efe0",
     borderRadius: "0.7rem",
     fontFamily: "inherit",
   },
   elements: {
     rootBox: "w-full flex justify-center",
     cardBox: "shadow-2xl",
-    card: "bg-[#141414]/95 border border-[#333333] backdrop-blur",
-    headerTitle: "text-[#f4f4f4]",
-    headerSubtitle: "text-[#767676]",
-    socialButtonsBlockButton: "border-[#333333] text-[#f4f4f4] hover:bg-[#1f1f1f] transition-colors",
-    socialButtonsBlockButtonText: "text-[#f4f4f4]",
-    dividerLine: "bg-[#333333]",
-    dividerText: "text-[#767676]",
-    formFieldLabel: "text-[#767676]",
-    formFieldInput: "bg-[#1f1f1f] border-[#333333] text-[#f4f4f4]",
-    formButtonPrimary: "bg-[#e4e4e4] !text-[#141414] hover:bg-[#f4f4f4] transition-colors",
+    card: "bg-[#1a1710]/95 border border-[#3a3320] backdrop-blur",
+    headerTitle: "text-[#f5efe0]",
+    headerSubtitle: "text-[#a89f86]",
+    socialButtonsBlockButton: "border-[#3a3320] text-[#f5efe0] hover:bg-[#221e15] transition-colors",
+    socialButtonsBlockButtonText: "text-[#f5efe0]",
+    dividerLine: "bg-[#3a3320]",
+    dividerText: "text-[#a89f86]",
+    formFieldLabel: "text-[#a89f86]",
+    formFieldInput: "bg-[#221e15] border-[#3a3320] text-[#f5efe0]",
+    formButtonPrimary: "bg-[#ece3cf] !text-[#1a1710] hover:bg-[#f5efe0] transition-colors",
     footer: "hidden",
-    identityPreviewText: "text-[#f4f4f4]",
-    formFieldInputShowPasswordButton: "text-[#767676]",
+    identityPreviewText: "text-[#f5efe0]",
+    formFieldInputShowPasswordButton: "text-[#a89f86]",
     logoBox: "hidden",
   },
 };
@@ -169,12 +169,12 @@ const SignInScreen = () => {
   }, []);
   return (
     <div
-      className="fixed inset-0 overflow-y-auto flex flex-col items-center justify-center gap-9 p-4 bg-[#0a0a0a] bg-[radial-gradient(ellipse_at_top,#141414_0%,#0a0a0a_60%,#050505_100%)]"
+      className="fixed inset-0 overflow-y-auto flex flex-col items-center justify-center gap-9 p-4 bg-[#0e0c08] bg-[radial-gradient(ellipse_at_top,#1c1810_0%,#0e0c08_60%,#080705_100%)]"
       style={{ minHeight: "100dvh" }}
     >
       <div className="text-center select-none">
-        <h1 className="text-5xl font-semibold tracking-tight text-[#f4f4f4]">Openworks</h1>
-        <p className="mt-3 text-[13px] tracking-wide text-[#8a8a8a]">
+        <h1 className="text-5xl font-semibold tracking-tight text-[#f5efe0]">Openworks</h1>
+        <p className="mt-3 text-[13px] tracking-wide text-[#9a916f]">
           read &rarr; summarize &rarr; internalize &rarr; organize &rarr; express
         </p>
       </div>
@@ -192,18 +192,18 @@ const OwnerGate = ({ children }: { children: React.ReactNode }) => {
   const me = useQuery(api.settings.whoami, {});
   if (me === undefined) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#0a0a0a] text-[#8a8a8a] text-sm">
+      <div className="fixed inset-0 flex items-center justify-center bg-[#0e0c08] text-[#9a916f] text-sm">
         Checking access&hellip;
       </div>
     );
   }
   if (me.authenticated && me.isOwner) return <>{children}</>;
   return (
-    <div className="fixed inset-0 overflow-y-auto flex flex-col items-center justify-center gap-6 p-6 bg-[#0a0a0a] bg-[radial-gradient(ellipse_at_top,#141414_0%,#0a0a0a_60%,#050505_100%)] text-center">
-      <h1 className="text-3xl font-semibold tracking-tight text-[#f4f4f4]">Openworks</h1>
-      <div className="max-w-md rounded-xl border border-[#333333] bg-[#141414]/95 px-6 py-5 text-left text-[13px] text-[#b8b8b8]">
-        <p className="mb-3 text-[#f4f4f4]">Signed in, but this account does not have access.</p>
-        <p className="font-mono break-all text-[12px] leading-relaxed text-[#8a8a8a]">
+    <div className="fixed inset-0 overflow-y-auto flex flex-col items-center justify-center gap-6 p-6 bg-[#0e0c08] bg-[radial-gradient(ellipse_at_top,#1c1810_0%,#0e0c08_60%,#080705_100%)] text-center">
+      <h1 className="text-3xl font-semibold tracking-tight text-[#f5efe0]">Openworks</h1>
+      <div className="max-w-md rounded-xl border border-[#3a3320] bg-[#1a1710]/95 px-6 py-5 text-left text-[13px] text-[#cdc3a6]">
+        <p className="mb-3 text-[#f5efe0]">Signed in, but this account does not have access.</p>
+        <p className="font-mono break-all text-[12px] leading-relaxed text-[#9a916f]">
           email: {me.authenticated ? (me.email ?? "(none in token)") : "(not signed in)"}
           <br />
           subject: {me.authenticated ? me.subject : "-"}
@@ -212,7 +212,7 @@ const OwnerGate = ({ children }: { children: React.ReactNode }) => {
         </p>
       </div>
       <SignOutButton>
-        <button className="rounded-full bg-[#e4e4e4] px-5 py-1.5 text-[13px] font-medium text-[#141414] hover:bg-[#f4f4f4] transition-colors">
+        <button className="rounded-full bg-[#ece3cf] px-5 py-1.5 text-[13px] font-medium text-[#1a1710] hover:bg-[#f5efe0] transition-colors">
           Sign out
         </button>
       </SignOutButton>
