@@ -2,22 +2,22 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-paper: #ffffff;
-  --color-paper-warm: #fafafa;
-  --color-ink: #0a0a0a;
-  --color-ink-2: #4a4a4a;
-  --color-ink-3: #8a8a8a;
-  --color-ink-4: #b8b8b8;
-  --color-rule: #e4e4e4;
-  --color-rule-light: #f4f4f4;
-  --color-rust: #333333;
-  --color-rust-deep: #0a0a0a;
-  --color-rust-dim: rgba(51, 51, 51, 0.08);
+  --color-paper: #faf8f4;
+  --color-paper-warm: #f7f4ef;
+  --color-ink: #1a1714;
+  --color-ink-2: #4a4540;
+  --color-ink-3: #8a8478;
+  --color-ink-4: #b5afa5;
+  --color-rule: #d5cfc5;
+  --color-rule-light: #e5e0d6;
+  --color-rust: #c4553a;
+  --color-rust-deep: #a93a20;
+  --color-rust-dim: rgba(196, 85, 58, 0.08);
   --color-slate: #3d5a80;
   --color-slate-dim: rgba(61, 90, 128, 0.08);
-  --color-ochre: #b8863b;
-  --color-ochre-dim: rgba(184, 134, 59, 0.1);
-  --color-charcoal: #333333;
+  --color-ochre: #c49a3a;
+  --color-ochre-dim: rgba(196, 154, 58, 0.08);
+  --color-charcoal: #2d2926;
   --color-sage: #5a7a5a;
   --color-sage-dim: rgba(90, 122, 90, 0.08);
   --font-serif: "Instrument Serif", Georgia, serif;
@@ -43,22 +43,22 @@
   }
 
   html.dark {
-    --color-paper: #0a0a0a;
-    --color-paper-warm: #141414;
-    --color-ink: #f4f4f4;
-    --color-ink-2: #c4c4c4;
-    --color-ink-3: #8a8a8a;
-    --color-ink-4: #5c5c5c;
-    --color-rule: #262626;
-    --color-rule-light: #1c1c1c;
-    --color-rust: #c4c4c4;
-    --color-rust-deep: #f4f4f4;
-    --color-rust-dim: rgba(196, 196, 196, 0.12);
+    --color-paper: #121212;
+    --color-paper-warm: #1c1c1e;
+    --color-ink: #e8e2d8;
+    --color-ink-2: #c5bfb5;
+    --color-ink-3: #8a8478;
+    --color-ink-4: #5a5550;
+    --color-rule: #3a3530;
+    --color-rule-light: #2e2a26;
+    --color-rust: #e07058;
+    --color-rust-deep: #ef8261;
+    --color-rust-dim: rgba(224, 112, 88, 0.12);
     --color-slate: #6d8ab0;
     --color-slate-dim: rgba(109, 138, 176, 0.12);
-    --color-ochre: #d0a355;
-    --color-ochre-dim: rgba(208, 163, 85, 0.14);
-    --color-charcoal: #f4f4f4;
+    --color-ochre: #d4aa4a;
+    --color-ochre-dim: rgba(212, 170, 74, 0.12);
+    --color-charcoal: #e8e2d8;
     --color-sage: #7a9a7a;
     --color-sage-dim: rgba(122, 154, 122, 0.12);
     color-scheme: dark;
@@ -246,6 +246,7 @@
     box-shadow: inset 0 1px 0 0 var(--glass-highlight);
     font-family: var(--font-mono);
     font-size: 10px;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--color-ink-2);
   }
