@@ -1,16 +1,17 @@
 import SwiftUI
 import UIKit
 
-// The browser's palette: ink on paper, slate as the one accent, sage for done.
-// Monochrome on purpose, so the only colour on a screen means something.
+// The browser's palette: rust on warm paper, with slate and sage kept for the
+// things they name rather than for emphasis. Shared with quire to the hex, so a
+// reader who uses both apps does not have to learn two palettes.
 enum Theme {
-    // Each accent is a pair. The single values these replaced were picked for
-    // white paper, so on a dark screen the near-black one used for newsletters
-    // was a pill you could not see, and slate on dark lost most of its
-    // contrast. The light half is unchanged, so nothing moves in light mode.
+    // Each accent is a pair, never a single constant: values picked for white
+    // paper leave a dark screen with pills you cannot read. The two halves flip
+    // together so both schemes stay legible.
     static let slate = pair(light: 0x3d_5a_80, dark: 0x8a_a9_d0)
     static let sage = pair(light: 0x5a_7a_5a, dark: 0x8f_b0_8f)
-    static let rust = pair(light: 0x33_33_33, dark: 0xc4_c4_c4)
+    static let rust = pair(light: 0xa9_3a_20, dark: 0xd9_60_3e)
+    static let rustBright = pair(light: 0xcf_54_35, dark: 0xef_82_61)
     // A link should not be the system's cornflower blue, which belongs to no
     // palette here, nor slate, which already means "structure".
     static let link = pair(light: 0x5b_4b_8a, dark: 0xb0_a0_e0)
@@ -40,9 +41,9 @@ enum Theme {
 
     static func statusColor(_ status: String) -> Color {
         switch status {
-        case "done": return sage
+        case "done": return .green
         case "failed", "error": return .red
-        case "processing", "running": return slate
+        case "processing", "running": return rustBright
         default: return .secondary
         }
     }

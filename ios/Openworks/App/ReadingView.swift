@@ -34,7 +34,7 @@ struct ReadingView: View {
                                     Button(archived ? "Restore" : "Archive") {
                                         Task { await setArchived(job) }
                                     }
-                                    .tint(Theme.slate)
+                                    .tint(Theme.rust)
                                 }
                         }
                         if !done {
@@ -201,7 +201,7 @@ struct JobDetail: View {
                         VStack(alignment: .leading, spacing: 3) {
                             ForEach(Array(s.tldr.enumerated()), id: \.offset) { _, line in
                                 HStack(alignment: .top, spacing: 6) {
-                                    Text("·").font(.subheadline).foregroundStyle(Theme.slate)
+                                    Text("·").font(.subheadline).foregroundStyle(Theme.rust)
                                     RichText(source: line)
                                 }
                             }
@@ -212,7 +212,7 @@ struct JobDetail: View {
                     if !s.keywords.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 6) {
-                                ForEach(s.keywords, id: \.self) { k in Pill(text: k, color: Theme.slate) }
+                                ForEach(s.keywords, id: \.self) { k in Pill(text: k, color: Theme.rustBright) }
                             }
                         }
                     }

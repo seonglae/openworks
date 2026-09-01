@@ -1,30 +1,31 @@
-/* Two inks on paper, not a repaint: body copy stays near-black, and slate,
+/* Two inks on warm paper, not a repaint: body copy stays near-black, and rust,
    sage and ochre mark structure. The three are the app's own accents
-   (--color-slate / -sage / -ochre in browser/src/index.css), so the site is
-   not introducing a fourth palette to the product it is describing. Ochre
-   used to be #5c5c5c in both, which is a grey wearing a colour's name. */
+   (--color-rust / -sage / -ochre in browser/src/index.css, shared with quire),
+   so the site is not introducing a fourth palette to the product it is
+   describing. Rust is the accent here because it is the accent there; a var
+   named for a colour it no longer holds is the bug this file already fixed
+   once, when ochre was #5c5c5c. */
 :root {
-  --bg: #ffffff;
-  --bg-sub: #fafafa;
-  --ink: #0a0a0a;
-  --ink-2: #4a4a4a;
+  --bg: #faf8f4;
+  --bg-sub: #f7f4ef;
+  --ink: #1a1714;
+  --ink-2: #4a4540;
   /* Darker than the app's equivalent grey, which fails AA on white at this
      text size. The app uses it for chrome; here it sets body copy. */
-  --ink-3: #767676;
-  --line: #e4e4e4;
-  --slate: #3d5a80;
+  --ink-3: #75706a;
+  --line: #d5cfc5;
+  --rust: #c4553a;
   --sage: #5a7a5a;
-  --ochre: #b8863b;
-  --slate-dim: rgba(61, 90, 128, 0.07);
-  --slate-edge: rgba(61, 90, 128, 0.32);
-  /* One hue at three tints rather than three hues. Slate, sage and a grey
-     called ochre had no relationship to each other, and a six-blade pinwheel
-     is where that shows worst: every blade argued with its neighbour. Tints
-     of the one accent the rest of the page already uses read as rotation and
-     depth instead. */
-  --blade-1: var(--slate);
-  --blade-2: #7089ab;
-  --blade-3: #a9bcd4;
+  --ochre: #c49a3a;
+  --rust-dim: rgba(196, 85, 58, 0.07);
+  --rust-edge: rgba(196, 85, 58, 0.32);
+  /* One hue at three tints rather than three hues: a six-blade pinwheel is
+     where unrelated hues show worst, because every blade argues with its
+     neighbour. These are the favicon's own three, so the card, the tab icon
+     and the app icon are one object rather than three drawings of it. */
+  --blade-1: #a93a20;
+  --blade-2: #ef7d52;
+  --blade-3: #cf5435;
   /* Frosted tiers. The tint derives from the page ground rather than being a
      colour of its own, so only the ambient wash underneath supplies hue and a
      theme flip carries the whole system along. Same shape the app uses. */
@@ -42,20 +43,20 @@
 /* The accents lift rather than invert: the same three hues at a lightness
    that clears 4.5:1 on the dark ground, so nothing has to branch below. */
 :root[data-theme="dark"] {
-  --bg: #0b0b0b;
-  --bg-sub: #141414;
-  --ink: #f4f4f4;
-  --ink-2: #b8b8b8;
-  --ink-3: #8a8a8a;
-  --line: #262626;
-  --slate: #8aa9d0;
-  --sage: #8fb08f;
-  --ochre: #d0a355;
-  --slate-dim: rgba(138, 169, 208, 0.12);
-  --slate-edge: rgba(138, 169, 208, 0.42);
-  --blade-1: var(--slate);
-  --blade-2: #6d89b0;
-  --blade-3: #43607f;
+  --bg: #121212;
+  --bg-sub: #1c1c1e;
+  --ink: #e8e2d8;
+  --ink-2: #c5bfb5;
+  --ink-3: #8a8478;
+  --line: #3a3530;
+  --rust: #e07058;
+  --sage: #7a9a7a;
+  --ochre: #d4aa4a;
+  --rust-dim: rgba(224, 112, 88, 0.12);
+  --rust-edge: rgba(224, 112, 88, 0.42);
+  --blade-1: #d9603e;
+  --blade-2: #ef8261;
+  --blade-3: #e07058;
   --glass-tint: color-mix(in srgb, var(--bg) 52%, transparent);
   --glass-tint-strong: color-mix(in srgb, var(--bg) 78%, transparent);
   --glass-border: color-mix(in srgb, #fff 11%, transparent);
@@ -91,9 +92,9 @@ body::before {
   pointer-events: none;
   opacity: var(--wash);
   background:
-    radial-gradient(62% 55% at 12% 0%, color-mix(in srgb, var(--slate) 34%, transparent), transparent 62%),
+    radial-gradient(62% 55% at 12% 0%, color-mix(in srgb, var(--rust) 34%, transparent), transparent 62%),
     radial-gradient(58% 50% at 96% 6%, color-mix(in srgb, var(--sage) 26%, transparent), transparent 60%),
-    radial-gradient(64% 58% at 88% 96%, color-mix(in srgb, var(--slate) 22%, transparent), transparent 62%),
+    radial-gradient(64% 58% at 88% 96%, color-mix(in srgb, var(--rust) 22%, transparent), transparent 62%),
     radial-gradient(54% 46% at 4% 92%, color-mix(in srgb, var(--ochre) 20%, transparent), transparent 62%);
 }
 
@@ -108,11 +109,11 @@ body::before {
 a {
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid var(--slate-edge);
+  border-bottom: 1px solid var(--rust-edge);
 }
 a:hover {
-  color: var(--slate);
-  border-bottom-color: var(--slate);
+  color: var(--rust);
+  border-bottom-color: var(--rust);
 }
 
 /* ---- masthead ---- */
@@ -161,7 +162,7 @@ header nav a {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: var(--slate);
+  color: var(--rust);
   border: 0;
 }
 header nav a:hover {
@@ -191,8 +192,8 @@ header nav a.icon svg {
   padding: 5px 9px;
 }
 #theme:hover {
-  color: var(--slate);
-  border-color: var(--slate-edge);
+  color: var(--rust);
+  border-color: var(--rust-edge);
 }
 
 /* ---- hero ---- */
@@ -228,7 +229,7 @@ header nav a.icon svg {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--slate-edge);
+  background: var(--rust-edge);
 }
 .demo-bar em {
   margin-left: 6px;
@@ -306,8 +307,8 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--slate);
-  background: var(--slate);
+  border: 1px solid var(--rust);
+  background: var(--rust);
   color: var(--bg);
   padding: 11px 20px;
   border-radius: 4px;
@@ -326,16 +327,16 @@ h1 {
 .btn:hover {
   opacity: 0.84;
   color: var(--bg);
-  border-bottom-color: var(--slate);
+  border-bottom-color: var(--rust);
 }
 .btn-ghost {
   background: none;
   color: var(--ink);
-  border-color: var(--slate-edge);
+  border-color: var(--rust-edge);
 }
 .btn-ghost:hover {
-  color: var(--slate);
-  border-color: var(--slate);
+  color: var(--rust);
+  border-color: var(--rust);
   opacity: 1;
 }
 .note {
@@ -353,7 +354,7 @@ h2 {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: var(--slate);
+  color: var(--rust);
   font-weight: 500;
   margin: 0 0 26px;
 }
@@ -424,7 +425,7 @@ figcaption {
 .cell {
   background: var(--glass-tint-strong);
   padding: 20px 22px;
-  box-shadow: inset 0 2px 0 var(--slate);
+  box-shadow: inset 0 2px 0 var(--rust);
 }
 .cell:nth-child(3n + 2) {
   box-shadow: inset 0 2px 0 var(--sage);
@@ -460,7 +461,7 @@ li code {
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 1px 5px;
-  color: var(--slate);
+  color: var(--rust);
 }
 
 details {
@@ -482,7 +483,7 @@ summary::-webkit-details-marker {
 summary::before {
   content: "+";
   font-family: var(--mono);
-  color: var(--slate);
+  color: var(--rust);
   margin-right: 11px;
 }
 details[open] summary::before {
@@ -556,7 +557,7 @@ footer p {
   margin-bottom: 8px;
 }
 .docnav-group:nth-child(2) .docnav-label {
-  color: var(--slate);
+  color: var(--rust);
 }
 .docnav-group:nth-child(3) .docnav-label {
   color: var(--ochre);
@@ -579,12 +580,12 @@ footer p {
 }
 
 .docnav a:hover {
-  color: var(--slate);
+  color: var(--rust);
 }
 
 .docnav a.on {
-  border-color: var(--slate-edge);
-  background: var(--slate-dim);
+  border-color: var(--rust-edge);
+  background: var(--rust-dim);
   color: var(--ink);
   font-weight: 600;
 }
@@ -661,7 +662,7 @@ footer p {
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
-  color: var(--slate);
+  color: var(--rust);
   font-weight: 400;
 }
 
@@ -672,7 +673,7 @@ footer p {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 1px 5px;
-  color: var(--slate);
+  color: var(--rust);
 }
 
 .prose pre {
@@ -685,7 +686,7 @@ footer p {
   line-height: 1.6;
 }
 
-/* Inline code is slate; a fenced block is not, or the rule would repaint
+/* Inline code is rust; a fenced block is not, or the rule would repaint
    every Shiki token that has no colour of its own. */
 .prose pre code {
   background: none;
@@ -721,8 +722,8 @@ footer p {
 }
 
 .doc-card:hover {
-  border-color: var(--slate-edge);
-  background: var(--slate-dim);
+  border-color: var(--rust-edge);
+  background: var(--rust-dim);
 }
 
 .doc-card strong {

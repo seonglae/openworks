@@ -82,7 +82,7 @@ struct NewsletterStatsView: View {
                 HStack(alignment: .bottom, spacing: gap) {
                     ForEach(recent, id: \.date) { day in
                         RoundedRectangle(cornerRadius: 1.5, style: .continuous)
-                            .fill(Theme.slate.opacity(0.30 + 0.55 * Double(day.elements) / Double(peak)))
+                            .fill(Theme.rust.opacity(0.30 + 0.55 * Double(day.elements) / Double(peak)))
                             .frame(width: width,
                                    height: max(geo.size.height * CGFloat(day.elements) / CGFloat(peak), 1))
                     }
@@ -118,7 +118,7 @@ struct NewsletterStatsView: View {
                     }
                     GeometryReader { geo in
                         RoundedRectangle(cornerRadius: 2, style: .continuous)
-                            .fill(Theme.slate.opacity(0.45))
+                            .fill(Theme.rust.opacity(0.45))
                             .frame(width: max(geo.size.width * Double(row.letters) / Double(total), 2))
                     }
                     .frame(height: 5)

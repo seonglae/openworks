@@ -18,7 +18,7 @@ struct ScoreGrid: View {
                 if let overall = number("overall") {
                     Text(format(overall))
                         .font(.title3.weight(.bold).monospacedDigit())
-                        .foregroundStyle(Theme.slate)
+                        .foregroundStyle(Theme.rust)
                     Text("overall")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -28,7 +28,7 @@ struct ScoreGrid: View {
                         .font(.caption.weight(.medium))
                         .padding(.horizontal, 7)
                         .padding(.vertical, 2)
-                        .background(Theme.slate.opacity(0.12), in: Capsule())
+                        .background(Theme.rust.opacity(0.12), in: Capsule())
                 }
             }
             let keys = ordered()

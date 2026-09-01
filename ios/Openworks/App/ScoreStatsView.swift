@@ -193,7 +193,7 @@ private struct DistributionCard: View {
                 ForEach(distribution.buckets, id: \.score) { bucket in
                     let inBand = selected.map { $0.contains(bucket.score) } ?? false
                     Rectangle()
-                        .fill(Theme.slate.opacity(inBand ? 0.45 : 0.16))
+                        .fill(Theme.rust.opacity(inBand ? 0.45 : 0.16))
                         .frame(width: max(x(bucket.score + 0.5) - x(bucket.score) - 1, 1),
                                height: max(geo.size.height * CGFloat(bucket.count) / CGFloat(peak), 1))
                         .offset(x: x(bucket.score))
@@ -205,7 +205,7 @@ private struct DistributionCard: View {
                         if i == 0 { path.move(to: p) } else { path.addLine(to: p) }
                     }
                 }
-                .stroke(Theme.slate, lineWidth: 1.4)
+                .stroke(Theme.rust, lineWidth: 1.4)
 
                 ForEach([("p25", distribution.quartiles.p25),
                          ("p50", distribution.quartiles.p50),
@@ -240,7 +240,7 @@ private struct DistributionCard: View {
                     }
                     .padding(.horizontal, 7)
                     .padding(.vertical, 4)
-                    .background(Theme.slate.opacity(active ? 0.3 : 0.10),
+                    .background(Theme.rust.opacity(active ? 0.3 : 0.10),
                                 in: RoundedRectangle(cornerRadius: 7, style: .continuous))
                 }
             }

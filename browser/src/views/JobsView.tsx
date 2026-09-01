@@ -295,8 +295,8 @@ const NL_SRC_FILL: Record<string, string> = {
   tldr: "var(--color-ochre)",
   alphasignal: "var(--color-rust)",
   alphaxiv: "#5a7a5a",
-  paste: "#8a8a8a",
-  other: "#b8b8b8",
+  paste: "#8a8478",
+  other: "#b5afa5",
 };
 // Newsletter source display label + accent color for the non-archived counts
 // shown left of the Detail button.

@@ -447,7 +447,7 @@ function flightDestCity(title: string): string | undefined {
   for (let i = codes.length - 1; i >= 0; i--) if (AIRPORT_CITY[codes[i]]) return AIRPORT_CITY[codes[i]];
   return undefined;
 }
-const cityColor = (city: string): string => cityMeta(city)?.color ?? "#8a8a8a";
+const cityColor = (city: string): string => cityMeta(city)?.color ?? "#8a8478";
 const cityFlag = (city: string): string => cityMeta(city)?.flag ?? "";
 const WEEKDAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function evKindCls(it: { tags: string[] }): string {
