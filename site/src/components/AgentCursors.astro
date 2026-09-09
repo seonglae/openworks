@@ -41,14 +41,23 @@ const AGENTS = [
 </div>
 
 <style>
-  /* Fixed, so a cursor tracks the heading it is reading while the page
-     scrolls under it, the way a reader's own pointer does. */
+  /* The field is the document, so an agent stays on the paragraph it is
+     reading and scrolls away with it. Anchored to the window instead, the
+     three of them ride down the page with the reader and read as an overlay
+     drawn on the glass rather than as three processes working the material. */
+  :global(body) {
+    position: relative;
+  }
   #agents {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 9;
     pointer-events: none;
     display: none;
+    /* A pointer settling on the last word of a wide heading puts its name tag
+       past the right edge, which is a horizontal scrollbar on an otherwise
+       vertical page. */
+    overflow: hidden;
   }
   #agents.on {
     display: block;
@@ -134,6 +143,7 @@ const AGENTS = [
       claude: ["commented", "reading", "linked an experiment", "flagged"],
     };
 
+    type Spot = { x: number; y: number };
     type Agent = {
       el: HTMLElement;
       id: string;
@@ -150,44 +160,31 @@ const AGENTS = [
     addEventListener(
       "mousemove",
       (e) => {
-        pointer.x = e.clientX;
-        pointer.y = e.clientY;
+        const f = field.getBoundingClientRect();
+        pointer.x = e.clientX - f.left;
+        pointer.y = e.clientY - f.top;
       },
       { passive: true },
     );
 
-    // Only what is on screen: an agent aiming at a heading three screens down
-    // parks against the edge of the viewport and reads as stuck.
-    const visible = (): HTMLElement[] =>
-      [...document.querySelectorAll<HTMLElement>(TARGETS)].filter((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top > 70 && r.bottom < innerHeight - 40;
-      });
-
-    const aim = (a: Agent, now: number) => {
-      const spots = visible();
-      if (spots.length === 0) {
-        a.until = now + 700;
-        return;
-      }
-      const el = spots[Math.floor(Math.random() * spots.length)];
-      const r = el.getBoundingClientRect();
-      // Land inside the text, past the first few characters, the way a reader
-      // rests a pointer on a word rather than on the box around it.
-      a.tx = r.left + 14 + Math.random() * Math.min(180, r.width * 0.55);
-      a.ty = r.top + r.height * 0.62;
-      a.until = now + 1800 + Math.random() * 2800;
-    };
-
-    const leaveNote = (a: Agent) => {
-      const lines = LINES[a.id] ?? ["reading"];
-      const note = document.createElement("span");
-      note.className = "note";
-      note.textContent = lines[Math.floor(Math.random() * lines.length)];
-      note.style.setProperty("--nx", `${a.x + 12}px`);
-      note.style.setProperty("--ny", `${a.y + 14}px`);
-      field.appendChild(note);
-      note.addEventListener("animationend", () => note.remove());
+    // The targets the reader can see, measured against the field rather than
+    // the window. Two things follow from that second half: a pointer keeps the
+    // spot it settled on while the page scrolls under the window, the way a
+    // note left on a paragraph stays with the paragraph, and the reader always
+    // has somebody working the screenful in front of them.
+    const visible = (): Spot[] => {
+      const f = field.getBoundingClientRect();
+      return [...document.querySelectorAll<HTMLElement>(TARGETS)]
+        .map((el) => el.getBoundingClientRect())
+        // An agent aiming at a heading three screens down parks against the
+        // edge of the viewport for the whole trip and reads as stuck.
+        .filter((r) => r.top > 70 && r.bottom < innerHeight - 40)
+        .map((r) => ({
+          // Land inside the text, past the first few characters, the way a
+          // reader rests a pointer on a word rather than on the box around it.
+          x: r.left - f.left + 14 + Math.random() * Math.min(180, r.width * 0.55),
+          y: r.top - f.top + r.height * 0.62,
+        }));
     };
 
     const agents: Agent[] = [...field.querySelectorAll<HTMLElement>(".agent")].map((el, i) => ({
@@ -203,6 +200,29 @@ const AGENTS = [
       // decoration rather than as three processes.
       until: performance.now() + 900 + i * 800,
     }));
+
+    const aim = (a: Agent, now: number) => {
+      const spots = visible();
+      if (spots.length === 0) {
+        a.until = now + 700;
+        return;
+      }
+      const spot = spots[Math.floor(Math.random() * spots.length)]!;
+      a.tx = spot.x;
+      a.ty = spot.y;
+      a.until = now + 1800 + Math.random() * 2800;
+    };
+
+    const leaveNote = (a: Agent) => {
+      const lines = LINES[a.id] ?? ["reading"];
+      const note = document.createElement("span");
+      note.className = "note";
+      note.textContent = lines[Math.floor(Math.random() * lines.length)]!;
+      note.style.setProperty("--nx", `${a.x + 12}px`);
+      note.style.setProperty("--ny", `${a.y + 14}px`);
+      field.appendChild(note);
+      note.addEventListener("animationend", () => note.remove());
+    };
 
     let last = performance.now();
     const step = (now: number) => {
