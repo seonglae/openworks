@@ -86,8 +86,14 @@ const AGENTS = [
     background: var(--hue);
   }
   /* What the agent left behind. Rises off the tip and fades, because a note
-     that stayed would be litter within three sections of scrolling. */
-  .note {
+     that stayed would be litter within three sections of scrolling.
+
+     Global because the note is built in script, so it never carries the
+     scoping attribute a template element gets. Scoped, none of this applies:
+     the note lands as inline text at the top of the field, and with no
+     animation to end it is never removed, so they pile up for as long as the
+     page is open. */
+  :global(.note) {
     position: absolute;
     top: 0;
     left: 0;
