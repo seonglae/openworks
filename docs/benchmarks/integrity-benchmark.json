@@ -1,0 +1,132 @@
+{
+  "scope": "Synthetic in-memory convex-test read/modify/write overhead, not production or model performance. Single local samples under shared-host load.",
+  "baseline_commit": "f57037ff3107203a668e452a190b46bc23e218d5",
+  "workload": "Fresh harness per kind; one initial 1024-code-unit ASCII document, 10 warmup updates plus 100 measured updates. Each sample reads current content then saves a changed 1024-code-unit payload. Only the candidate supplies its returned CAS token. Each checkout resolves the domain package to its own source; dependency versions share the unchanged frozen lockfile.",
+  "candidate_base_commit": "f57037ff3107203a668e452a190b46bc23e218d5",
+  "results": [
+    {
+      "kind": "memo",
+      "before": {
+        "kind": "memo",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 0.37021099999992657,
+        "p95Ms": 0.9865619999999353,
+        "storage": {
+          "bytes": 1200,
+          "documents": 1
+        },
+        "versioned": false
+      },
+      "after": {
+        "kind": "memo",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 1.5774390000001404,
+        "p95Ms": 5.399878000000172,
+        "storage": {
+          "bytes": 308916,
+          "documents": 224
+        },
+        "versioned": true
+      }
+    },
+    {
+      "kind": "section",
+      "before": {
+        "kind": "section",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 0.41132500000003347,
+        "p95Ms": 0.8351450000000114,
+        "storage": {
+          "bytes": 1220,
+          "documents": 1
+        },
+        "versioned": false
+      },
+      "after": {
+        "kind": "section",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 1.2188280000000304,
+        "p95Ms": 2.354689000000235,
+        "storage": {
+          "bytes": 314381,
+          "documents": 224
+        },
+        "versioned": true
+      }
+    },
+    {
+      "kind": "tex",
+      "before": {
+        "kind": "tex",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 0.39284200000008695,
+        "p95Ms": 3.102209000000016,
+        "storage": {
+          "bytes": 1185,
+          "documents": 1
+        },
+        "versioned": false
+      },
+      "after": {
+        "kind": "tex",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 1.1088740000000143,
+        "p95Ms": 2.0465640000002168,
+        "storage": {
+          "bytes": 304681,
+          "documents": 224
+        },
+        "versioned": true
+      }
+    },
+    {
+      "kind": "experiment",
+      "before": {
+        "kind": "experiment",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 0.3474900000001071,
+        "p95Ms": 0.809976000000006,
+        "storage": {
+          "bytes": 1218,
+          "documents": 1
+        },
+        "versioned": false
+      },
+      "after": {
+        "kind": "experiment",
+        "runtime": "v24.19.0",
+        "warmups": 10,
+        "samples": 100,
+        "textCodeUnits": 1024,
+        "p50Ms": 1.1346340000000055,
+        "p95Ms": 2.6134179999999105,
+        "storage": {
+          "bytes": 314718,
+          "documents": 224
+        },
+        "versioned": true
+      }
+    }
+  ]
+}

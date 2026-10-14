@@ -1,0 +1,55 @@
+{
+  "total": 8,
+  "passed": 0,
+  "failed": 8,
+  "files": 1,
+  "success": false,
+  "results": [
+    {
+      "file": "convex/test/contentIntegrity.test.ts",
+      "status": "failed",
+      "tests": [
+        {
+          "name": "content integrity acceptance cases queues workspace subscriptions only for projects in that workspace",
+          "status": "failed",
+          "failure": "AssertionError: expected [] to have a length of 1 but got +0"
+        },
+        {
+          "name": "content integrity acceptance cases pins canonical config and exact source revisions when queuing a run",
+          "status": "failed",
+          "failure": "AssertionError: expected { …(10) } to match object { …(2) }"
+        },
+        {
+          "name": "content integrity acceptance cases routes phase changes in upsert through the timeline and trigger path",
+          "status": "failed",
+          "failure": "AssertionError: expected [ 'ideation' ] to deeply equal [ 'ideation', 'literature' ]"
+        },
+        {
+          "name": "content integrity acceptance cases preserves human history while appending validated inference history",
+          "status": "failed",
+          "failure": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "name": "content integrity acceptance cases rejects a stale overwrite after first save instead of losing newer content",
+          "status": "failed",
+          "failure": "AssertionError: expected undefined to be 1 // Object.is equality"
+        },
+        {
+          "name": "content integrity acceptance cases keeps immutable persisted snapshots after deletion",
+          "status": "failed",
+          "failure": "AssertionError: expected undefined to be defined"
+        },
+        {
+          "name": "content integrity acceptance cases rejects completion of an unclaimed run",
+          "status": "failed",
+          "failure": "Error: promise resolved \"null\" instead of rejecting"
+        },
+        {
+          "name": "content integrity acceptance cases preserves a large legacy document verbatim on its first save",
+          "status": "failed",
+          "failure": "AssertionError: expected undefined to be 1 // Object.is equality"
+        }
+      ]
+    }
+  ]
+}

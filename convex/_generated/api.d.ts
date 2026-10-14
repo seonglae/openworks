@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as contentRevisions from "../contentRevisions.js";
 import type * as agentSubscriptions from "../agentSubscriptions.js";
 import type * as agentTriggers from "../agentTriggers.js";
 import type * as apnsToken from "../apnsToken.js";
@@ -67,6 +68,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  contentRevisions: typeof contentRevisions;
   agentSubscriptions: typeof agentSubscriptions;
   agentTriggers: typeof agentTriggers;
   apnsToken: typeof apnsToken;

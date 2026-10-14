@@ -1,6 +1,6 @@
 # MCP server
 
-MCP exposes working content to agents within the personal content input/output loop. Existing research-named tools remain compatible; research is one use case, not the product boundary.
+MCP exposes working content to agents within the personal content input/output loop. Existing research-named tools keep their names; versioned writes require read tokens as described below; research is one use case, not the product boundary.
 
 `mcp/research-server.mjs` exposes the research graph to agent CLIs over stdio:
 ~50 tools covering every entity type, references, comments, reports
@@ -36,9 +36,19 @@ Grouped by what they touch:
 - **Reporting**: `save_report`, `list_reports`
 - **Agents**: `subscribe_agent`, `list_subscriptions`, `list_agent_runs`
 - **Artifacts**: `log_artifact`
+- **History**: `get_content_head`, `list_content_revisions`, `get_content_revision`
 
-Writes are upserts throughout, so an agent that retries a save updates the row
-rather than creating a second one.
+For memo, experiment, section and TeX writes, first call `get_*`, then pass its
+`revision` as `expectedRevision` on save/delete. Forks also need the source read’s
+`expectedSourceRevision`. `get_content_head` exposes the deletion tombstone token
+when recreating a deleted identity. Initial creation and unversioned legacy adoption
+accept version 0; once a head exists, a missing token is rejected. A stale response
+requires rereading and reconciling the caller’s edits, never an automatic blind retry.
+Every one of these ten write/delete/fork tool schemas exposes the token and optional
+`runId`/`sourceRevisionIds` provenance fields. See [Content integrity](/docs/content-integrity/).
+
+`post_comment` accepts run/source IDs for validated agent attribution. A worker’s
+plain stdout is not evidence that an output comment was saved.
 
 ## It fails closed, and quietly
 

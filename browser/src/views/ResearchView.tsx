@@ -99,7 +99,7 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
             console.log(`queued ${r.queued} phase-infer runs`);
           }}
           className="ml-auto mono text-[10px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-rust transition-colors rounded-full"
-          title="Spawn one subagent per project: analyses folder + git log and rewrites phase + timeline"
+          title="Spawn one subagent per project: analyses folder + git log and updates phase and appends inferred evidence without replacing history"
         >
           infer phases all
         </button>
@@ -123,7 +123,12 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
             visitedStates={visitedStates}
             selectedSlug={selectedSlug}
             onNodeClick={(projectId, nodeId) => {
-              if (projectId) updatePhase({ id: projectId, phase: nodeId });
+              if (projectId)
+                updatePhase({
+                  id: projectId,
+                  phase: nodeId,
+                  expectedStateVersion: projects?.find((p) => p._id === projectId)?.stateVersion ?? 0,
+                });
             }}
           />
         </div>
@@ -172,7 +177,7 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
               selected={selectedSlug === p.slug}
               focused={focusSlug === p.slug}
               onSelect={() => setSelectedSlug((cur) => (cur === p.slug ? null : p.slug))}
-              updatePhase={(id, phase) => updatePhase({ id, phase })}
+              updatePhase={(id, phase) => updatePhase({ id, phase, expectedStateVersion: p.stateVersion ?? 0 })}
               remove={(id) => remove(id, p.title)}
               updateKeywords={(_id, keywords) =>
                 upsert({
@@ -180,6 +185,7 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
                   title: p.title,
                   kind: p.kind,
                   phase: p.phase,
+                  expectedStateVersion: p.stateVersion ?? 0,
                   venue: p.venue,
                   deadline: p.deadline,
                   notes: p.notes,
@@ -241,6 +247,7 @@ function ResearchRow({
       title: next,
       kind: project.kind,
       phase: project.phase,
+      expectedStateVersion: project.stateVersion ?? 0,
       venue: project.venue,
       deadline: project.deadline,
       notes: project.notes,

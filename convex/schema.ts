@@ -350,6 +350,8 @@ export default defineSchema({
     .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 384 }),
 
   researchProjects: defineTable({
+    stateVersion: v.optional(v.number()),
+    deletionStartedAt: v.optional(v.number()),
     slug: v.string(),
     title: v.string(),
     kind: literals(RESEARCH_KINDS),
@@ -442,6 +444,8 @@ export default defineSchema({
     .index("by_research_iter_item", ["researchSlug", "iterationN", "itemKey"]),
 
   researchTimeline: defineTable({
+    runId: v.optional(v.id("researchPhaseRuns")),
+    inferred: v.optional(v.boolean()),
     researchSlug: v.string(),
     state: v.string(),
     at: v.number(),
@@ -514,6 +518,13 @@ export default defineSchema({
   // git log, paper/references.bib presence) and infer (a) the project's
   // current phase and (b) the visited timeline with reasons + timestamps.
   researchPhaseRuns: defineTable({
+    stateVersion: v.optional(v.number()),
+    projectId: v.optional(v.id("researchProjects")),
+    kindSnapshot: v.optional(v.string()),
+    phaseSnapshot: v.optional(v.string()),
+    appliedAt: v.optional(v.number()),
+    appliedPhase: v.optional(v.string()),
+    appliedHistory: v.optional(v.string()),
     researchSlug: v.string(),
     rootPath: v.optional(v.string()),
     machineId: v.optional(v.string()),
@@ -735,10 +746,68 @@ export default defineSchema({
     .index("by_agent", ["agentId"])
     .index("by_scope", ["scope", "scopeId"]),
 
+  // Mutable heads live separately so first adoption never enlarges legacy rows.
+  contentHeads: defineTable({
+    identity: v.string(),
+    researchSlug: v.string(),
+    kind: v.union(
+      v.literal("memo"),
+      v.literal("section"),
+      v.literal("tex"),
+      v.literal("experiment"),
+      v.literal("research"),
+      v.literal("comment"),
+    ),
+    key: v.string(),
+    venueSlug: v.optional(v.string()),
+    version: v.number(),
+    revisionId: v.id("contentRevisions"),
+    deleted: v.boolean(),
+  })
+    .index("by_identity", ["identity"])
+    .index("by_research", ["researchSlug"]),
+  contentRevisions: defineTable({
+    identity: v.string(),
+    researchSlug: v.string(),
+    kind: v.string(),
+    key: v.string(),
+    venueSlug: v.optional(v.string()),
+    version: v.number(),
+    operation: v.union(
+      v.literal("legacy"),
+      v.literal("create"),
+      v.literal("update"),
+      v.literal("delete"),
+      v.literal("fork"),
+    ),
+    deleted: v.boolean(),
+    createdAt: v.number(),
+    codec: v.literal("utf16-fields-v1"),
+    snapshotBytes: v.number(),
+    chunkCount: v.number(),
+    sourceRevisionIds: v.array(v.id("contentRevisions")),
+    runId: v.optional(v.id("agentRuns")),
+  })
+    .index("by_identity_version", ["identity", "version"])
+    .index("by_research", ["researchSlug"]),
+  contentRevisionChunks: defineTable({
+    researchSlug: v.string(),
+    revisionId: v.id("contentRevisions"),
+    position: v.number(),
+    bytes: v.bytes(),
+  })
+    .index("by_revision_position", ["revisionId", "position"])
+    .index("by_research", ["researchSlug"]),
+
   // Agent runs — pending/running/done log of triggered agent calls. Worker
   // polls status="pending" and dispatches via the same gemini→codex→claude
   // chain used for newsletters.
   agentRuns: defineTable({
+    outcome: v.optional(v.union(v.literal("commented"), v.literal("no_action"))),
+    configSnapshot: v.optional(v.string()),
+    configDiagnostic: v.optional(v.string()),
+    sourceRevisionIds: v.optional(v.array(v.id("contentRevisions"))),
+    triggerSnapshot: v.optional(v.string()),
     subscriptionId: v.id("agentSubscriptions"),
     agentId: v.string(),
     triggerType: v.string(),
@@ -761,6 +830,9 @@ export default defineSchema({
   // Comments — polymorphic, threaded, soft-deletable. Attaches to any research entity.
   // For section/tex targets, targetVenueSlug disambiguates which venue copy.
   comments: defineTable({
+    outputRevisionId: v.optional(v.id("contentRevisions")),
+    runId: v.optional(v.id("agentRuns")),
+    sourceRevisionIds: v.optional(v.array(v.id("contentRevisions"))),
     researchSlug: v.string(),
     targetType: ENTITY_TYPE,
     targetKey: v.string(),
@@ -778,7 +850,8 @@ export default defineSchema({
     .index("by_research", ["researchSlug"])
     .index("by_target", ["researchSlug", "targetType", "targetKey", "createdAt"])
     .index("by_parent", ["parentId", "createdAt"])
-    .index("by_author", ["authorType", "authorId", "createdAt"]),
+    .index("by_author", ["authorType", "authorId", "createdAt"])
+    .index("by_run", ["runId"]),
 
   // References — directed edges between entities. Scoped to a project.
   // fromVenueSlug/toVenueSlug only meaningful when corresponding type ∈ {section,tex}.
