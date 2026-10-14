@@ -38,7 +38,7 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.1.163",
     "@huggingface/transformers": "^4.2.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.31.0",
     "@openworks/core": "workspace:*",
     "@openworks/domain": "workspace:*",
     "@openworks/node": "workspace:*",
