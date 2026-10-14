@@ -13,6 +13,7 @@ import { embed, EMBED_MODEL } from "./embed.mts";
 import { buildMime, digestsDue, gwsSendArgs, renderDigest, type DigestPR } from "./digest.mts";
 import { connectConvexWatcher, createConvexClient, loadEnvLocal, resolveConvexUrl } from "@openworks/node";
 import { isTerminalJobStatus } from "@openworks/domain";
+import { captureJobContent } from "./content-input.mts";
 
 // Load .env.local. A value already in the real environment wins.
 for (const [key, val] of Object.entries(loadEnvLocal(process.cwd()))) {
@@ -295,6 +296,21 @@ function getLanguageName(): string {
 }
 
 function buildPrompt(job) {
+  const prompt = buildLegacyPrompt(job);
+  if (job.type === "pr-fix" || job.tldrOnly === true || job.scoresOnly === true) return prompt;
+  let contents;
+  try {
+    contents = captureJobContent(job);
+  } catch (e) {
+    console.warn(`[worker] ${job._id}: content boundary skipped: ${(e as Error).message}`);
+    return prompt;
+  }
+  if (!contents.length) return prompt;
+  const references = contents.filter((item) => item.completeness === "reference-only").length;
+  return `Content input boundary: ${contents.length} source record(s), ${references} reference-only. References and screenshots are source locators, not verified full text. Read the source before making content claims.\n\n${prompt}`;
+}
+
+function buildLegacyPrompt(job) {
   const type = job.type || "newsletter";
   const lang = getLanguageName();
 

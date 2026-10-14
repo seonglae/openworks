@@ -14,7 +14,8 @@
     "build:app": "pnpm --filter openworks-browser exec vite build",
     "site:deploy": "pnpm site:build && wrangler pages deploy site/dist --project-name=openworks --branch=main --commit-dirty=true",
     "site:build": "pnpm site:demo && pnpm --filter openworks-site build && rm -rf site/dist/demo && cp -R browser/dist-demo site/dist/demo",
-    "site:demo": "pnpm --filter openworks-browser build:demo"
+    "site:demo": "pnpm --filter openworks-browser build:demo",
+    "benchmark:content": "node --import tsx scripts/benchmark-content.mts"
   },
   "repository": {
     "type": "git",

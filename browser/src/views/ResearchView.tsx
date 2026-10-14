@@ -570,14 +570,14 @@ function ResearchRow({
                 }
                 className="mono text-xs text-ink-2 bg-paper-warm/60 hover:bg-paper-warm px-2.5 py-1.5 rounded-lg border border-rule-light outline-none focus:border-rust transition-colors cursor-pointer"
               >
-                <option value="private">private — owner + members only</option>
-                <option value="workspace">workspace — workspace members</option>
-                <option value="unlisted">unlisted — anyone with link</option>
-                <option value="public">public — anyone</option>
+                <option value="private">private — deployment owner only</option>
+                <option value="workspace">workspace — metadata only</option>
+                <option value="unlisted">unlisted — metadata only</option>
+                <option value="public">public — metadata only</option>
               </select>
               {(project.visibility === "public" || project.visibility === "unlisted") && (
                 <span className="mono text-[10px] text-ink-4 truncate">
-                  share: {window.location.origin}/?research={project.slug}
+                  owner-only link: {window.location.origin}/?research={project.slug}
                 </span>
               )}
             </div>

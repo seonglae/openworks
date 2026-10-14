@@ -34,6 +34,11 @@ export const DOC_GROUPS: DocGroup[] = [
         blurb: "Newsletters, papers, articles and feeds arrive as jobs, get distilled and scored, and leave as a line.",
       },
       {
+        slug: "content-management",
+        title: "Content input/output",
+        blurb: "Input, Processing and Output adapters around ordered content lists, and what each one does today.",
+      },
+      {
         slug: "research",
         title: "Research",
         blurb:
@@ -77,7 +82,7 @@ export const DOC_GROUPS: DocGroup[] = [
       {
         slug: "auth",
         title: "Auth and sharing",
-        blurb: "The owner gate, the service key, and what changes when a project is made public.",
+        blurb: "The owner gate, the service key, and why visibility labels do not grant public access.",
       },
       {
         slug: "configuration",

@@ -10,6 +10,7 @@ import { DEPLOY_URL } from "../src/data/product";
 const files = readdirSync(new URL("../../docs", import.meta.url))
   .filter((name) => name.endsWith(".md"))
   .map((name) => name.slice(0, -".md".length));
+const readRepoText = (path: string) => readFileSync(new URL(`../../${path}`, import.meta.url), "utf8");
 
 describe("docs sidebar", () => {
   it("has a page behind every entry", () => {
@@ -24,6 +25,15 @@ describe("docs sidebar", () => {
     for (const page of DOC_PAGES) {
       expect(page.title.length, page.slug).toBeGreaterThan(0);
       expect(page.blurb.length, page.slug).toBeGreaterThan(0);
+    }
+  });
+
+  it("resolves published guide links through the sidebar allow-list", () => {
+    for (const slug of DOC_SLUGS) {
+      const text = readRepoText(`docs/${slug}.md`);
+      for (const [, target] of text.matchAll(/\]\(\/docs\/([^/#)]+)\/(?:#[^)]*)?\)/g)) {
+        expect(DOC_SLUGS, `${slug} links to ${target}`).toContain(target);
+      }
     }
   });
 });
