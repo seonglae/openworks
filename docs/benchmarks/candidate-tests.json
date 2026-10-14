@@ -1,0 +1,4765 @@
+{
+  "total": 1123,
+  "passed": 1123,
+  "failed": 0,
+  "files": 44,
+  "success": true,
+  "results": [
+    {
+      "file": "browser/test/appModes.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "tab fallback keeps a tab that is in the enabled set",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback falls back to the first enabled tab when the current one was disabled",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback stays put when nothing is enabled, so the user is never stranded",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback keeps a ?tab= deep link that has no nav slot of its own",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback keeps any future subnav-only mode, not just the one that ships today",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback exempts every mode that has no nav slot, whatever MODE_KEYS grows to hold",
+          "status": "passed"
+        },
+        {
+          "name": "tab fallback routes every nav tab, so the deep-link vocabulary stays covered",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/authorsView.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "authors leaderboard renders one row per author, numbered by rank",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard explains the empty corpus once the first page has loaded",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard waits for the first page instead of claiming the corpus is empty",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard counts the loaded rows once the list is exhausted",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard holds back the row count while more pages can load",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard shows the shrunk score of the ranked position by default",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard swaps the displayed number for the paper count when ranking by count",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard re-ranks by last authorship when corresponding is picked",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard keeps authors who share a display name as separate rows tagged by entity id",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard loads the author's papers only once the row is unfolded",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard folds the open row away when the ranking axis changes under it",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard offers the resolve sweep only while authors are still unresolved",
+          "status": "passed"
+        },
+        {
+          "name": "authors leaderboard hides the resolve sweep when nothing is pending",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/date.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "addDays with the process in UTC counts one day across the US spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in UTC counts one day across the US fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in UTC counts one day across the EU spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in UTC counts one day across the EU fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in UTC lands on the same date whether a year is walked one day at a time or jumped at once",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in America/New_York counts one day across the US spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in America/New_York counts one day across the US fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in America/New_York counts one day across the EU spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in America/New_York counts one day across the EU fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in America/New_York lands on the same date whether a year is walked one day at a time or jumped at once",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Europe/Berlin counts one day across the US spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Europe/Berlin counts one day across the US fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Europe/Berlin counts one day across the EU spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Europe/Berlin counts one day across the EU fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Europe/Berlin lands on the same date whether a year is walked one day at a time or jumped at once",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Asia/Seoul counts one day across the US spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Asia/Seoul counts one day across the US fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Asia/Seoul counts one day across the EU spring-forward night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Asia/Seoul counts one day across the EU fall-back night",
+          "status": "passed"
+        },
+        {
+          "name": "addDays with the process in Asia/Seoul lands on the same date whether a year is walked one day at a time or jumped at once",
+          "status": "passed"
+        },
+        {
+          "name": "addDays rolls into the next month at a month end",
+          "status": "passed"
+        },
+        {
+          "name": "addDays keeps the leap day in a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "addDays rolls into the next year at a year end",
+          "status": "passed"
+        },
+        {
+          "name": "addDays walks backwards for a negative count",
+          "status": "passed"
+        },
+        {
+          "name": "addDays returns the same date for a zero count",
+          "status": "passed"
+        },
+        {
+          "name": "addDays returns to the starting date when a step is undone",
+          "status": "passed"
+        },
+        {
+          "name": "addDays pads single-digit months and days so results sort as strings",
+          "status": "passed"
+        },
+        {
+          "name": "dateParts splits a date string into a year, a one-based month and a day",
+          "status": "passed"
+        },
+        {
+          "name": "localDate names the day the user is living in, not the UTC one",
+          "status": "passed"
+        },
+        {
+          "name": "localDate emits exactly the zero-padded shape addDays parses back",
+          "status": "passed"
+        },
+        {
+          "name": "localDate agrees with addDays on which day follows today, in every zone",
+          "status": "passed"
+        },
+        {
+          "name": "localDate still names the local day on the two nights the clock jumps",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/dietView.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "diet day log waits for the day's log rather than calling it empty while it loads",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log waits for the trend rather than calling it empty while it loads",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log says the day is empty when nothing was logged",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log renders one row per logged food, with rounded macros",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log rounds the day's totals to whole units",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log marks an entry the worker has not analyzed yet",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log names an analyzed entry the model could not identify",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log omits the macros the analyzer did not return",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log deletes the entry its own delete button belongs to",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log logs a typed food name against the selected day and clears the box",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log refuses to log a blank food name",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log reads the selected day and the 14 days ending on it",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log says there is no trend until days have been logged",
+          "status": "passed"
+        },
+        {
+          "name": "diet day log draws one labelled bar per day of the trend",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/hooks.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "useInfiniteScroll watches the sentinel a screenful before it reaches the viewport",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll watches nothing while a page is still in flight or the list is exhausted",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll pulls one batch when the sentinel scrolls into view",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll pulls nothing when the sentinel scrolls back out of view",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll pulls a batch per crossing, so a fast scroll keeps filling the list",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll starts watching once a stalled list can load again",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll stops watching once the list runs out",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll stops watching when the list unmounts",
+          "status": "passed"
+        },
+        {
+          "name": "useInfiniteScroll re-subscribes when the caller passes a fresh callback identity",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery returns the live value and remembers it for the next visit",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery shows the last known value while the query is still loading",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery replaces the cache once the query resolves",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery returns nothing on a cold start and writes nothing",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery survives a cache entry that is not valid JSON",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery survives storage that refuses to read or write, as in private browsing",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery keeps caches apart by key",
+          "status": "passed"
+        },
+        {
+          "name": "useCachedQuery hands back a fresh object on every render while serving the cache",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/jobRow.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "job row label shows short pasted content whole, with no elision mark",
+          "status": "passed"
+        },
+        {
+          "name": "job row label marks the label elided once the content is longer than the window",
+          "status": "passed"
+        },
+        {
+          "name": "job row label never cuts an emoji in half at the window boundary",
+          "status": "passed"
+        },
+        {
+          "name": "job row label flattens newlines so the preview stays on one line",
+          "status": "passed"
+        },
+        {
+          "name": "job row label falls back to a fixed label for an image-only job",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/researchFsm.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "research FSM diagram draws every own state, in the domain's order",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram draws every review state, in the domain's order",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram labels the own nodes with the text the user reads",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram labels the review nodes with the text the user reads",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram takes every node label from the domain, per kind",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram keeps the shared `setup` id reading differently in each graph",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram draws exactly the own transitions the domain allows",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram draws exactly the review transitions the domain allows",
+          "status": "passed"
+        },
+        {
+          "name": "research FSM diagram draws no edge twice",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/ui.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "isModifiedClick lets the browser handle a click that asks for a new tab or window",
+          "status": "passed"
+        },
+        {
+          "name": "isModifiedClick lets the browser handle a middle click",
+          "status": "passed"
+        },
+        {
+          "name": "isModifiedClick claims a plain left click for client-side routing",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter says it is fetching while the first page is on the way",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter says it is fetching while a later page is on the way",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter reports the total only once the whole list has arrived",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter stays silent about a total that is still growing",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter stays silent when the list turned out to be empty",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter exposes its own node as the scroll sentinel",
+          "status": "passed"
+        },
+        {
+          "name": "PaginationFooter keeps the sentinel node mounted while it is empty, so scrolling can still trigger",
+          "status": "passed"
+        },
+        {
+          "name": "BlockSkeleton draws three bars unless told otherwise",
+          "status": "passed"
+        },
+        {
+          "name": "BlockSkeleton draws as many bars as asked for",
+          "status": "passed"
+        },
+        {
+          "name": "BlockSkeleton tapers the bars so the block reads as text rather than a table",
+          "status": "passed"
+        },
+        {
+          "name": "BlockSkeleton tells assistive tech the region is still loading",
+          "status": "passed"
+        },
+        {
+          "name": "BlockSkeleton keeps the caller's layout classes alongside its own",
+          "status": "passed"
+        },
+        {
+          "name": "OFFSCREEN_SKIP is a single class token, since it is interpolated into className strings",
+          "status": "passed"
+        },
+        {
+          "name": "MODE_KEYS lists every tab once",
+          "status": "passed"
+        },
+        {
+          "name": "MODE_KEYS includes the tab the router falls back to when `?tab=` is missing or unknown",
+          "status": "passed"
+        },
+        {
+          "name": "MODE_KEYS names tabs that survive a round trip through a query string",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "browser/test/vocabView.test.tsx",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "vocab review queue reports how much of the deck is due",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue cannot start a review with nothing due",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue shows the Japanese side first and keeps the answer hidden",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue prompts with the English side for a card that has no Japanese",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue reveals every filled field of the card on demand",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue grades the shown card and hides the answer again",
+          "status": "passed"
+        },
+        {
+          "name": "vocab review queue says the queue is clear once the last due card is graded",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck lists every expression with its next review day",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck leads each row with the English entry, not the translation of it",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck marks only the expressions the worker is still enriching",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck deletes the expression its own del button belongs to",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck adds an expression with only the fields that were filled in",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck refuses to add an expression with no English side",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck bulk imports one expression per line, skipping blank lines",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck reports a line it dropped for having no English side as skipped",
+          "status": "passed"
+        },
+        {
+          "name": "vocab deck counts only the lines that landed when some are dropped",
+          "status": "passed"
+        },
+        {
+          "name": "vocab notion sync prefills the saved database id and exports to it",
+          "status": "passed"
+        },
+        {
+          "name": "vocab notion sync keeps the database count singular when one database was imported",
+          "status": "passed"
+        },
+        {
+          "name": "vocab notion sync surfaces a failed Notion import instead of staying silent",
+          "status": "passed"
+        },
+        {
+          "name": "vocab due reminders stays off when the browser refuses notification permission",
+          "status": "passed"
+        },
+        {
+          "name": "vocab due reminders announces the due count and remembers the choice once permitted",
+          "status": "passed"
+        },
+        {
+          "name": "vocab day boundary asks for the cards due on the user's day, not the server's UTC day",
+          "status": "passed"
+        },
+        {
+          "name": "vocab day boundary schedules the next review from the user's day",
+          "status": "passed"
+        },
+        {
+          "name": "vocab day boundary captures a new expression on the user's day",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/agentRuns.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "recovering runs a dead worker left claimed fails a run still claimed long after the spawn could have finished",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed leaves a run that is merely slow alone",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed reaps a row claimed before startedAt was recorded, dating it from creation",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed does not touch pending work waiting for a live worker",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed does not re-reap a run it already failed",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed says how long the row was abandoned, so the cause is datable",
+          "status": "passed"
+        },
+        {
+          "name": "recovering runs a dead worker left claimed keeps a reaped run out of the pending queue a worker would pick up",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/auth.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "the gate on a deployment with no owner configured refuses a caller with no service key",
+          "status": "passed"
+        },
+        {
+          "name": "the gate on a deployment with no owner configured refuses a caller presenting the wrong key",
+          "status": "passed"
+        },
+        {
+          "name": "the gate on a deployment with no owner configured lets the service key through, which is how the workers and the dev UI connect",
+          "status": "passed"
+        },
+        {
+          "name": "the gate on a deployment with no owner configured refuses everyone when no key is configured either",
+          "status": "passed"
+        },
+        {
+          "name": "the gate once an owner is configured still lets the service key through for the workers",
+          "status": "passed"
+        },
+        {
+          "name": "the gate once an owner is configured rejects an anonymous caller",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/authors.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "papers still awaiting author resolution offers only paper jobs that have never been through OpenAlex",
+          "status": "passed"
+        },
+        {
+          "name": "papers still awaiting author resolution keeps archived papers queued, because the leaderboard covers the whole reading history",
+          "status": "passed"
+        },
+        {
+          "name": "papers still awaiting author resolution hands back the newest pending papers first and never more than the limit",
+          "status": "passed"
+        },
+        {
+          "name": "identifiers gathered for one paper returns null for a job that no longer exists",
+          "status": "passed"
+        },
+        {
+          "name": "identifiers gathered for one paper gathers the job url, every summary url and the leading slice of stripped content",
+          "status": "passed"
+        },
+        {
+          "name": "identifiers gathered for one paper drops blank urls and falls back to the first summary title when the job has none",
+          "status": "passed"
+        },
+        {
+          "name": "saving resolved authorships replaces the paper's previous authorships instead of appending to them",
+          "status": "passed"
+        },
+        {
+          "name": "saving resolved authorships stamps the paper as resolved even when OpenAlex matched nothing",
+          "status": "passed"
+        },
+        {
+          "name": "saving resolved authorships leaves an already known work id in place when the caller omits one",
+          "status": "passed"
+        },
+        {
+          "name": "rekeying authorships OpenAlex could not identify gives two same-named unidentified authors different keys so they never merge",
+          "status": "passed"
+        },
+        {
+          "name": "rekeying authorships OpenAlex could not identify leaves identified authorships alone and finds nothing left to fix on a second pass",
+          "status": "passed"
+        },
+        {
+          "name": "the join feeding the author rollup averages over papers rather than authorships, so a many-author paper does not weigh more",
+          "status": "passed"
+        },
+        {
+          "name": "the join feeding the author rollup counts a work once in the baseline when the same paper was submitted twice",
+          "status": "passed"
+        },
+        {
+          "name": "the join feeding the author rollup identifies a paper by its OpenAlex work, so a second submission is not a second paper",
+          "status": "passed"
+        },
+        {
+          "name": "the join feeding the author rollup takes the score from the first summary that carries one",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup leaves out an authorship with no OpenAlex entity behind it",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup keeps two researchers who publish under the same display name apart",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup counts a work once when the same paper was submitted twice",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup does not let a many-author paper drag a solo author's shrunk score",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup pulls a single outstanding score toward the global mean",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup gives an author with no scored paper the global mean and a raw mean of zero",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup tallies first, last and any authorship on separate axes",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup keeps the first orcid and institution seen for an author",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup remembers the newest paper date across an author's papers",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup drops an author whose authorships disappeared once the clock has moved on",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup drops a vanished author even when two rebuilds land on the same millisecond",
+          "status": "passed"
+        },
+        {
+          "name": "author rollup gives each rebuild a marker past the last one even without the clock moving",
+          "status": "passed"
+        },
+        {
+          "name": "stats persistence updates an author's existing row rather than inserting a second one",
+          "status": "passed"
+        },
+        {
+          "name": "stats persistence deletes only the rows an earlier rebuild left behind",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard ranks by shrunk first-author score when neither axis is given",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard ranks by paper count when the count metric is asked for",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard hides an author who never held the ranked position",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard hides an author with no scored paper in the position, but only under the score metric",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard returns a short page when the filter drops a row, because filtering runs after pagination",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard walks the whole board across pages without repeating an author",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard puts the more recently written of two tied authors first",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard rejects a position outside first, last and all",
+          "status": "passed"
+        },
+        {
+          "name": "leaderboard rejects a metric outside score and count",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row shows a work once even when it was submitted twice",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row falls back to the summary at index 0, not to whichever row was written first",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row skips an authorship whose job was deleted",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row carries the paper's score, research level and archive flag",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row falls back to the summary title, and marks a paper with neither title untitled",
+          "status": "passed"
+        },
+        {
+          "name": "papers behind one leaderboard row returns nothing for an author id that was never recorded",
+          "status": "passed"
+        },
+        {
+          "name": "resolution progress counts resolved and pending papers and ignores other job types",
+          "status": "passed"
+        },
+        {
+          "name": "sweep entry point schedules the sweep, which rebuilds the stats once no paper is pending",
+          "status": "passed"
+        },
+        {
+          "name": "shrinkage constant reports the constant alone, without consulting the stored rows",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/calendar.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "queueing a single day sync leaves a pending request the worker can pick up",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a single day sync does not create the plan day it refers to",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range covers both endpoints of the range",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range queues a single day when start and end are the same date",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range queues nothing when the end precedes the start",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range rolls the day key over a month and a year boundary",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range counts 29 February in a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range skips 29 February outside a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range emits one day per calendar date across a daylight saving transition",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range stops after 62 days on a range that spans a year",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range reuses a plan day that already exists and only counts the new ones",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range queues a second request for a day that already has one pending",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range ignores plan days that belong to another plan when deciding what to create",
+          "status": "passed"
+        },
+        {
+          "name": "queueing a day range numbers plan days by days since the epoch, unlike the recent sync's 0-based order",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue hands out the oldest pending request first",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue hands out nothing once every request has been handled",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue takes a request off the queue as soon as it is claimed",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue refuses a second claim of the same request",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue records the failure of a request that was already claimed",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue stores the worker's summary on a successful completion",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue shows the newest request for a day, ignoring the same day on another plan",
+          "status": "passed"
+        },
+        {
+          "name": "worker request queue shows nothing for a day that was never queued",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day numbers the first event of an empty day 0, where a hand-made item would start at 1",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day appends after items a human already put on that day",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day updates an event in place on a re-sync instead of duplicating it",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day keeps the done flag a user set on a re-synced event",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day clears the times of an event that came back without them",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day keeps a tier the previous sync assigned when the new payload omits it",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day leaves behind an item whose outlook event has disappeared",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day folds a payload that repeats the same event id into one row",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day syncs only the last of a twin pair sharing an event id and leaves the other alone",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day duplicates an event that moved to another day rather than moving the row",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day keeps an imported item on the day a user re-dated it to",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day keeps the same event id independent across plans",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day writes nothing for an empty payload",
+          "status": "passed"
+        },
+        {
+          "name": "folding outlook events into a plan day imports a todo when the payload asks for one",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/diet.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "logging a food entry stores the day key the caller supplies without deriving one server-side",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry pads an unpadded day key so range queries compare strings correctly",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry stores an already-padded day key unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry rejects a day key that is not a calendar date",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry accepts 29 February only in a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry starts a new entry pending with no macros attached",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry hands out an upload url for the photo",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry returns no image url for an entry logged without a photo",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry returns the stored image url for an entry logged with a photo",
+          "status": "passed"
+        },
+        {
+          "name": "logging a food entry drops the row it is asked to remove",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries returns the most recently logged entry first",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries returns zero totals and no entries for a day nothing was logged on",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries excludes the adjacent days on both sides of the requested one",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries sums the macros of every entry on the day",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries answers an unpadded day key with the padded day's entries",
+          "status": "passed"
+        },
+        {
+          "name": "one day's entries counts an entry still waiting for analysis as zero rather than skipping it",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range includes both endpoints of the range",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range returns a single day when the range collapses to one date",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range omits days with no entries instead of filling them with zeroes",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range crosses a month boundary in ascending date order",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range includes 29 February when the range spans a leap day",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range aggregates several entries logged on the same day into one bucket",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range finds an entry logged with an unpadded day key inside a zero-padded month range",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range matches a range asked for with unpadded endpoints",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range returns nothing when the range runs backwards",
+          "status": "passed"
+        },
+        {
+          "name": "daily totals over a range returns an empty series when nothing has been logged at all",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline offers only the entries still waiting for analysis",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline lets exactly one worker claim an entry",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline refuses to claim an entry that already finished",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline marks an analyzed entry done without moving it to another day",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline counts a newly analyzed entry into its day's totals",
+          "status": "passed"
+        },
+        {
+          "name": "worker analysis pipeline records a failure without clearing the day it was logged on",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/embeddings.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "moving vectors out of the subject row upserts rather than accumulating when a row is re-embedded",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row keeps two models side by side for the same row",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row moves every embedded row even when unembedded ones are interleaved",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row leaves no vector behind on the rows it migrated",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row is safe to run twice",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row stamps the subject so the worker stops offering it",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row does not let a second model mark the active model's work as done",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row returns the subject's id from a search, not the embedding row's",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row does not return one subject kind's vectors when searching another",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row files a vector by its width and searches the matching index",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row clears the narrow vector when a row is re-embedded by a wider model",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row refuses a width no index can answer for",
+          "status": "passed"
+        },
+        {
+          "name": "moving vectors out of the subject row counts only the model asked for",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/expressions.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "capturing expressions starts an English-only phrase due on the server's day when the caller names none",
+          "status": "passed"
+        },
+        {
+          "name": "capturing expressions skips enrichment once either a translation or a meaning is supplied",
+          "status": "passed"
+        },
+        {
+          "name": "capturing expressions still queues enrichment when only a reading or an example came in",
+          "status": "passed"
+        },
+        {
+          "name": "capturing expressions keeps duplicates typed one at a time, because only the bulk import dedupes",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing expressions drops blanks and case-insensitive repeats inside one import",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing expressions matches an existing row on its trimmed form, so padded entries are not re-added",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing expressions marks every imported phrase for enrichment",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment hands the worker only the rows still missing a translation",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment takes a row out of the queue once enrichment lands",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment leaves fields the second enrichment omitted untouched",
+          "status": "passed"
+        },
+        {
+          "name": "listing and the review queue lists newest first regardless of the review schedule",
+          "status": "passed"
+        },
+        {
+          "name": "listing and the review queue serves overdue cards before today's and never a card scheduled ahead",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review schedules the first good review one day out",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review schedules the second good review three days out",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review compounds the interval by the ease factor from the third good review on",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review raises ease on an easy grade while the first interval stays fixed at one day",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review applies the easy bonus on top of the raised ease once the interval compounds",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review resets the streak to tomorrow when the answer was forgotten",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review stops lowering ease at the floor no matter how often a card is forgotten",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review does nothing when the card was deleted between the draw and the grade",
+          "status": "passed"
+        },
+        {
+          "name": "grading a review rejects a grade outside again / good / easy",
+          "status": "passed"
+        },
+        {
+          "name": "the caller's day captures a new phrase on the day the caller named",
+          "status": "passed"
+        },
+        {
+          "name": "the caller's day bulk imports onto the day the caller named",
+          "status": "passed"
+        },
+        {
+          "name": "the caller's day moves the review queue's cut-off with the day the caller named",
+          "status": "passed"
+        },
+        {
+          "name": "the caller's day schedules the next review forward from the day the caller named",
+          "status": "passed"
+        },
+        {
+          "name": "the caller's day falls back to the server's day for the worker and any other caller that names none",
+          "status": "passed"
+        },
+        {
+          "name": "removing an expression takes the card out of both the list and the review queue",
+          "status": "passed"
+        },
+        {
+          "name": "removing an expression rejects an id that does not belong to the expressions table",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/github.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "listing open pull requests asks GitHub nothing when no user or org is configured",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/insights.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "pasting insights by hand makes one insight per blank-line-separated paragraph",
+          "status": "passed"
+        },
+        {
+          "name": "pasting insights by hand keeps a multi-line quote whole as long as it has no blank line inside",
+          "status": "passed"
+        },
+        {
+          "name": "pasting insights by hand adds nothing for a blob that is only whitespace",
+          "status": "passed"
+        },
+        {
+          "name": "pasting insights by hand stores a hand-pasted duplicate again, because only the bulk import dedupes",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing insight texts skips fragments shorter than four characters",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing insight texts dedupes case-insensitively against stored rows and within the same batch",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing insight texts labels imported rows as coming from notion unless the caller says otherwise",
+          "status": "passed"
+        },
+        {
+          "name": "bulk importing insight texts refuses a harvest origin, which only the worker path may set",
+          "status": "passed"
+        },
+        {
+          "name": "screenshot insights queues an empty row so the worker can read the quote off the image",
+          "status": "passed"
+        },
+        {
+          "name": "screenshot insights serves a download url for the stored screenshot",
+          "status": "passed"
+        },
+        {
+          "name": "screenshot insights returns no url for a text-only insight",
+          "status": "passed"
+        },
+        {
+          "name": "screenshot insights returns no url when the insight was deleted while its image was on screen",
+          "status": "passed"
+        },
+        {
+          "name": "screenshot insights hands the paste flow an upload url to post the screenshot to",
+          "status": "passed"
+        },
+        {
+          "name": "listing insights lists every status together, newest first",
+          "status": "passed"
+        },
+        {
+          "name": "listing insights counts each status for the filter chips and reports the count as exact",
+          "status": "passed"
+        },
+        {
+          "name": "listing insights stops counting at the cap and says so, counting the newest rows the list also shows",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights returns a single status newest first when the list is filtered",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights orders the unfiltered feed by what still needs attention, then by recency",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights skips statuses with no rows instead of spending a round trip on an empty page",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights finishes in one call on an empty table",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights hands the cursor to the next status once a stream runs out",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights restarts from the top when handed a cursor that carries no status rank",
+          "status": "passed"
+        },
+        {
+          "name": "paginating insights rejects a status the feed does not know",
+          "status": "passed"
+        },
+        {
+          "name": "editing and status changes re-queues an edited insight and drops the enrichment written for the old text",
+          "status": "passed"
+        },
+        {
+          "name": "editing and status changes drops the provider and the placement stamp but keeps the unrecoverable source url",
+          "status": "passed"
+        },
+        {
+          "name": "editing and status changes moves an insight to a chosen status",
+          "status": "passed"
+        },
+        {
+          "name": "editing and status changes refuses a status outside the five the schema allows",
+          "status": "passed"
+        },
+        {
+          "name": "editing and status changes drops a removed insight out of the list",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment hands the worker only the rows waiting to be enriched",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment accepts a typo-level cleanup of the original wording",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment keeps the user's wording when the enrichment tries to paraphrase it",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment fills the text of an image-only row from scratch",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment lets a very short insight be replaced wholesale, because the guard has a four-edit floor",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment ignores a whitespace-only rewrite but still records the enrichment",
+          "status": "passed"
+        },
+        {
+          "name": "worker enrichment parks a failed enrichment with a truncated error message",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs attaches the origin job and skips blanks and quotes already captured",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs applies the same minimum length the bulk import does, so neither path can seed a fragment",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs offers newsletter jobs before paper jobs and the newest of each first",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs offers one job at a time unless a limit is given",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs passes over archived, unfinished and already-harvested jobs",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs stops offering a job once it has been marked harvested",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs still reaches a harvestable job sitting behind hundreds of newer ones",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs reaches a job old enough to predate the archived field",
+          "status": "passed"
+        },
+        {
+          "name": "harvesting insights from finished jobs clamps an oversized limit so one caller cannot read more job content than a transaction allows",
+          "status": "passed"
+        },
+        {
+          "name": "placement from the notion action reads back the row the placement action was given",
+          "status": "passed"
+        },
+        {
+          "name": "placement from the notion action reads back nothing when the insight was deleted before the action ran",
+          "status": "passed"
+        },
+        {
+          "name": "placement from the notion action stamps the placement time when the quote lands in notion",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/jobs.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "jobs:create queues a new url as a pending non-archived newsletter",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create returns the existing job id instead of queueing the same email twice",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create queues the same url twice, because dedup is keyed on emailId and not on the url",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create keeps imageId pointing at the first attachment of a multi-image paste",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create drops an empty attachment list rather than storing it",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create honours a caller supplied createdAt so a backfilled row lands on its real date",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:create accepts every type in the domain vocabulary and rejects anything else",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:getContent returns the full body the list view only previews",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:getContent returns null for a job that has been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:claimJob moves a pending job to summarizing and counts the attempt",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:claimJob returns null for a job that is already being worked on, so two workers cannot claim it",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:claimJob keeps the original start time on a re-claim so the duration measures the first attempt",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:recordAttemptResult accumulates token usage across attempts",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:recordAttemptResult keeps the first completion timestamp when a later attempt also reports completed",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:recordAttemptResult writes nothing when the attempt reported neither tokens nor completion",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:recordAttemptResult ignores telemetry for a job that was deleted mid-run",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateStatus clears the error left by a failed attempt once the job reaches done",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateStatus keeps the message when the terminal status is error",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateStatus stamps the completion time on the first terminal status only",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateStatus accepts every status in the domain vocabulary and rejects anything else",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateStatus returns quietly when the job was deleted mid-run, like recordAttemptResult",
+          "status": "passed"
+        },
+        {
+          "name": "worker queue reads getPending skips rows that are already summarizing",
+          "status": "passed"
+        },
+        {
+          "name": "worker queue reads getAllPending drops the content blob the worker refetches through claimJob",
+          "status": "passed"
+        },
+        {
+          "name": "worker queue reads getProcessable spans the three in-flight statuses and excludes finished jobs",
+          "status": "passed"
+        },
+        {
+          "name": "worker queue reads internalGetAllPending keeps the content the public listing strips",
+          "status": "passed"
+        },
+        {
+          "name": "tldr backfill helpers lists only finished jobs of the requested type that still have no tldr",
+          "status": "passed"
+        },
+        {
+          "name": "tldr backfill helpers clearAllTldr counts only the rows that actually carried a tldr",
+          "status": "passed"
+        },
+        {
+          "name": "tldr backfill helpers clearAllTldr leaves archived rows alone",
+          "status": "passed"
+        },
+        {
+          "name": "tldr backfill helpers setTldr clears the pending spinner flag as it writes",
+          "status": "passed"
+        },
+        {
+          "name": "tldr backfill helpers requeues finished untldr'd jobs as tldr-only work",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent returns nothing for a blank query without touching the indexes",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent drops fuzzy index hits that do not contain the exact phrase",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent finds a job through the text of one of its summaries",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent finds a job through a chat message about it",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent ignores the content body unless includeContent is set",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent scopes hits to the requested type and archived flag",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent returns the matches newest first",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent finds the exact phrase behind more token-only noise rows than the limit allows",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent does the same for a body match when includeContent is on",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent still reaches a body match past the 75th content hit when the caller asks for 100",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent keeps a chat-only match even behind more summary matches than the lookup budget",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent caps the result at the requested limit",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:searchWithContent ships a content preview rather than the whole body",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:getById returns null for a malformed id instead of throwing at the UI",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:getById returns null for a well formed id belonging to another table",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:getById returns the whole row, content included, for a real id",
+          "status": "passed"
+        },
+        {
+          "name": "date distributions buckets papers by their arXiv publication month and by upload day",
+          "status": "passed"
+        },
+        {
+          "name": "date distributions leaves the published axis empty for a type that is not paper",
+          "status": "passed"
+        },
+        {
+          "name": "date distributions counts archived rows separately from active ones",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:listByDate returns the issues whose title date matches the clicked bar",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:listByDate falls back to the upload day when the title carries no issue date",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:listByDate treats an issue with no url but pasted content as the paste source",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:listByDate intersects the date bucket with the source chip when both are set",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:newsletterStats counts issues per source but sums summarized elements per issue date",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:newsletterStats reads the denormalized summaryCount, so a job with unsynced rollups contributes zero elements",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list pages newest first and reports isDone only on the final page",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list orders the archived list by archive time rather than creation time",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list defaults to non-archived newsletters when no filter is given",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list replaces the body with a preview capped at 120 characters",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list never cuts the preview through a surrogate pair",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list omits contentPreview entirely for a job with no body",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:list returns an empty page for a tab key that is not a job type",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts returns the requested window of the newest-first list",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts returns fewer rows than asked for when the window runs off the end",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts counts only the requested type and archived flag",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts getLatest crosses every type and returns the newest row",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts listAllMeta reports the content length instead of the content",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts listAll ships the raw rows, content and all",
+          "status": "passed"
+        },
+        {
+          "name": "offset paging and counts listPaperRefs returns newest-first ids for active papers only",
+          "status": "passed"
+        },
+        {
+          "name": "archive semantics archiving stamps archivedAt and moves the row out of the active list",
+          "status": "passed"
+        },
+        {
+          "name": "archive semantics unarchiving clears the archive timestamp so the row sorts by creation again",
+          "status": "passed"
+        },
+        {
+          "name": "archive semantics backfillArchived only touches legacy rows that never had the flag",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths retry drops the derived rows, clears the error and resets the rollup",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths resets arxiv papers whose content was never stored and leaves the rest scanned but untouched",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths skips an arxiv paper a worker is still summarizing but retries one that errored",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths still cleans a queued arxiv paper, because pending means no worker has claimed it",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths leaves an in-flight paper alone, so the rescore sweep cannot hand a running job to a second worker",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths still rescores a paper whose last attempt ended in error, because error is terminal",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths marks papers whose summaries are missing any structured score field",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths marks only unscored articles unless force is passed",
+          "status": "passed"
+        },
+        {
+          "name": "retry paths clears the one-shot rescore flags",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateType brings the paper scores into the rollup when a newsletter is retyped",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateType drops the scores again when the same job is retyped away from paper",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:updateType rejects a type outside the domain vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "pasted images prefers the multi-image list over the legacy single id",
+          "status": "passed"
+        },
+        {
+          "name": "pasted images falls back to the single imageId for rows written before multi-paste",
+          "status": "passed"
+        },
+        {
+          "name": "pasted images returns nothing for a job with no paste and for a job that is gone",
+          "status": "passed"
+        },
+        {
+          "name": "small field writers stamps the canonical url an agent recovered from a pasted screenshot",
+          "status": "passed"
+        },
+        {
+          "name": "small field writers stores title, content, provider and emailId without disturbing the status",
+          "status": "passed"
+        },
+        {
+          "name": "small field writers patching an emailId after the fact does not retroactively dedupe the row",
+          "status": "passed"
+        },
+        {
+          "name": "small field writers setTldrPending toggles the spinner flag on its own",
+          "status": "passed"
+        },
+        {
+          "name": "small field writers hands out an upload url for a clipboard paste",
+          "status": "passed"
+        },
+        {
+          "name": "jobs:remove deletes the job together with its summaries and suggestions",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/notion.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "anchoring a suggestion to the block its context came from anchors a bookmark line to the bookmark block, which has no rich_text",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from anchors a linked paragraph, whose markdown carries syntax the block text does not",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from anchors a list item, whose markdown carries a bullet marker the block text does not",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from still anchors a heading",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from still anchors a plain paragraph",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from does not anchor to an unrelated block",
+          "status": "passed"
+        },
+        {
+          "name": "anchoring a suggestion to the block its context came from yields no needle for a marker-only line",
+          "status": "passed"
+        },
+        {
+          "name": "resolving the insert position anchors to the bookmark in the middle of the page, not the last block",
+          "status": "passed"
+        },
+        {
+          "name": "resolving the insert position picks the first matching block when a page repeats a URL",
+          "status": "passed"
+        },
+        {
+          "name": "resolving the insert position reports no anchor when the context is absent, so the caller can append",
+          "status": "passed"
+        },
+        {
+          "name": "resolving the insert position reports no anchor when the context names something the page does not have",
+          "status": "passed"
+        },
+        {
+          "name": "resolving the insert position steps forward past trailing context lines",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/paperLinks.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "summary vector lookup returns null when the summary is gone",
+          "status": "passed"
+        },
+        {
+          "name": "summary vector lookup reports a summary that was never embedded as a null vector while still naming its job",
+          "status": "passed"
+        },
+        {
+          "name": "summary cards keeps the order the ids were asked for and skips ones that no longer resolve",
+          "status": "passed"
+        },
+        {
+          "name": "summary cards carries the job type onto each card so the ui can label the source",
+          "status": "passed"
+        },
+        {
+          "name": "project lookup skips project ids that no longer resolve",
+          "status": "passed"
+        },
+        {
+          "name": "research links shown for a job hides rejected suggestions and puts the strongest of the rest first",
+          "status": "passed"
+        },
+        {
+          "name": "research links shown for a job returns nothing for a job that has no suggestions at all",
+          "status": "passed"
+        },
+        {
+          "name": "summaries still awaiting link generation offers only finished, unarchived paper jobs whose summary is embedded and unlinked",
+          "status": "passed"
+        },
+        {
+          "name": "summaries still awaiting link generation skips a summary that has already been through link generation",
+          "status": "passed"
+        },
+        {
+          "name": "summaries still awaiting link generation skips a legacy paper job that carries no archived flag, because the index demands one",
+          "status": "passed"
+        },
+        {
+          "name": "summaries still awaiting link generation hands out three summaries unless a different limit is asked for, newest job first",
+          "status": "passed"
+        },
+        {
+          "name": "summaries still awaiting link generation only ever considers a job's first summary",
+          "status": "passed"
+        },
+        {
+          "name": "writing the agent's accepted links clears its own earlier suggestions but keeps the ones the user already acted on",
+          "status": "passed"
+        },
+        {
+          "name": "writing the agent's accepted links marks the summary as processed even when the agent accepted nothing",
+          "status": "passed"
+        },
+        {
+          "name": "writing the agent's accepted links leaves suggestions belonging to another summary alone",
+          "status": "passed"
+        },
+        {
+          "name": "writing the agent's accepted links rejects a link that names no research project",
+          "status": "passed"
+        },
+        {
+          "name": "acting on a suggestion moves a suggestion to linked, which takes it off the job list only once rejected",
+          "status": "passed"
+        },
+        {
+          "name": "acting on a suggestion rejects a status outside suggested, linked and rejected",
+          "status": "passed"
+        },
+        {
+          "name": "papers linked into a research project shows only the linked rows of that project, best score first",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project lists a project's papers newest first",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project swaps out one project's whole set without touching another's",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project empties a project when the replacement set is empty",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project takes the same arxiv id only once per project",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project keeps the same arxiv id once per project it is added to",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project always inserts a paper that carries no arxiv id, even an identical one",
+          "status": "passed"
+        },
+        {
+          "name": "papers attached to a research project rejects a bibtex source even though the table stores one",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/plans.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "recent calendar sync window covers the given day and the following range days, never a past day",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window produces a single day when the range is zero",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window defaults to a four day window when no range is given",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window rolls the day key over a month and a year boundary",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window counts 29 February in a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window skips 29 February outside a leap year",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window stores the caller timezone but does not use it to derive the day keys",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window falls back to the day of the process clock when the caller sends no date",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window queues exactly one pending calendar request per synced day",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window drops days and items left over from an earlier window",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window keeps a single plan row across repeated syncs",
+          "status": "passed"
+        },
+        {
+          "name": "recent calendar sync window leaves other plans untouched when the recent window is rebuilt",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing reports the earliest and latest day of each plan",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing reports a null date range for a plan with no days",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing orders plans by most recently synced first",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing returns null for an unknown slug",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing orders a plan's days by date even when the stored order disagrees",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing returns a plan's items grouped by date and then by order",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing merges days across every plan in date order and strips embeddings",
+          "status": "passed"
+        },
+        {
+          "name": "plan listing returns empty collections when nothing has been synced",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert keeps the done flag of an item that stays on the same date and order",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert refuses to hand the done flag to a different task that took over that date and order",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert keeps the done flag on an item that an insert above it renumbers",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert matches a re-imported title regardless of case and spacing",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert gives each of two identical titles its own carried state, nearest order first",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert pins identity to a supplied calendar event id even when the title was rewritten",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert does not carry a done flag across dates",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert keeps the outlook event id of an item the re-import lists under the same title",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert drops the outlook link when a re-import renames the item, and then duplicates it",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert discards the stored embedding of every item it rewrites",
+          "status": "passed"
+        },
+        {
+          "name": "plan upsert replaces the whole day set rather than merging into it",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits flips the done flag on each call",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits does nothing when the toggled item has already been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits numbers the first item of an empty day 1, so order 0 is never used",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits appends after the highest order already on that day",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits numbers each day independently",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits mirrors a created time into timeStart and leaves timeEnd unset",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits patches only the fields the update supplies",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits re-mirrors timeStart whenever the time is updated",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits moves an item to another day without renumbering it",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits does nothing when the updated item has already been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits adds and removes the archived tag, matching existing tags case-insensitively",
+          "status": "passed"
+        },
+        {
+          "name": "single item edits removes the row it is asked to delete and leaves the rest of the day alone",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits patches the first item on that day whose title starts with the match string",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits inserts a new item when the matching title lives on a different day",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits numbers an inserted item after the highest order on that day",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits replaces a previous end date tag instead of stacking a second one",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits merges added tags into an existing item without duplicating them",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits ignores an empty string title but clears an emptied notes and location",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits leaves a field alone when the edit does not mention it",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits clears the mirrored timeStart when the time is emptied",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits falls back to the match title when an inserted item is given a blank title",
+          "status": "passed"
+        },
+        {
+          "name": "match-or-insert item edits keeps the done flag and the order of the item it patches",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/research.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "registering a project starts a new own-kind project at the state the domain FSM calls initial",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project starts a new review-kind project at its own initial state, not the own-kind one",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project writes a registration entry into the timeline",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project updates the existing row instead of creating a second project for the same slug",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project leaves an already-advanced project on its current phase when it is re-registered",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project adds no second timeline entry when a project is re-registered",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project claims the project for the signed-in caller and makes it private by default",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project gives the signed-in creator an owner membership",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project leaves a project unclaimed when the caller is signed out",
+          "status": "passed"
+        },
+        {
+          "name": "registering a project refuses to let a stranger re-register someone else's project",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance accepts a move along an edge the domain FSM declares",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance rejects a move to a state that is real but not a successor of the current one",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance names the legal successors in the rejection message",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance leaves the phase and the timeline untouched when a move is rejected",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance lets force push a project across an edge the FSM does not declare",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance still refuses a state belonging to the other kind's vocabulary even under force",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance refuses an entirely unknown state name",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance refuses to advance a slug that was never registered",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance answers identically to the domain FSM for every ordered pair of own-kind states",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance records every accepted move in the timeline",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance uses the review vocabulary for a review-kind project",
+          "status": "passed"
+        },
+        {
+          "name": "FSM enforcement on advance keeps the terminal own-kind state terminal",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition queues a pending run for a global subscriber",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition queues nothing for a project-scoped subscriber watching a different project",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition queues a run for a project-scoped subscriber watching that project",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition ignores a disabled subscription",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition ignores a subscription pinned to a different entity type",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition ignores a subscription bound to a different event",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition queues one run per matching subscriber",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out on a transition queues nothing when registration creates a project, because only transitions fan out",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI refuses a phase that is not in the project kind's vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI refuses a state that belongs to the other kind's vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI allows a jump to any valid state, because the graph is a direct-set surface",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI records the change in the timeline, like advance does",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI writes no timeline entry when the phase is rejected",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI queues an agent run, like advance does",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI fails for a project that no longer exists",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI refuses a phase that is not in the vocabulary through upsert",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI refuses the other kind's vocabulary through upsert",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI still edits a row whose stored phase left the vocabulary, when the edit carries that phase back",
+          "status": "passed"
+        },
+        {
+          "name": "setting a phase directly from the UI refuses a move to a different invalid phase even on a row already outside the vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "upsert by slug inserts a row the first time a slug is seen",
+          "status": "passed"
+        },
+        {
+          "name": "upsert by slug returns the same id and keeps a single row when the slug repeats",
+          "status": "passed"
+        },
+        {
+          "name": "upsert by slug writes no timeline entry, unlike register",
+          "status": "passed"
+        },
+        {
+          "name": "listing projects returns only the requested kind, most recently updated first",
+          "status": "passed"
+        },
+        {
+          "name": "listing projects returns every kind as a compact summary row when no kind is given",
+          "status": "passed"
+        },
+        {
+          "name": "listing projects narrows to one kind when a kind is given",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project deletes the project row",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project takes the project's timeline with it, so a re-registered slug starts clean",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project empties every table scoped to the project",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project stops at the row budget, keeps the project, and finishes when the caller loops",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project can afford a whole page of maximum-size documents on top of a spent budget",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project stops on the byte budget even when the row budget is untouched",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project counts the budget in UTF-8 bytes, not string length",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project treats a NaN limit as no limit rather than reporting work forever",
+          "status": "passed"
+        },
+        {
+          "name": "removing a project is a no-op on a project that is already gone, so the caller's loop terminates",
+          "status": "passed"
+        },
+        {
+          "name": "project visibility stores the new visibility and echoes it back",
+          "status": "passed"
+        },
+        {
+          "name": "project visibility fails for a project that no longer exists",
+          "status": "passed"
+        },
+        {
+          "name": "project visibility lets a signed-out caller through while no auth issuer is configured",
+          "status": "passed"
+        },
+        {
+          "name": "project visibility refuses a non-owner once an auth issuer is configured",
+          "status": "passed"
+        },
+        {
+          "name": "artifact logging appends a timeline entry at the phase the project is already in",
+          "status": "passed"
+        },
+        {
+          "name": "artifact logging fails for a slug that was never registered",
+          "status": "passed"
+        },
+        {
+          "name": "state info reports the successors the domain FSM declares for the current phase",
+          "status": "passed"
+        },
+        {
+          "name": "state info is null for a slug that was never registered",
+          "status": "passed"
+        },
+        {
+          "name": "timeline reads comes back newest first",
+          "status": "passed"
+        },
+        {
+          "name": "timeline reads takes the newest entries when a limit is given",
+          "status": "passed"
+        },
+        {
+          "name": "timeline reads is scoped to one project",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project returns a job whose summary shares the project's vocabulary, tagged with the job type",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project drops a job whose summary shares no vocabulary with the project",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project returns nothing when the project's text yields no tokens longer than two characters",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project returns nothing for a project id that no longer resolves",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project ranks the better-matching job first and honours the limit",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project scores a job by its best-matching summary, not by whichever comes first",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project scans the newest summaries only, and stops at the corpus bound",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project counts a job once even when several of its summaries clear the threshold",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project does not match a Korean-only summary while the corpus is too small to weigh",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project matches Korean on rare words and ignores the generic words every summary shares",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project still matches one English term inside a full-length Korean summary",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project matches an English term that carries a Korean particle, the corpus's usual shape",
+          "status": "passed"
+        },
+        {
+          "name": "jobs related to a project still drops two-letter English tokens, which carry nothing on their own",
+          "status": "passed"
+        },
+        {
+          "name": "projects related to a job returns the projects that share the job's summary vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "projects related to a job returns nothing for a job that has no summaries yet",
+          "status": "passed"
+        },
+        {
+          "name": "plan items related to a project returns a plan item that shares the project's vocabulary",
+          "status": "passed"
+        },
+        {
+          "name": "plan items related to a project returns nothing for a project id that no longer resolves",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/researchEntities.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "upsert semantics for a 'experiment' reports the first save as a creation and the second as an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' keeps exactly one row when the same key is saved twice",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' overwrites the fields the second save carries",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' preserves fields the second save omits",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' falls back to the key as the display name when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' keeps the original creation timestamp across an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' treats the same key under two projects as two separate rows",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' returns null for a key that was never saved",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' lists only the rows of the requested project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' lists the most recently updated row first",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' reports a delete of an existing row as removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' reports a delete of a missing row as not removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'experiment' does not delete the same key belonging to another project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' reports the first save as a creation and the second as an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' keeps exactly one row when the same key is saved twice",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' overwrites the fields the second save carries",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' preserves fields the second save omits",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' falls back to the key as the display name when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' keeps the original creation timestamp across an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' treats the same key under two projects as two separate rows",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' returns null for a key that was never saved",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' lists only the rows of the requested project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' lists the most recently updated row first",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' reports a delete of an existing row as removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' reports a delete of a missing row as not removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'memo' does not delete the same key belonging to another project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' reports the first save as a creation and the second as an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' keeps exactly one row when the same key is saved twice",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' overwrites the fields the second save carries",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' preserves fields the second save omits",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' falls back to the key as the display name when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' keeps the original creation timestamp across an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' treats the same key under two projects as two separate rows",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' returns null for a key that was never saved",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' lists only the rows of the requested project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' lists the most recently updated row first",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' reports a delete of an existing row as removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' reports a delete of a missing row as not removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'table' does not delete the same key belonging to another project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' reports the first save as a creation and the second as an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' keeps exactly one row when the same key is saved twice",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' overwrites the fields the second save carries",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' preserves fields the second save omits",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' falls back to the key as the display name when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' keeps the original creation timestamp across an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' treats the same key under two projects as two separate rows",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' returns null for a key that was never saved",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' lists only the rows of the requested project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' lists the most recently updated row first",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' reports a delete of an existing row as removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' reports a delete of a missing row as not removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'figure' does not delete the same key belonging to another project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' reports the first save as a creation and the second as an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' keeps exactly one row when the same key is saved twice",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' overwrites the fields the second save carries",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' preserves fields the second save omits",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' falls back to the key as the display name when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' keeps the original creation timestamp across an update",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' treats the same key under two projects as two separate rows",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' returns null for a key that was never saved",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' lists only the rows of the requested project",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' lists the most recently updated row first",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' reports a delete of an existing row as removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' reports a delete of a missing row as not removed",
+          "status": "passed"
+        },
+        {
+          "name": "upsert semantics for a 'venue' does not delete the same key belonging to another project",
+          "status": "passed"
+        },
+        {
+          "name": "experiment specifics starts at the status the domain package calls the default",
+          "status": "passed"
+        },
+        {
+          "name": "experiment specifics keeps a status set on creation when a later save omits it",
+          "status": "passed"
+        },
+        {
+          "name": "experiment specifics returns only the experiments in the requested status",
+          "status": "passed"
+        },
+        {
+          "name": "memo specifics starts with empty content when none is given",
+          "status": "passed"
+        },
+        {
+          "name": "memo specifics returns only the memos carrying the requested tag",
+          "status": "passed"
+        },
+        {
+          "name": "memo specifics replaces the whole tag array rather than merging into it",
+          "status": "passed"
+        },
+        {
+          "name": "table specifics returns only the tables attached to the requested experiment",
+          "status": "passed"
+        },
+        {
+          "name": "table specifics returns every table of the project when no experiment is given",
+          "status": "passed"
+        },
+        {
+          "name": "table specifics stores every rendering of the same table side by side",
+          "status": "passed"
+        },
+        {
+          "name": "figure specifics returns only the figures attached to the requested experiment",
+          "status": "passed"
+        },
+        {
+          "name": "figure specifics keeps the stored path when a later save only supplies a url",
+          "status": "passed"
+        },
+        {
+          "name": "venue specifics starts a venue in the drafting status",
+          "status": "passed"
+        },
+        {
+          "name": "venue specifics moves the venue status without touching the project phase",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes queues a run when an experiment is created for the first time",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes queues an update run, not a second creation run, when an experiment is saved again",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes skips a subscriber pinned to a different entity type",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes skips a project-scoped subscriber watching another project",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes queues nothing when an experiment is deleted",
+          "status": "passed"
+        },
+        {
+          "name": "trigger fan-out from entity writes queues nothing for memo, table, figure and venue writes, which do not fan out today",
+          "status": "passed"
+        },
+        {
+          "name": "entities against an unregistered project saves an entity even when no project row exists, because the slug is not a foreign key",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/suggestions.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "queuing a batch of Notion suggestions stores every row as pending and moves the job into triage",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions still moves the job into triage when the agent proposed nothing",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions keeps the job in triage when a trailing empty batch arrives",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions clears the error a failed attempt left behind and stamps the completion",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions appends a second batch rather than replacing the first",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions re-opens a job that was already closed",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions rejects a suggestion that is missing a required field",
+          "status": "passed"
+        },
+        {
+          "name": "queuing a batch of Notion suggestions does not let the caller pre-set a status",
+          "status": "passed"
+        },
+        {
+          "name": "listing suggestions returns only the requested job's suggestions",
+          "status": "passed"
+        },
+        {
+          "name": "listing suggestions returns an empty list for a job that never produced suggestions",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion keeps the job open while an approved suggestion is still waiting to execute",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion closes the job once the last suggestion is rejected",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion keeps the job open while a sibling suggestion is untouched",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion closes the job when a mix of executed and rejected leaves nothing outstanding",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion re-opens nothing when a resolved suggestion is put back to pending",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion silently ignores a suggestion that has already been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "triaging a single suggestion refuses a status outside the four triage states",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once promotes only the pending rows and leaves already-triaged ones as they are",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once does not close the job on approve-all, because approved work is still outstanding",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once closes the job when reject-all leaves nothing unresolved",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once leaves the job open when reject-all skips an approved row",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once leaves a job with no suggestions where it is instead of closing it",
+          "status": "passed"
+        },
+        {
+          "name": "triaging every suggestion at once touches only the given job's suggestions",
+          "status": "passed"
+        },
+        {
+          "name": "handing approved suggestions to the executor returns approved rows only, ignoring pending, rejected and executed",
+          "status": "passed"
+        },
+        {
+          "name": "handing approved suggestions to the executor closes the job when it marks the last outstanding suggestion executed",
+          "status": "passed"
+        },
+        {
+          "name": "handing approved suggestions to the executor closes the job only once the sibling suggestion is executed too",
+          "status": "passed"
+        },
+        {
+          "name": "handing approved suggestions to the executor silently ignores a suggestion that has already been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "closing the parent job leaves a job with no suggestions alone so it never closes prematurely",
+          "status": "passed"
+        },
+        {
+          "name": "closing the parent job closes a job that is mid-execution once every suggestion has landed",
+          "status": "passed"
+        },
+        {
+          "name": "closing the parent job clears a stale error and stamps the completion when it closes the job",
+          "status": "passed"
+        },
+        {
+          "name": "closing the parent job leaves an already-closed job at done",
+          "status": "passed"
+        },
+        {
+          "name": "internal accessors used by the Notion executor reads a single suggestion back by id",
+          "status": "passed"
+        },
+        {
+          "name": "internal accessors used by the Notion executor returns null for a suggestion that has been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "internal accessors used by the Notion executor hands back only the pending rows of a job",
+          "status": "passed"
+        },
+        {
+          "name": "internal accessors used by the Notion executor sets a status without touching the parent job",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context lists the suggestions that carry neither side of the context",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context keeps an empty-string context in the backfill queue, because the check is truthiness",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context drops a row from the queue as soon as one side carries real text",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context scans at most 500 rows, so a larger backlog needs repeated passes",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context writes back only the fields the backfill supplies",
+          "status": "passed"
+        },
+        {
+          "name": "backfilling the Notion page context accepts a call with nothing to write and leaves the row untouched",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/summaries.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "score rollup on the parent job sorts rolled-up scores ascending regardless of the order the summaries arrive in",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job re-derives the whole rollup when one summary is rescored",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job keeps the rollup intact when only the display order of the summaries changes",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job drops the scores of rows removed as duplicates",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job keeps the first inserted row for a repeated index and discards the later one",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job leaves the rollup unset on a job that never had a summary write",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job writes a zero count when an empty batch syncs a job that has no summaries",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job empties the score list rather than leaving stale numbers when the last scored row goes",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job reads article rubric scores for article jobs and ignores the paper rubric on them",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job collects no scores for a pr-fix job because neither rubric applies to it",
+          "status": "passed"
+        },
+        {
+          "name": "score rollup on the parent job carries a stale rubric until the next write when the job type changes underneath it",
+          "status": "passed"
+        },
+        {
+          "name": "adding summaries appends a second batch instead of replacing the first",
+          "status": "passed"
+        },
+        {
+          "name": "adding summaries rejects a score rubric that is missing a criterion",
+          "status": "passed"
+        },
+        {
+          "name": "adding summaries rejects a summary whose keywords are not strings",
+          "status": "passed"
+        },
+        {
+          "name": "stamping the completing provider onto a job's summaries fills only the rows that have no provider yet",
+          "status": "passed"
+        },
+        {
+          "name": "stamping the completing provider onto a job's summaries does not reach into another job's summaries",
+          "status": "passed"
+        },
+        {
+          "name": "rescoring an existing summary leaves the summary prose untouched while stamping the structured fields",
+          "status": "passed"
+        },
+        {
+          "name": "rescoring an existing summary does nothing at all when every optional field is omitted",
+          "status": "passed"
+        },
+        {
+          "name": "rescoring an existing summary cannot clear a previously set field, because omitted means unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications queues one push and marks the job when a paper reaches the recommend threshold",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications stays quiet below the threshold",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications notifies once no matter how many times the paper is rescored high",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications stays quiet for an archived job even at a top score",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications stays quiet for a newsletter, which has no recommend surface",
+          "status": "passed"
+        },
+        {
+          "name": "recommend notifications notifies on an article using its own rubric and deep-links to the job",
+          "status": "passed"
+        },
+        {
+          "name": "link repair patches rewrites only the body and the url",
+          "status": "passed"
+        },
+        {
+          "name": "link repair patches accepts a call with nothing to patch and leaves the row alone",
+          "status": "passed"
+        },
+        {
+          "name": "removing a summary treats a second delete of the same row as a quiet no-op",
+          "status": "passed"
+        },
+        {
+          "name": "listing a job's summaries returns them ordered by index, not by insertion time",
+          "status": "passed"
+        },
+        {
+          "name": "listing a job's summaries returns an empty list for a job that has no summaries",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles returns nothing when neither a query nor a seed job is supplied",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles returns nothing when the seed job has no summaries to build a query from",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles never returns the seed job itself",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles collapses several matching summaries of one job into a single entry",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles clamps a limit of zero up to one result",
+          "status": "passed"
+        },
+        {
+          "name": "finding similar articles leaves out jobs whose summaries share no terms with the query",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution reports empty rubrics as null bounds rather than infinities",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution bins overall scores into half-point buckets per rubric",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution splits the distribution by archived state so the two never mix",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution counts a job whose archived flag was never written on the unarchived side",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution keeps the flagless rows out of the archived side while still splitting the two",
+          "status": "passed"
+        },
+        {
+          "name": "score distribution also rescues a flagless article, not just papers",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste flags a paper whose title shares almost no vocabulary with its content",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste leaves a paper alone when its title vocabulary shows up in the content",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste puts the most confident mismatch first",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste skips a paper that has no summaries to judge",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste skips a paper whose stored content is too short to compare against",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste falls back to the lowest-index summary title, not the first row inserted",
+          "status": "passed"
+        },
+        {
+          "name": "detecting summaries written against the wrong paste ignores an article job, because the scan is scoped to papers",
+          "status": "passed"
+        },
+        {
+          "name": "reconciling mismatched papers wipes the summaries and suggestions of a mismatch and requeues the job from scratch",
+          "status": "passed"
+        },
+        {
+          "name": "reconciling mismatched papers leaves a matching paper and its suggestions completely alone",
+          "status": "passed"
+        },
+        {
+          "name": "restoring archived state after a blanket unarchive re-archives every pending paper except the kept ones",
+          "status": "passed"
+        },
+        {
+          "name": "bulk restore from a recovery payload replaces existing summaries instead of stacking on top of them",
+          "status": "passed"
+        },
+        {
+          "name": "bulk restore from a recovery payload keeps the existing title when the entry does not carry one",
+          "status": "passed"
+        },
+        {
+          "name": "bulk restore from a recovery payload skips an entry whose job has been deleted",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers resets only unarchived papers that carry real pasted content",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers unarchives the archived papers it resets so they come back into the queue",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers resets exactly the listed jobs and leaves their neighbours alone",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers counts a requested id it could not find, so the count is not a success count",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers reports what a full reset would touch without mutating anything on a dry run",
+          "status": "passed"
+        },
+        {
+          "name": "bulk resets of paste-mode papers wipes and requeues archived and unarchived paste papers alike on a real run",
+          "status": "passed"
+        },
+        {
+          "name": "dumping paste heads for external judging truncates the content head and pairs each paper with its lowest-index summary title",
+          "status": "passed"
+        },
+        {
+          "name": "dumping paste heads for external judging lists a paper that has no summaries yet with an empty summary title",
+          "status": "passed"
+        },
+        {
+          "name": "dumping paste heads for external judging omits papers whose content is below the paste threshold",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/summaryAggregates.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "summary rollups on jobs counts summaries and collects paper scores",
+          "status": "passed"
+        },
+        {
+          "name": "summary rollups on jobs ignores paper scores on a newsletter, because the rollup is keyed by job type",
+          "status": "passed"
+        },
+        {
+          "name": "summary rollups on jobs recomputes rather than accumulates when summaries are removed",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "convex/test/usage.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "usage ingest keeps one row per view per browser tab, not one per flush",
+          "status": "passed"
+        },
+        {
+          "name": "usage ingest never lowers the engaged time it already has",
+          "status": "passed"
+        },
+        {
+          "name": "usage ingest separates two views inside one browser tab",
+          "status": "passed"
+        },
+        {
+          "name": "usage ingest assigns sequence numbers server-side, continuing across flushes",
+          "status": "passed"
+        },
+        {
+          "name": "usage ingest refuses a batch with no session or view to attach it to",
+          "status": "passed"
+        },
+        {
+          "name": "usage overview adds up engaged time per view, heaviest first",
+          "status": "passed"
+        },
+        {
+          "name": "usage overview leaves localhost out by default and can put it back",
+          "status": "passed"
+        },
+        {
+          "name": "usage overview counts distinct browsers, not visits",
+          "status": "passed"
+        },
+        {
+          "name": "usage overview ignores visits older than the window",
+          "status": "passed"
+        },
+        {
+          "name": "usage flow reads the moves between views out of the pageview order",
+          "status": "passed"
+        },
+        {
+          "name": "usage flow does not count a reload as a move",
+          "status": "passed"
+        },
+        {
+          "name": "usage flow does not join one browser tab's journey to another's",
+          "status": "passed"
+        },
+        {
+          "name": "retention drops what is older than the cutoff and keeps the rest",
+          "status": "passed"
+        },
+        {
+          "name": "dev host detection knows a dev server from a deployment",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/core/test/date.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "addDays is unaffected by the ambient timezone, including across DST boundaries",
+          "status": "passed"
+        },
+        {
+          "name": "addDays crosses month, year and leap-day boundaries",
+          "status": "passed"
+        },
+        {
+          "name": "addDays goes backwards and round-trips",
+          "status": "passed"
+        },
+        {
+          "name": "addDays zero-pads, because callers compare these strings with < and >=",
+          "status": "passed"
+        },
+        {
+          "name": "addDays agrees with 365 single steps",
+          "status": "passed"
+        },
+        {
+          "name": "addDays splits a date into numeric parts",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/core/test/order.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "lowestBy finds the lowest rank regardless of array position",
+          "status": "passed"
+        },
+        {
+          "name": "lowestBy returns undefined for an empty list rather than throwing",
+          "status": "passed"
+        },
+        {
+          "name": "lowestBy keeps the first row of a tie, so the result is stable",
+          "status": "passed"
+        },
+        {
+          "name": "lowestBy differs from rows[0] exactly when the array is out of order",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/core/test/text.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "truncateSafe returns the input untouched when it already fits",
+          "status": "passed"
+        },
+        {
+          "name": "truncateSafe cuts plain text at exactly the limit",
+          "status": "passed"
+        },
+        {
+          "name": "truncateSafe drops the dangling half when the cut splits a surrogate pair",
+          "status": "passed"
+        },
+        {
+          "name": "truncateSafe keeps a surrogate pair that fits whole",
+          "status": "passed"
+        },
+        {
+          "name": "truncateSafe never emits a lone surrogate at any cut position",
+          "status": "passed"
+        },
+        {
+          "name": "truncateSafe treats a non-positive limit as empty",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/domain/test/content.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "narrows every adapter stage without a shared parent class",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation copies only canonical fields instead of exporting unknown runtime properties",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation does not echo duplicate identifiers in errors",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed list containers and entries",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed list containers and entries",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed list containers and entries",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed list containers and entries",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed list containers and entries",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (0)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (1)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (2)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (3)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (4)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (5)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (6)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (7)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (8)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (9)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (10)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (11)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (12)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (13)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (14)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (15)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (16)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (17)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (18)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (19)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (20)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (21)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (22)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation rejects malformed canonical records at direct export boundaries (23)",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation validates the entire input before running any transformation",
+          "status": "passed"
+        },
+        {
+          "name": "runtime canonical-list validation does not confuse a deliberately empty result with missing source evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input captures text without modifying evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input keeps paper-only references explicit",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input captures supplied paper text",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input does not invent screenshot OCR",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input retains supplied OCR independently from the image locator",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input captures links without fetching them",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects duplicate identities",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects empty identity",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects empty 'text' evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects empty 'link' evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects empty 'paper' evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects empty 'screenshot' evidence",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input rejects unknown runtime discriminants",
+          "status": "passed"
+        },
+        {
+          "name": "canonical content input snapshots caller objects and freezes nested evidence",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries preserves source and identity while recording each transformation",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries never calls transforms for unread references",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries leaves prior lists unchanged across repeated processing",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries propagates a transformation failure without mutating input",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries requires a named processing step",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries rejects a non-string processing result without mutating the source",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries rejects a non-string processing result without mutating the source",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries rejects a non-string processing result without mutating the source",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries rejects a non-string processing result without mutating the source",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries rejects a non-string processing result without mutating the source",
+          "status": "passed"
+        },
+        {
+          "name": "processing boundaries passes an isolated frozen snapshot to the processor",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries prepares a Notion export plan retaining all source evidence",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries prepares portable feed records in canonical order",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries retains untrusted text literally rather than rendering HTML",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries supports empty lists at every boundary",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries requires an explicit destination",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries requires a feed title",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries rejects duplicate content at both export boundaries",
+          "status": "passed"
+        },
+        {
+          "name": "output boundaries freezes output plans and nested processing evidence",
+          "status": "passed"
+        },
+        {
+          "name": "never echoes malformed source payloads in errors",
+          "status": "passed"
+        },
+        {
+          "name": "rejects malformed runtime source with a controlled error",
+          "status": "passed"
+        },
+        {
+          "name": "rejects malformed runtime source with a controlled error",
+          "status": "passed"
+        },
+        {
+          "name": "rejects malformed runtime source with a controlled error",
+          "status": "passed"
+        },
+        {
+          "name": "rejects malformed runtime source with a controlled error",
+          "status": "passed"
+        },
+        {
+          "name": "rejects malformed runtime source with a controlled error",
+          "status": "passed"
+        },
+        {
+          "name": "preserves source completeness and processing history in feed plans",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/domain/test/enums.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "vocabularies ENTITY_TYPES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies AUTHOR_TYPES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies AGENT_EVENT_TYPES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies SUBSCRIPTION_SCOPES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies EXPERIMENT_STATUSES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies RESEARCH_KINDS has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies JOB_TYPES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies JOB_STATUSES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies PAPER_SOURCES has unique members",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies ENTITY_TYPES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies AUTHOR_TYPES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies AGENT_EVENT_TYPES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies SUBSCRIPTION_SCOPES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies EXPERIMENT_STATUSES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies RESEARCH_KINDS has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies JOB_TYPES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies JOB_STATUSES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies PAPER_SOURCES has at least two members, as Convex v.union requires",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies pins the member order, because it is the order every derived validator emits",
+          "status": "passed"
+        },
+        {
+          "name": "vocabularies keeps the experiment default inside its own vocabulary",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/domain/test/fsm.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "FSM shape every own transition points at a declared state",
+          "status": "passed"
+        },
+        {
+          "name": "FSM shape every review transition points at a declared state",
+          "status": "passed"
+        },
+        {
+          "name": "FSM shape every own state is reachable from the initial state",
+          "status": "passed"
+        },
+        {
+          "name": "FSM shape every review state is reachable from the initial state",
+          "status": "passed"
+        },
+        {
+          "name": "FSM shape has no duplicate states",
+          "status": "passed"
+        },
+        {
+          "name": "FSM shape starts each kind at its first declared state",
+          "status": "passed"
+        },
+        {
+          "name": "labels labels every own state",
+          "status": "passed"
+        },
+        {
+          "name": "labels labels every review state",
+          "status": "passed"
+        },
+        {
+          "name": "labels names the shared `setup` state per kind",
+          "status": "passed"
+        },
+        {
+          "name": "labels pins the review labels to the text the UI renders",
+          "status": "passed"
+        },
+        {
+          "name": "labels pins the own labels to the text the UI renders",
+          "status": "passed"
+        },
+        {
+          "name": "labels does not leak one kind's vocabulary into the other",
+          "status": "passed"
+        },
+        {
+          "name": "labels falls back to the raw id for a state it does not know",
+          "status": "passed"
+        },
+        {
+          "name": "transition rules permits only declared edges",
+          "status": "passed"
+        },
+        {
+          "name": "transition rules rejects a target that is not a state of that kind",
+          "status": "passed"
+        },
+        {
+          "name": "transition rules keeps the two kinds' vocabularies apart",
+          "status": "passed"
+        },
+        {
+          "name": "transition rules reports terminal states as having no next move",
+          "status": "passed"
+        },
+        {
+          "name": "transition rules returns no moves for an unknown source rather than throwing",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/node/test/convexClient.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "createConvexClient finds a mutation after the query probe is rejected",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient remembers the kind so the second call costs one request",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient shares a caller-supplied cache, so another transport's discovery counts",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient throws a real function error instead of walking the other kinds",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient injects the service key, and never overwrites one the caller passed",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient sends no key when none is configured",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient returns null rather than undefined when a handler returns nothing",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexClient falls back to the CLI when no deployment url resolved, still injecting the key",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/node/test/convexWatcher.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "createConvexWatcher injects the service key, and never overwrites one the caller passed",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher sends no key when none is configured",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher delivers each result change to the caller",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher unsubscribing stops delivery",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher routes a query error to onError instead of throwing",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher still supplies an error callback when the caller registered no handler",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher reports not live and no-ops when no url resolved",
+          "status": "passed"
+        },
+        {
+          "name": "createConvexWatcher closes the underlying client",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "packages/node/test/env.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "parseEnvFile reads plain assignments",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile skips comments and blank lines",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile strips surrounding quotes, which the old regex readers kept",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile strips a trailing comment from an unquoted value but keeps one inside quotes",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile keeps a '#' that is not preceded by a space",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile keeps '=' inside a value",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile tolerates whitespace around the separator",
+          "status": "passed"
+        },
+        {
+          "name": "parseEnvFile ignores a line with no '=' and one starting with '='",
+          "status": "passed"
+        },
+        {
+          "name": "resolveConvexUrl prefers CONVEX_URL",
+          "status": "passed"
+        },
+        {
+          "name": "resolveConvexUrl derives the url from a dev deployment name",
+          "status": "passed"
+        },
+        {
+          "name": "resolveConvexUrl derives it from a prod deployment name too",
+          "status": "passed"
+        },
+        {
+          "name": "resolveConvexUrl returns null rather than a malformed url when nothing resolves",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "site/test/docs.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "docs sidebar has a page behind every entry",
+          "status": "passed"
+        },
+        {
+          "name": "docs sidebar lists each slug once",
+          "status": "passed"
+        },
+        {
+          "name": "docs sidebar gives every entry the title and blurb the index card renders",
+          "status": "passed"
+        },
+        {
+          "name": "docs sidebar resolves published guide links through the sidebar allow-list",
+          "status": "passed"
+        },
+        {
+          "name": "the deploy button is the one canonical URL in README.md",
+          "status": "passed"
+        },
+        {
+          "name": "the deploy button is the one canonical URL in docs/deploy.md",
+          "status": "passed"
+        },
+        {
+          "name": "personal content product positioning keeps every Markdown guide aligned with the personal content scope",
+          "status": "passed"
+        },
+        {
+          "name": "personal content product positioning puts content architecture and comparison before the research use case",
+          "status": "passed"
+        },
+        {
+          "name": "personal content product positioning links both guides from the README and links the published guides to each other",
+          "status": "passed"
+        },
+        {
+          "name": "personal content product positioning keeps public page metadata and social-card source aligned with personal content",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/actor.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "codex invocation enables network access, because every job writes its result over the network",
+          "status": "passed"
+        },
+        {
+          "name": "codex invocation keeps network access in chat and agent mode too",
+          "status": "passed"
+        },
+        {
+          "name": "codex invocation disables the hai-guardian plugin per call",
+          "status": "passed"
+        },
+        {
+          "name": "codex invocation runs exec and takes its prompt on stdin",
+          "status": "passed"
+        },
+        {
+          "name": "codex invocation does not pass the deprecated --full-auto",
+          "status": "passed"
+        },
+        {
+          "name": "codex invocation attaches the Openworks MCP unless the caller skips it",
+          "status": "passed"
+        },
+        {
+          "name": "the other providers in the chain antigravity takes the prompt as an argument and skips permissions",
+          "status": "passed"
+        },
+        {
+          "name": "the other providers in the chain claude asks for JSON so CLI banners stay out of the reply text",
+          "status": "passed"
+        },
+        {
+          "name": "the other providers in the chain claude in agent mode inlines the prompt rather than reading stdin",
+          "status": "passed"
+        },
+        {
+          "name": "the other providers in the chain rejects a provider it does not know",
+          "status": "passed"
+        },
+        {
+          "name": "fallback order puts codex first everywhere, so a broken codex costs every job an attempt",
+          "status": "passed"
+        },
+        {
+          "name": "fallback order sends pr-fix to claude before antigravity, unlike every other task",
+          "status": "passed"
+        },
+        {
+          "name": "fallback order falls back to the default order for an unknown task type",
+          "status": "passed"
+        },
+        {
+          "name": "fallback order reports no next provider once the chain is exhausted",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/apnsToken.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "the APNs provider token says ES256 and carries the key id in the header, where APNs reads it",
+          "status": "passed"
+        },
+        {
+          "name": "the APNs provider token issues to the team, with an iat APNs will not call stale",
+          "status": "passed"
+        },
+        {
+          "name": "the APNs provider token signs in the format JOSE wants, not the DER openssl defaults to",
+          "status": "passed"
+        },
+        {
+          "name": "the APNs provider token accepts a key whose newlines survived as literal backslash-n",
+          "status": "passed"
+        },
+        {
+          "name": "the APNs provider token reuses one token rather than minting per push, which Apple rate limits",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/content-input.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "adapts legacy paper jobs without changing their schema",
+          "status": "passed"
+        },
+        {
+          "name": "retains every screenshot alongside pasted content",
+          "status": "passed"
+        },
+        {
+          "name": "supports the original single-image job",
+          "status": "passed"
+        },
+        {
+          "name": "leaves source-less jobs and whitespace-only pasted input empty",
+          "status": "passed"
+        },
+        {
+          "name": "keeps a URL and its supplied content in one source record",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/digest.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "escaping escapes markup so a title cannot inject into the mail",
+          "status": "passed"
+        },
+        {
+          "name": "escaping renders a hostile title as text, not markup",
+          "status": "passed"
+        },
+        {
+          "name": "escaping survives missing optional fields",
+          "status": "passed"
+        },
+        {
+          "name": "score colour separates keep / good / marginal / noise",
+          "status": "passed"
+        },
+        {
+          "name": "score colour puts the boundaries at 7, 6 and 5",
+          "status": "passed"
+        },
+        {
+          "name": "period delta signs the change and says nothing without a previous window",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests recognises the bots that open most of the PRs",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests lists bot PRs too, rather than collapsing them to a count",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests sorts human PRs above bots inside a repo",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests says each repo once as a heading instead of on every row",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests puts repos with human work before repos that are only bots",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests carries checks, conflict state and the diffstat",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests says conflict when the branch cannot merge",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests renders a PR that has no status at all",
+          "status": "passed"
+        },
+        {
+          "name": "bot pull requests prints no diffstat when the counts are the search payload's zeros",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest omits a section that has nothing in it",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest keeps the counts in the subject and not in the body",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest puts the reading first and the operational sections last",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest leads with what to read even when the window held nothing",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest separates what to read from what was read",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest sends the title into the app and leaves the source one line below",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest omits the tab for the default one",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest falls back to the source when no app URL is configured",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest collects the week's agent reports under each project, newest day first",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest keeps the reports out of the daily mail",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest falls back to the slug when the project a report names is gone",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest omits the section entirely when no agent reported",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest opens a research project in the app rather than printing its name",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest opens a study card on its own row",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest sends a pull request to the app, which is where its checks and diff are",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest keeps github as the pull request link when no app URL is configured",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest carries the summary, not only the title",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest prefers the tldr lines over the raw summary when a job has them",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest links every paper, article and PR to its source",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest shows today's cards rather than only a due count",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest alternates which side of the card is the prompt",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest falls back to the English side when a card has no Japanese",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest separates newsletters from articles, and ranks the reading first",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest puts papers above both of them",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest gives a section the single topic it is most about",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest reports what the one topic left out instead of dropping it silently",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest falls back to the category when a summary carries no keywords",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest lists one row per source, not one per summary of it",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest names a phase the way the app does, never the raw state id",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest falls back to the id when the state is not one it knows",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest carries the pronunciation of the side it is prompting with",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest gives the Japanese side its kana reading instead",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest renders a card that has no meaning yet",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest shows a section once it has content",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest labels the two cadences differently",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest puts the numbers a reader scans for in the subject",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest handles a window with no scored paper rather than printing NaN",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest uses no external stylesheet, font or script",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest says so when the window hit the read cap",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest writes a plain-text alternative that is not empty",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest names the product on every rendered surface",
+          "status": "passed"
+        },
+        {
+          "name": "rendering a digest styles the mail inline rather than through a stylesheet",
+          "status": "passed"
+        },
+        {
+          "name": "staying inside the mail size limit trims a heavy week instead of letting the client cut it",
+          "status": "passed"
+        },
+        {
+          "name": "staying inside the mail size limit says what it dropped rather than trimming silently",
+          "status": "passed"
+        },
+        {
+          "name": "staying inside the mail size limit leaves an ordinary week untrimmed",
+          "status": "passed"
+        },
+        {
+          "name": "staying inside the mail size limit keeps the study list, which sits last and would be the first thing lost",
+          "status": "passed"
+        },
+        {
+          "name": "staying inside the mail size limit fits an ordinary week without dropping a single pull request",
+          "status": "passed"
+        },
+        {
+          "name": "markdown in a summary keeps a link's label and drops the address it would have printed twice",
+          "status": "passed"
+        },
+        {
+          "name": "markdown in a summary unwraps emphasis and code so the markers do not show as text",
+          "status": "passed"
+        },
+        {
+          "name": "markdown in a summary leaves prose that only looks like markup alone",
+          "status": "passed"
+        },
+        {
+          "name": "markdown in a summary reaches the rendered summary, not just the helper",
+          "status": "passed"
+        },
+        {
+          "name": "hoisting repeated styles collapses a rule that repeats and leaves a one-off inline",
+          "status": "passed"
+        },
+        {
+          "name": "hoisting repeated styles declares each surviving class exactly once and uses each one",
+          "status": "passed"
+        },
+        {
+          "name": "hoisting repeated styles shrinks the message, which is the only reason to do it",
+          "status": "passed"
+        },
+        {
+          "name": "hoisting repeated styles does not chew on a title that merely looks like markup",
+          "status": "passed"
+        },
+        {
+          "name": "hoisting repeated styles leaves html alone when nothing repeats",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due sends nothing before the send hour",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due covers yesterday in full, not a rolling 24 hours",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due keys the daily send by local calendar day",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due adds the weekly only on the configured weekday",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due makes the weekly cover the seven days before today",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due gives the two kinds different keys on a Monday, so one claim cannot swallow the other",
+          "status": "passed"
+        },
+        {
+          "name": "when a digest is due uses ISO weeks so a new-year week is not split",
+          "status": "passed"
+        },
+        {
+          "name": "the gws request posts through the raw messages API, because +send cannot carry HTML",
+          "status": "passed"
+        },
+        {
+          "name": "the gws request can be asked for a dry run",
+          "status": "passed"
+        },
+        {
+          "name": "the MIME message round-trips through base64url with both alternatives",
+          "status": "passed"
+        },
+        {
+          "name": "the MIME message encodes a non-ascii subject rather than sending it raw",
+          "status": "passed"
+        },
+        {
+          "name": "the MIME message closes the multipart boundary",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/mcp-server.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "the research MCP server is where the CLIs are configured to find it",
+          "status": "passed"
+        },
+        {
+          "name": "the research MCP server starts and completes a handshake",
+          "status": "passed"
+        },
+        {
+          "name": "the research MCP server serves the research tool surface",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "test/scripts.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "the operator scripts are all there",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts actor.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts agent-worker.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts benchmark-content.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts config.mjs imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts configure-machine.mjs imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts content-input.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts digest.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts embed.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts register-research.mjs imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts research-arxiv.mjs imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts sync-plans.mjs imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "the operator scripts worker.mts imports only files that exist",
+          "status": "passed"
+        },
+        {
+          "name": "project discovery finds the git checkouts beside the repo and slugs their names",
+          "status": "passed"
+        },
+        {
+          "name": "project discovery returns nothing rather than throwing when the root does not exist",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

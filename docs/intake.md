@@ -1,5 +1,7 @@
 # Intake
 
+Intake is the Input boundary of personal content management. Screenshot and paper adapters normalize evidence into canonical content lists; they do not themselves run OCR or fetch full text. See [Content architecture](/docs/content-management/).
+
 Newsletters, papers, articles and feeds arrive as jobs, get distilled and
 scored, and leave as one line each. The queue is triage, not reading.
 

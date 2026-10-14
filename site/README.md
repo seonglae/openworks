@@ -1,5 +1,7 @@
 # site
 
+The site presents Openworks as personal content input/output management. Keep the homepage, metadata and documentation aligned; research is one use case.
+
 `openworksai.app`: the homepage and the docs. Astro, static output, no adapter,
 because nothing on it is dynamic.
 
@@ -22,6 +24,11 @@ collection, so a feature and its page change in the same commit. `docs/` also
 holds runbooks that are notes to ourselves; a page is published only once it is
 listed in `src/data/docs.ts`. Listing one whose file does not exist fails the
 build rather than shipping a link to a 404.
+
+Keep the content architecture and product comparison pages discoverable before the
+research use case. Their comparison is about design lessons and current adapter
+boundaries, not tested feature parity. Links between published guides should use
+`/docs/<slug>/`; repository-relative `.md` links do not resolve on the static site.
 
 ## The screenshots
 

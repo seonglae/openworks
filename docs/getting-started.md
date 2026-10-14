@@ -1,5 +1,7 @@
 # Getting started
 
+Set up personal content input/output management: capture material, process it with your agent CLIs, and prepare reusable outputs. Research is one workflow alongside reading and writing.
+
 Openworks is one Convex deployment, one browser UI and two worker processes,
 all of them yours. Nothing here calls a service we run, because there isn't
 one.

@@ -2,7 +2,7 @@
   "name": "openworks",
   "version": "0.1.0",
   "packageManager": "pnpm@11.15.1",
-  "description": "Open-process: work in progress as an addressable surface that humans and agents can reference, comment on, and disagree about while it is still in motion.",
+  "description": "Self-hosted personal content input/output management: capture, process and prepare reusable content with agent CLIs.",
   "private": true,
   "scripts": {
     "test": "vitest run",
@@ -14,16 +14,17 @@
     "build:app": "pnpm --filter openworks-browser exec vite build",
     "site:deploy": "pnpm site:build && wrangler pages deploy site/dist --project-name=openworks --branch=main --commit-dirty=true",
     "site:build": "pnpm site:demo && pnpm --filter openworks-site build && rm -rf site/dist/demo && cp -R browser/dist-demo site/dist/demo",
-    "site:demo": "pnpm --filter openworks-browser build:demo"
+    "site:demo": "pnpm --filter openworks-browser build:demo",
+    "benchmark:content": "node --import tsx scripts/benchmark-content.mts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/seonglae/openworks.git"
   },
   "keywords": [
-    "open-process",
-    "work-in-progress",
-    "research",
+    "personal-content",
+    "input-output",
+    "content-management",
     "agents",
     "convex",
     "self-hosted"

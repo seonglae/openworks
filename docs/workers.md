@@ -1,5 +1,7 @@
 # Workers
 
+Workers connect captured personal content to processing and existing output workflows. The canonical Input/Processing/Output contracts live in `packages/domain/src/content/`; worker scheduling and side effects remain here.
+
 Two long-running node processes. Both resolve `.env.local` and every relative
 path from the repository root, so both must be started from there.
 

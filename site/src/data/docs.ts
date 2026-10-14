@@ -21,7 +21,7 @@ export const DOC_GROUPS: DocGroup[] = [
       {
         slug: "concepts",
         title: "Concepts",
-        blurb: "Projects, entities, references and comments: the substrate every feature is built on.",
+        blurb: "The content loop and the existing project graph: content lists, entities, references and comments.",
       },
     ],
   },
@@ -29,13 +29,25 @@ export const DOC_GROUPS: DocGroup[] = [
     label: "Working",
     items: [
       {
+        slug: "content-management",
+        title: "Content input/output",
+        blurb:
+          "Input, Processing and Output around canonical content lists, with current capabilities and reproducible checks.",
+      },
+      {
+        slug: "product-comparison",
+        title: "Product comparison and roadmap",
+        blurb:
+          "Public product references, implemented adapter boundaries and remaining work, without claiming feature parity.",
+      },
+      {
         slug: "intake",
         title: "Intake",
         blurb: "Newsletters, papers, articles and feeds arrive as jobs, get distilled and scored, and leave as a line.",
       },
       {
         slug: "research",
-        title: "Research",
+        title: "Research use case",
         blurb:
           "Projects on a state machine, with memos, experiments, tables, figures, sections and venues hanging off them.",
       },
@@ -77,7 +89,7 @@ export const DOC_GROUPS: DocGroup[] = [
       {
         slug: "auth",
         title: "Auth and sharing",
-        blurb: "The owner gate, the service key, and what changes when a project is made public.",
+        blurb: "The owner gate, the service key, and why visibility labels do not grant public access.",
       },
       {
         slug: "configuration",

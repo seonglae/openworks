@@ -1,5 +1,7 @@
 # Agent CLIs
 
+Agent CLIs process personal content after capture and before outputs are prepared. The same dispatch layer serves reading, writing and research workflows.
+
 Every model call in Openworks is dispatched to a command-line agent you are
 already signed in to. There is no provider API key anywhere in this repository,
 and adding one would defeat the design.

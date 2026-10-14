@@ -2,9 +2,12 @@
 
 # Openworks
 
-**Agent-native productivity.** A self-hosted workspace where humans and AI agents
-work the same material while it is still moving, and every model call goes through an
-agent CLI you are already signed in to.
+**Personal content input/output management.** Capture links, screenshots, papers and
+notes; process them into reusable content; prepare useful outputs with the agent CLIs
+you already use. Research is one workflow in this broader personal content loop.
+
+[Content architecture and adapter boundaries](docs/content-management.md) ·
+[Product comparison and roadmap](docs/product-comparison.md).
 
 **No API keys. No metered inference. No hosted tier. No subscription to us.**
 
@@ -19,7 +22,7 @@ Interfaces will still move.
 **Docs: [openworksai.app/docs](https://openworksai.app/docs)**, one page per
 surface, written from `docs/` in this repo.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20humans%20and%20AI%20agents%20work%20the%20same%20material%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=Self-hosted%20personal%20content%20input%2Foutput%20management.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
 
 Clones this repo into your account, provisions a Convex project through the
 Vercel Marketplace, and builds the backend and the UI in one command. Three
@@ -32,41 +35,33 @@ you.
 
 ## Why
 
-The unit of public discourse today is the finished artifact: the published paper, the
-merged PR, the released product. Review and critique are bolted onto the end of the
-pipe, so by the time anyone outside sees the work, the design space has already
-collapsed.
+Personal material arrives in different forms and leaves through different tools. A
+screenshot, an article, a paper and a note should not require four disconnected
+workflows just to become a useful summary, draft or reading feed.
 
-Meanwhile AI agents have become collaborators inside the work, but their contributions
-stay locked in private sessions. They cannot be cited mid-thought, cannot disagree with
-another agent on the record, cannot be argued with by a human peer while it still
-matters.
+Openworks separates **Input → Processing → Output** around canonical content lists.
+Input adapters preserve source references. Processing transforms working text while
+retaining evidence. Output adapters prepare destination-specific data. The existing
+intake queue, project graph, agents and digest are useful surfaces over that loop.
 
-Openworks treats the process itself as the addressable surface. Every entity the work
-passes through, a memo, an experiment, a table, a figure, a draft section, a state
-transition, is a stable target that can be referenced, commented on, and disagreed with
-while it is still moving.
+- **Capture:** URLs, pasted text and screenshots enter the existing intake jobs.
+- **Process:** agent CLIs distill and score material; reusable content keeps its source.
+- **Prepare outputs:** Notion export plans and portable feed records have independent,
+  side-effect-free adapters. Existing digest and project workflows remain available.
+- **Research is one use case:** papers, experiments, figures and sections use the
+  existing research schema. Its API names remain compatible, without defining the
+  whole product as a research workspace.
 
-- **Pre-publication, during the procedure.** A half-run ablation and an unresolved
-  design memo are valid units to share and take critique on.
-- **Humans and agents on equal footing.** A human peer's objection and a reviewer
-  agent's objection land in the same thread, separated only by a tag.
-- **Cross-entity references are first class.** Memos point at experiments, experiments
-  at tables, tables at sections. The graph is the substrate, and comments hang off any
-  node in it.
-- **Agent-to-agent disagreement stays on the record.**
-
-Research is the first vertical because its artifact taxonomy is already well defined:
-memos, experiments, tables, figures, sections, venues. The substrate underneath is
-project + entities + references + comments + agents, and none of those names anything
-research-specific. Whether that generalises is not something this repo has shown yet.
+The new adapters are a typed foundation, not a claim that every existing worker has
+been migrated. Notion publishing, a hosted feed endpoint and video rendering are not
+implemented by these adapters. See the [capability matrix](docs/content-management.md).
 
 ## The same argument, from the other end
 
-Keeping a process open is not a display problem. It only means anything if agents are
-actually working the material as it moves: reacting to a state transition, reading an
-experiment the moment it is saved, answering a comment without being asked.
-Subscriptions here fan out on every one of those events.
+The content loop needs processing as well as storage. Existing workers distill intake
+jobs, and agent subscriptions can react when a project artifact changes, its state
+advances, or a comment arrives. A saved experiment is one such artifact; the same
+personal workspace also holds reading material, notes and drafts.
 
 Metered inference is the wrong shape for that. When each run bills per token, every
 autonomous reaction becomes a purchase, and a product that spends the operator's money
@@ -95,7 +90,8 @@ processes that spend your agent quota stay where your logins already are.
 
 | Surface       |                                                                                                                              |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Research      | projects on a state machine, memos, experiments, tables, figures, sections, tex, venues, cross-references, threaded comments |
+| Content contracts | separate Input, Processing and Output adapters sharing ordered content lists; Notion and feed export preparation, without publication |
+| Research use case | projects on a state machine, memos, experiments, tables, figures, sections, tex, venues, cross-references, threaded comments |
 | Agents        | subscriptions that fan out on entity events and queue autonomous runs, results posted back as comments                       |
 | MCP           | ~50 tools so `codex` / `antigravity` / `claude` can read and write the graph directly                                        |
 | Intake        | newsletters, arXiv papers, articles and RSS distilled and scored, so the queue is triage rather than reading                 |
@@ -210,7 +206,7 @@ feature and its page is in the same repository as the change.
 The phone client is a native SwiftUI app in [`ios/`](ios/Openworks), talking to
 the same Convex backend over the owner service key. It is not a wrapper around
 the web app: the desktop keeps the surfaces that need a keyboard and a canvas,
-and the phone gets reading, the plan, and the research timelines.
+and the phone gets reading, the plan, and project timelines for the research use case.
 
 ## License
 

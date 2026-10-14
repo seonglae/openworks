@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "measured_on": "2026-10-14",
+  "scope": "Local repository regressions, runtime/type boundary checks and synthetic pure-adapter overhead; no model-quality or competitor-performance evaluation.",
+  "environment": {
+    "node": "v24.19.0",
+    "pnpm": "11.25.0",
+    "platform": "linux-x64",
+    "declared_pnpm": "11.15.1",
+    "ci_node_major": 22,
+    "astro_telemetry_disabled": true,
+    "writable_config_home": "temporary directory",
+    "lockfile_sha256": "e09f38022aa46a4b96c1fad16bef7b5a6fb8cbf46e46cb2634a7103f499af74d"
+  },
+  "baseline": {
+    "commit": "8f1c786ef4d38e759f0162f4f336ee32f38d1358",
+    "git_tree": "a29feca3ad2b4c2b3e56dea75cc1b7de01d935e6",
+    "tracked_worktree_clean": true,
+    "tests": {
+      "total": 1037,
+      "passed": 1037,
+      "failed": 0,
+      "files": 42
+    },
+    "frozen_install": "passed after a transient ONNX GPU download proxy timeout on the first attempt",
+    "typecheck": "passed",
+    "app_build": "passed",
+    "site_build": "passed",
+    "static_site_routes_excluding_demo": 15,
+    "content_pipeline_benchmark": "not available; these content adapters do not exist in the baseline"
+  },
+  "candidate": {
+    "base_commit": "8f1c786ef4d38e759f0162f4f336ee32f38d1358",
+    "uncommitted": true,
+    "source_manifest": "source-manifest.json",
+    "source_manifest_sha256": "144d20d615a3b05a84f63f003e325536335c28558bde65294fbc87776966cf30",
+    "source_files": 273,
+    "tests": {
+      "total": 1123,
+      "passed": 1123,
+      "failed": 0,
+      "files": 44
+    },
+    "frozen_install": "passed using writable temporary pnpm store",
+    "typecheck": "passed",
+    "app_build": "passed",
+    "site_build": "passed",
+    "static_site_routes_excluding_demo": 17,
+    "content_pipeline_benchmark": "content-pipeline.json"
+  },
+  "regression_comparison": {
+    "same_named_tests_retained": 1037,
+    "baseline_test_identities_removed": 0,
+    "additional_test_cases": 86,
+    "additional_test_cases_by_file": {
+      "packages/domain/test/content.test.ts": 74,
+      "site/test/docs.test.ts": 5,
+      "test/content-input.test.ts": 5,
+      "test/scripts.test.ts": 2
+    },
+    "interpretation": "Additional tests exercise new contracts and documentation. Their count is not an accuracy, reliability or product-quality gain."
+  },
+  "commands": {
+    "install": "XDG_DATA_HOME=<temporary-data-dir> pnpm install --frozen-lockfile --store-dir <temporary-store>",
+    "typecheck": "ASTRO_TELEMETRY_DISABLED=1 XDG_CONFIG_HOME=<temporary-config-dir> pnpm typecheck",
+    "tests": "pnpm exec vitest run --reporter=json --outputFile=<report-path>",
+    "app_build_baseline": "pnpm --filter openworks-browser exec vite build",
+    "app_build_candidate": "pnpm build:app",
+    "site_build": "ASTRO_TELEMETRY_DISABLED=1 XDG_CONFIG_HOME=<temporary-config-dir> pnpm site:build",
+    "benchmark": "node --import tsx scripts/benchmark-content.mts"
+  },
+  "limitations": [
+    "No identical baseline pipeline exists; no before/after adapter speedup is claimed.",
+    "No real provider inference, OCR, Notion API publication, hosted feed, video rendering, authentication or deployed backend was exercised.",
+    "App builds ran without deployment credentials; compilation is not verification of a live authenticated UI. The site demo uses synthetic fixture data.",
+    "Node 24.19.0/pnpm 11.25.0 were available locally, rather than CI Node 22/repository-declared pnpm 11.15.1. Dependency lockfile stayed byte-identical.",
+    "Both source revisions produce existing large-chunk and deprecated markdown.smartypants build warnings. Astro type diagnostics are clean.",
+    "The corrected social-card HTML has not been rasterized: site/public/og.png remains the original asset because Chromium could not launch in this sandbox. Regenerate it in a working browser before publication.",
+    "Source files remain uncommitted locally. No remote write, PR, merge or deployment was performed.",
+    "Benchmark timings are one local run and may be affected by other work on the same host. They measure adapter overhead only."
+  ]
+}
