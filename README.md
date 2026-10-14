@@ -2,9 +2,7 @@
 
 # Openworks
 
-**Agent-native productivity.** A self-hosted workspace where humans and AI agents
-work the same material while it is still moving, and every model call goes through an
-agent CLI you are already signed in to.
+**Agent-native productivity, from input to output.** A self-hosted workspace where links, screenshots, papers and notes move from input through processing to output, and where humans and AI agents work that material while it is still moving. Every model call goes through an agent CLI you are already signed in to.
 
 **No API keys. No metered inference. No hosted tier. No subscription to us.**
 
@@ -19,7 +17,7 @@ Interfaces will still move.
 **Docs: [openworksai.app/docs](https://openworksai.app/docs)**, one page per
 surface, written from `docs/` in this repo.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20humans%20and%20AI%20agents%20work%20the%20same%20material%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20personal%20content%20moves%20from%20input%20to%20output%20and%20humans%20and%20AI%20agents%20work%20it%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
 
 Clones this repo into your account, provisions a Convex project through the
 Vercel Marketplace, and builds the backend and the UI in one command. Three
@@ -31,6 +29,22 @@ you.
 ---
 
 ## Why
+
+Two things have to hold at once: what you read and write has to move from input to output, and the work in between has to stay open to people and agents while it moves.
+
+### From input to output
+
+Personal material arrives in different forms and leaves through different tools. A screenshot, an article, a paper and a note should not need four disconnected workflows to become a useful summary, draft or reading feed.
+
+Openworks runs them through one **Input → Processing → Output** loop around ordered content lists.
+
+- **Input keeps the source.** Captured text stays next to its link, paper or screenshot reference, and a reference without text is never presented as already read.
+- **Processing keeps working content apart from evidence.** Agent CLIs distill and score material while the source and the steps applied to it are kept.
+- **Output has its own boundary.** Preparing a Notion export plan or a portable feed record does not publish it.
+
+The adapters are a typed foundation, not a claim that every worker has moved onto them: intake uses the input boundary today, and live Notion publishing, a hosted feed and video rendering are separate work. See [Content input/output](docs/content-management.md).
+
+### Open while it moves
 
 The unit of public discourse today is the finished artifact: the published paper, the
 merged PR, the released product. Review and critique are bolted onto the end of the
@@ -63,10 +77,7 @@ research-specific. Whether that generalises is not something this repo has shown
 
 ## The same argument, from the other end
 
-Keeping a process open is not a display problem. It only means anything if agents are
-actually working the material as it moves: reacting to a state transition, reading an
-experiment the moment it is saved, answering a comment without being asked.
-Subscriptions here fan out on every one of those events.
+Moving content from input to output and keeping a process open are not display problems. Both only mean anything if agents actually work the material as it moves: distilling what arrives, reacting to a state transition, reading an experiment the moment it is saved, answering a comment without being asked. Workers and subscriptions here cover every one of those events.
 
 Metered inference is the wrong shape for that. When each run bills per token, every
 autonomous reaction becomes a purchase, and a product that spends the operator's money

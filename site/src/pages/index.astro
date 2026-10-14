@@ -9,6 +9,7 @@ const faq = [
   { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, antigravity or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
   { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. That is a claim about whose keys run the work, not about how much setup you deserve: the deploy button provisions into a Vercel project and a Convex project that are yours, and the workers stay where your agent CLIs are signed in." },
   { q: "What does Openworks cost?", a: "Nothing. Convex has a free tier sufficient for a single operator, the agent CLIs run on subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0." },
+  { q: "Is this only for research?", a: "No. Reading, collecting, organizing and writing run through the same Input, Processing and Output loop. Research projects are where the open process goes deepest: memos, experiments, figures and sections that people and agents comment on while they move." },
   { q: "Can agents act on their own?", a: "Yes. An agent subscription binds an agent to an event type and scope. On a matching event a run is queued, a worker claims it, spawns the CLI, and posts the result back as a comment." },
 ];
 
@@ -18,7 +19,7 @@ const schema = [
 ---
 
 <Base
-  title="Openworks: agent-native productivity"
+  title="Openworks: agent-native productivity, from input to output"
   description={`${PRODUCT_LEDE} No API keys, no metered inference.`}
   path="/"
   schema={schema}
@@ -29,10 +30,11 @@ const schema = [
       <main id="top">
         <div class="wrap">
           <div class="hero">
-            <h1>Agent-native<br />productivity.</h1>
+            <h1>Agent-native productivity,<br />from input to output.</h1>
             <p class="lede">
-              A self-hosted workspace where humans and AI agents work the same material while it is still moving, and
-              every model call goes through an agent CLI you are already signed in to.
+              Links, screenshots, papers and notes move from input through processing to output, and humans and AI
+              agents work that material while it is still moving. Every model call goes through an agent CLI you are
+              already signed in to.
             </p>
             <ul class="claims">
               <li>No API keys</li>
@@ -83,6 +85,34 @@ const schema = [
         <div class="wrap">
           <section id="why">
             <h2>Why</h2>
+            <p>
+              Two things have to hold at once: what you read and write has to move from input to output, and the work in
+              between has to stay open to people and agents while it moves.
+            </p>
+            <h3>From input to output</h3>
+            <p>
+              Personal material arrives in different forms and leaves through different tools. A screenshot, an article,
+              a paper and a note should not need four disconnected workflows to become a useful summary, draft or reading
+              feed.
+            </p>
+            <p>
+              <strong>Openworks runs them through one Input, Processing and Output loop around ordered content lists.</strong>
+            </p>
+            <ul class="plain">
+              <li>
+                <strong>Input keeps the source.</strong> Captured text stays next to its link, paper or screenshot
+                reference, and a reference without text is never presented as already read.
+              </li>
+              <li>
+                <strong>Processing keeps working content apart from evidence.</strong> Agent CLIs distill and score
+                material while the source and the steps applied to it are kept.
+              </li>
+              <li>
+                <strong>Output has its own boundary.</strong> Preparing a Notion export plan or a portable feed record
+                does not publish it. Live Notion publishing, a hosted feed and video rendering are separate work.
+              </li>
+            </ul>
+            <h3>Open while it moves</h3>
             <p>
               The unit of public discourse today is the finished artifact: the published paper, the merged PR, the
               released product. Review and critique are bolted onto the end of the pipe, so by the time anyone outside
@@ -143,6 +173,13 @@ const schema = [
           <section id="what">
             <h2>What it does</h2>
             <div class="grid">
+              <div class="cell">
+                <h3>Content loop</h3>
+                <p>
+                  Input, Processing and Output adapters share ordered content lists. Intake captures links, papers,
+                  screenshots and notes; Notion and feed adapters prepare export data without publishing it.
+                </p>
+              </div>
               <div class="cell">
                 <h3>Research</h3>
                 <p>

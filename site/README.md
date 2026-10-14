@@ -3,6 +3,8 @@
 `openworksai.app`: the homepage and the docs. Astro, static output, no adapter,
 because nothing on it is dynamic.
 
+The site gives both halves of Openworks equal weight: the content loop from input to output, and the open process people and agents work while it moves. Keep the homepage, metadata and docs aligned on both. Links between published guides use `/docs/<slug>/`; repository-relative `.md` links do not resolve on the static site.
+
 ```bash
 pnpm --filter openworks-site dev        # localhost:6002
 pnpm --filter openworks-site typecheck  # astro check

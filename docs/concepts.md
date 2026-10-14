@@ -1,8 +1,12 @@
 # Concepts
 
-Everything in Openworks is a project, an entity hanging off it, a reference
-between two of them, or a comment on any of them. Features are views over that
-substrate rather than separate systems.
+Openworks has two halves that work together. A content loop takes links, screenshots, papers and notes from input through processing to output. A project graph keeps work open while it moves: everything there is a project, an entity hanging off it, a reference between two of them, or a comment on any of them. Features are views over those two rather than separate systems.
+
+## Content loop
+
+The shared domain contracts use an ordered `ContentList` of `Content` records. Input adapters capture text or source references, Processing adapters transform working text while keeping the source, and Output adapters prepare destination-specific data. The stages are separate interfaces; source and output variants are discriminated unions rather than one large parent class.
+
+These contracts connect to intake prompt construction and standalone export preparation today. Project, digest and agent workflows have not all moved onto them. See [Content input/output](/docs/content-management/) for the exact boundaries.
 
 ## Projects
 

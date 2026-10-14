@@ -2,7 +2,7 @@
   "name": "openworks",
   "version": "0.1.0",
   "packageManager": "pnpm@11.15.1",
-  "description": "Open-process: work in progress as an addressable surface that humans and agents can reference, comment on, and disagree about while it is still in motion.",
+  "description": "Agent-native productivity from input to output: a self-hosted workspace where personal content is captured, processed and prepared as outputs, and humans and agents work it while it is still in motion.",
   "private": true,
   "scripts": {
     "test": "vitest run",
@@ -24,6 +24,8 @@
   "keywords": [
     "open-process",
     "work-in-progress",
+    "personal-content",
+    "input-output",
     "research",
     "agents",
     "convex",

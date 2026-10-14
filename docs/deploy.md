@@ -10,7 +10,7 @@ point, and the last section says why.
 
 ## One click
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20humans%20and%20AI%20agents%20work%20the%20same%20material%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fseonglae%2Fopenworks&project-name=openworks&repository-name=openworks&demo-title=Openworks&demo-description=A%20self-hosted%20workspace%20where%20personal%20content%20moves%20from%20input%20to%20output%20and%20humans%20and%20AI%20agents%20work%20it%20while%20it%20is%20still%20moving.&demo-url=https%3A%2F%2Fopenworksai.app&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22convex%22%2C%22productSlug%22%3A%22convex%22%2C%22protocol%22%3A%22storage%22%7D%5D&env=VITE_CLERK_PUBLISHABLE_KEY&envDescription=Clerk%20publishable%20key.%20The%20deployment%20is%20owner-only%2C%20so%20it%20needs%20an%20identity%20provider%20to%20know%20who%20you%20are.&envLink=https%3A%2F%2Fopenworksai.app%2Fdocs%2Fdeploy%2F)
 
 In order, that flow:
 
