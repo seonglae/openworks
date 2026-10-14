@@ -78,7 +78,7 @@ const contentWriteSchema = {
     .nonnegative()
     .optional()
     .describe(
-      "Revision from get_* or get_content_head. Required after versioning; 0 adopts legacy content. Stale writes fail; reconcile, do not blindly retry.",
+      "Revision from get_*, get_content_head or the last save's result. Required after versioning; 0 adopts legacy content. Stale writes fail; reconcile, do not blindly retry.",
     ),
   ...provenanceSchema,
 };

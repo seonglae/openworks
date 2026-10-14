@@ -138,3 +138,24 @@ it("retains server-applied inference history instead of a replacement completion
   const stored = await t.run((ctx) => ctx.db.get(run.id as Id<"researchPhaseRuns">));
   expect(JSON.parse(stored!.inferredHistory!)).toEqual(history);
 });
+it("does not fan out a write made inside an agent run, so a run cannot re-trigger itself", async () => {
+  const { t, run, source } = await queued();
+  const pending = () =>
+    t.run((ctx) =>
+      ctx.db
+        .query("agentRuns")
+        .filter((q) => q.eq(q.field("status"), "pending"))
+        .collect(),
+    );
+  await t.mutation(api.researchMemos.save, {
+    ...auth,
+    researchSlug: "p",
+    memoSlug: "from-run",
+    content: "written by the run",
+    runId: run._id,
+    sourceRevisionIds: [source.revisionId],
+  });
+  expect(await pending()).toHaveLength(0);
+  await t.mutation(api.researchMemos.save, { ...auth, researchSlug: "p", memoSlug: "by-hand", content: "typed" });
+  expect(await pending()).toHaveLength(1);
+});

@@ -10,6 +10,7 @@ export type FanOutOpts = {
   researchSlug?: string;
   sourceRevisionIds?: Id<"contentRevisions">[];
   eventSnapshot?: Record<string, unknown>;
+  runId?: Id<"agentRuns">;
 };
 async function currentContent(ctx: MutationCtx, opts: FanOutOpts) {
   const r = opts.researchSlug!;
@@ -43,6 +44,9 @@ async function currentContent(ctx: MutationCtx, opts: FanOutOpts) {
   }
 }
 export async function fanOut(ctx: MutationCtx, opts: FanOutOpts): Promise<number> {
+  // A write made inside an agent run does not fan out, for the same reason an
+  // agent's comment does not: the run's output would re-enqueue its own trigger.
+  if (opts.runId) return 0;
   const project = opts.researchSlug
     ? await ctx.db
         .query("researchProjects")

@@ -56,7 +56,7 @@ export function checkExpected(head: Doc<"contentHeads"> | null, expected?: numbe
   if (expected !== undefined && (!Number.isSafeInteger(expected) || expected < 0))
     throw new Error("Invalid expectedRevision");
   if (head && expected === undefined)
-    throw new Error("expectedRevision is required; read the current content before writing");
+    throw new Error("expectedRevision is required; pass the revision your last read or save returned");
   if ((expected ?? 0) !== (head?.version ?? 0))
     throw new Error("Stale content revision; read and reconcile before retrying");
 }

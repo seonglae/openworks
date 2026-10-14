@@ -54,6 +54,7 @@ export const save = mutation({
         entityKey: args.expSlug,
         researchSlug: args.researchSlug,
         sourceRevisionIds: [token.revisionId],
+        runId: args.runId,
       });
       return { id: existing._id, expSlug: existing.expSlug, created: false, ...token };
     }
@@ -78,6 +79,7 @@ export const save = mutation({
       entityKey: args.expSlug,
       researchSlug: args.researchSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, expSlug: args.expSlug, created: true, ...token };
   },

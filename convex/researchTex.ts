@@ -46,6 +46,7 @@ export const save = mutation({
         researchSlug: args.researchSlug,
         entityVenueSlug: args.venueSlug,
         sourceRevisionIds: [token.revisionId],
+        runId: args.runId,
       });
       return { id: existing._id, texPath: existing.texPath, created: false, ...token };
     }
@@ -67,6 +68,7 @@ export const save = mutation({
       researchSlug: args.researchSlug,
       entityVenueSlug: args.venueSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, texPath: args.texPath, created: true, ...token };
   },
@@ -214,6 +216,7 @@ export const fork = mutation({
       entityVenueSlug: args.toVenueSlug,
       researchSlug: args.researchSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, forked: !existing, ...token };
   },

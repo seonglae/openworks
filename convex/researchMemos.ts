@@ -41,6 +41,7 @@ export const save = mutation({
         entityKey: args.memoSlug,
         researchSlug: args.researchSlug,
         sourceRevisionIds: [token.revisionId],
+        runId: args.runId,
       });
       return { id: existing._id, memoSlug: existing.memoSlug, created: false, ...token };
     }
@@ -62,6 +63,7 @@ export const save = mutation({
       entityKey: args.memoSlug,
       researchSlug: args.researchSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, memoSlug: args.memoSlug, created: true, ...token };
   },

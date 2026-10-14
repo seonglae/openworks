@@ -55,6 +55,7 @@ export const save = mutation({
         researchSlug: args.researchSlug,
         entityVenueSlug: args.venueSlug,
         sourceRevisionIds: [token.revisionId],
+        runId: args.runId,
       });
       return { id: existing._id, sectionSlug: existing.sectionSlug, created: false, ...token };
     }
@@ -79,6 +80,7 @@ export const save = mutation({
       researchSlug: args.researchSlug,
       entityVenueSlug: args.venueSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, sectionSlug: args.sectionSlug, created: true, ...token };
   },
@@ -234,6 +236,7 @@ export const fork = mutation({
       entityVenueSlug: args.toVenueSlug,
       researchSlug: args.researchSlug,
       sourceRevisionIds: [token.revisionId],
+      runId: args.runId,
     });
     return { id, forked: !existing, ...token };
   },
