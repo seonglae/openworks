@@ -4,6 +4,7 @@ import { mutation, query } from "./_generated/server";
 import { canCommentProject, getUserId, projectBySlug, requireOwner } from "./auth";
 import { fanOut } from "./agentTriggers";
 import { literals } from "./validators";
+import { provenanceArgs, validateProvenance, pinEventSnapshot, assertProjectWritable } from "./contentStore";
 
 const TARGET_TYPE = literals(ENTITY_TYPES);
 
@@ -20,6 +21,7 @@ export const post = mutation({
     authorId: v.string(),
     authorName: v.optional(v.string()),
     body: v.string(),
+    ...provenanceArgs,
     serviceKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -45,6 +47,30 @@ export const post = mutation({
         throw new Error(`forbidden: cannot comment on project ${args.researchSlug}`);
       }
     }
+    const run = await validateProvenance(ctx, args.researchSlug, args);
+    if (run) {
+      if (!args.body.trim()) throw new Error("Attributed output comment must not be blank");
+      if (
+        args.authorType !== "agent" ||
+        args.authorId !== run.agentId ||
+        args.targetType !== run.triggerEntityType ||
+        args.targetKey !== run.triggerEntityKey ||
+        args.targetVenueSlug !== run.triggerEntityVenueSlug
+      )
+        throw new Error("Comment author and target must match the attributed run");
+      const config = JSON.parse(run.configSnapshot ?? "{}");
+      if (typeof config.maxCommentChars === "number" && [...args.body].length > config.maxCommentChars)
+        throw new Error("Comment exceeds the configured character limit");
+      const prior = await ctx.db
+        .query("comments")
+        .withIndex("by_run", (q) => q.eq("runId", run._id))
+        .first();
+      if (prior) {
+        if (!prior.deleted && prior.body === args.body && prior.parentId === args.parentId)
+          return { id: prior._id, createdAt: prior.createdAt };
+        throw new Error("Run already has an immutable output comment");
+      }
+    }
     const now = Date.now();
     const id = await ctx.db.insert("comments", {
       researchSlug: args.researchSlug,
@@ -56,9 +82,21 @@ export const post = mutation({
       authorId: args.authorId,
       authorName: args.authorName,
       body: args.body,
+      runId: args.runId,
+      sourceRevisionIds: args.sourceRevisionIds,
       createdAt: now,
       updatedAt: now,
     });
+    if (run) {
+      const snapshot = (await ctx.db.get(id))!;
+      const revision = await pinEventSnapshot(
+        ctx,
+        { kind: "comment", researchSlug: args.researchSlug, key: id },
+        snapshot,
+        args,
+      );
+      await ctx.db.patch(id, { outputRevisionId: revision.revisionId });
+    }
     // Agent-authored comments do NOT fan out. A triggered agent is instructed
     // to post a comment as its output; if that post re-fired comment.posted it
     // would re-enqueue the same subscription and loop until quota is exhausted.
@@ -70,6 +108,7 @@ export const post = mutation({
         entityKey: args.targetKey,
         entityVenueSlug: args.targetVenueSlug,
         researchSlug: args.researchSlug,
+        eventSnapshot: (await ctx.db.get(id))!,
       });
     }
     return { id, createdAt: now };
@@ -89,9 +128,11 @@ export const edit = mutation({
     const existing = await ctx.db.get(args.commentId);
     if (!existing) throw new Error("comment not found");
     if (existing.deleted) throw new Error("comment is deleted");
+    await assertProjectWritable(ctx, existing.researchSlug);
     if (existing.authorType !== args.authorType || existing.authorId !== args.authorId) {
       throw new Error("not the author");
     }
+    if (existing.runId && existing.body !== args.body) throw new Error("Attributed output comments are immutable");
     const now = Date.now();
     await ctx.db.patch(args.commentId, { body: args.body, editedAt: now, updatedAt: now });
     return { id: args.commentId, editedAt: now };
@@ -111,6 +152,7 @@ export const remove = mutation({
     await requireOwner(ctx, args.serviceKey);
     const existing = await ctx.db.get(args.commentId);
     if (!existing) return { removed: false };
+    await assertProjectWritable(ctx, existing.researchSlug);
     if (existing.authorType !== args.authorType || existing.authorId !== args.authorId) {
       throw new Error("not the author");
     }

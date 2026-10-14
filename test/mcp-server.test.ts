@@ -23,7 +23,10 @@ import { afterAll, describe, expect, it } from "vitest";
 // is not available under the CommonJS target the test tsconfig builds to.
 const SERVER = resolve(process.cwd(), "mcp/research-server.mjs");
 
-type Rpc = { id?: number; result?: { tools?: { name: string }[] } };
+type Rpc = {
+  id?: number;
+  result?: { tools?: { name: string; inputSchema?: { properties?: Record<string, unknown> } }[] };
+};
 
 // A live stdio session, torn down once for the whole file: startup dominates
 // the cost and every case here asks the same process a different question.
@@ -106,5 +109,30 @@ describe("the research MCP server", () => {
     expect(names).toContain("post_comment");
     expect(names).toContain("save_report");
     expect(names).toContain("list_reports");
+  }, 30_000);
+  it("exposes read tokens and provenance on every versioned write surface", async () => {
+    const res = await s.call(3, "tools/list", {});
+    const tools = new Map((res.result?.tools ?? []).map((tool) => [tool.name, tool]));
+    for (const name of [
+      "save_memo",
+      "delete_memo",
+      "save_experiment",
+      "delete_experiment",
+      "save_section",
+      "delete_section",
+      "fork_section",
+      "save_tex",
+      "delete_tex",
+      "fork_tex",
+    ]) {
+      expect(tools.get(name)?.inputSchema?.properties, name).toHaveProperty("expectedRevision");
+      expect(tools.get(name)?.inputSchema?.properties, name).toHaveProperty("runId");
+      expect(tools.get(name)?.inputSchema?.properties, name).toHaveProperty("sourceRevisionIds");
+    }
+    for (const name of ["fork_section", "fork_tex"])
+      expect(tools.get(name)?.inputSchema?.properties).toHaveProperty("expectedSourceRevision");
+    for (const name of ["get_content_head", "list_content_revisions", "get_content_revision"])
+      expect(tools.has(name)).toBe(true);
+    expect(tools.get("post_comment")?.inputSchema?.properties).toHaveProperty("runId");
   }, 30_000);
 });

@@ -115,6 +115,17 @@ describe("registering a project", () => {
     expect(await phaseOf(t, "sae")).toBe("literature");
   });
 
+  it("keeps a review project's kind and phase when it is re-registered without one", async () => {
+    const t = withConvex();
+    await t.mutation(api.research.register, { ...auth, slug: "rev", title: "Rev", kind: "review" });
+    await t.mutation(api.research.advance, { ...auth, slug: "rev", state: "lit_review" });
+    const before = await t.run(async (ctx) => ctx.db.query("researchProjects").first());
+    await t.mutation(api.research.register, { ...auth, slug: "rev", title: "Rev v2" });
+    const after = await t.run(async (ctx) => ctx.db.query("researchProjects").first());
+    expect(after).toMatchObject({ kind: "review", phase: "lit_review", title: "Rev v2" });
+    expect(after!.stateVersion).toBe(before!.stateVersion);
+  });
+
   it("adds no second timeline entry when a project is re-registered", async () => {
     const t = withConvex();
     await t.mutation(api.research.register, { ...auth, slug: "sae", title: "SAE", kind: "own" });
@@ -230,7 +241,7 @@ describe("FSM enforcement on advance", () => {
     );
   });
 
-  it("answers identically to the domain FSM for every ordered pair of own-kind states", async () => {
+  it("uses the domain FSM for every state change and treats the current state as a no-op", async () => {
     const t = withConvex();
     await t.mutation(api.research.register, { ...auth, slug: "sweep", title: "Sweep", kind: "own" });
     const id = await projectIdBySlug(t, "sweep");
@@ -238,7 +249,7 @@ describe("FSM enforcement on advance", () => {
       for (const to of OWN_STATES) {
         await setPhase(t, id, from);
         const call = t.mutation(api.research.advance, { ...auth, slug: "sweep", state: to });
-        if (canTransition("own", from, to)) {
+        if (from === to || canTransition("own", from, to)) {
           const res = await call;
           expect(res.phase).toBe(to);
         } else {
@@ -541,10 +552,10 @@ describe("upsert by slug", () => {
     expect(rows[0].phase).toBe("literature");
   });
 
-  it("writes no timeline entry, unlike register", async () => {
+  it("records the initial state through upsert as well as register", async () => {
     const t = withConvex();
     await t.mutation(api.research.upsert, { ...auth, slug: "sae", title: "SAE", kind: "own", phase: "ideation" });
-    expect(await timelineOf(t, "sae")).toHaveLength(0);
+    expect(await timelineOf(t, "sae")).toHaveLength(1);
   });
 });
 
@@ -673,9 +684,9 @@ describe("removing a project", () => {
     const t = withConvex();
     await t.mutation(api.research.register, { ...auth, slug: "sae", title: "SAE", kind: "own" });
     const id = await projectIdBySlug(t, "sae");
-    // Six memos of 1.2MB each: over CASCADE_BYTES in total, under it individually.
-    const big = "x".repeat(1_200_000);
-    for (let i = 0; i < 6; i++) {
+    // Eight valid 900kB memos plus their chunked revisions exceed the aggregate budget.
+    const big = "x".repeat(900_000);
+    for (let i = 0; i < 8; i++) {
       await t.mutation(api.researchMemos.save, {
         ...auth,
         researchSlug: "sae",
@@ -687,7 +698,7 @@ describe("removing a project", () => {
     const first = await t.mutation(api.research.remove, { ...auth, id });
     // No `limit`, so only the byte budget can stop it.
     expect(first.done).toBe(false);
-    expect(first.remainingIn).toBe("researchMemos");
+    expect(first.remainingIn).toBe("contentRevisionChunks");
     expect(await t.run(async (ctx) => (await ctx.db.query("researchMemos").collect()).length)).toBeGreaterThan(0);
     expect(await t.run(async (ctx) => ctx.db.get(id))).not.toBeNull();
 
@@ -704,17 +715,20 @@ describe("removing a project", () => {
     const t = withConvex();
     await t.mutation(api.research.register, { ...auth, slug: "sae", title: "SAE", kind: "own" });
     const id = await projectIdBySlug(t, "sae");
-    // 2.4M Hangul syllables = 2.4M `.length` but 7.2MB of UTF-8, so this is
-    // under the budget by the wrong measure and over it by the right one.
-    const hangul = "\uAC00".repeat(2_400_000);
-    for (let i = 0; i < 2; i++) {
-      await t.mutation(api.researchMemos.save, {
-        ...auth,
-        researchSlug: "sae",
-        memoSlug: `m${i}`,
-        title: "M",
-        content: hangul,
-      });
+    // Seven valid 900kB documents cross the 6MB budget, while their total
+    // JavaScript string length is only 2.1 million code units.
+    const hangul = "\uAC00".repeat(300_000);
+    for (let i = 0; i < 7; i++) {
+      await t.run((ctx) =>
+        ctx.db.insert("researchMemos", {
+          researchSlug: "sae",
+          memoSlug: `m${i}`,
+          title: "M",
+          content: hangul,
+          createdAt: 1,
+          updatedAt: 1,
+        }),
+      );
     }
     expect((await t.mutation(api.research.remove, { ...auth, id })).done).toBe(false);
   });
@@ -1221,14 +1235,16 @@ describe("jobs related to a project", () => {
         // The project's own notes carry the same generic vocabulary the filler
         // does. Without that overlap the filler could never match on generic
         // words, and this test would pass with or without the weighting.
-        notes: "\uC774\uBC88 \uC5F0\uAD6C\uC5D0\uC11C\uB294 \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uACF5\uAC1C\uD558\uBA70 \uC131\uB2A5\uC744 \uD06C\uAC8C \uAC1C\uC120\uD588\uB2E4\uACE0 \uBC1D\uD614\uB2E4",
+        notes:
+          "\uC774\uBC88 \uC5F0\uAD6C\uC5D0\uC11C\uB294 \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uACF5\uAC1C\uD558\uBA70 \uC131\uB2A5\uC744 \uD06C\uAC8C \uAC1C\uC120\uD588\uB2E4\uACE0 \uBC1D\uD614\uB2E4",
         phase: "ideation",
         updatedAt: 1,
       }),
     );
     // A corpus of filler, every row sharing the vocabulary a Korean summary is
     // mostly made of. These are the words that used to create false matches.
-    const filler = "\uC774\uBC88 \uBC1C\uD45C\uC5D0\uC11C\uB294 \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uACF5\uAC1C\uD558\uBA70 \uC131\uB2A5\uC744 \uD06C\uAC8C \uAC1C\uC120\uD588\uB2E4\uACE0 \uBC1D\uD614\uB2E4";
+    const filler =
+      "\uC774\uBC88 \uBC1C\uD45C\uC5D0\uC11C\uB294 \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uACF5\uAC1C\uD558\uBA70 \uC131\uB2A5\uC744 \uD06C\uAC8C \uAC1C\uC120\uD588\uB2E4\uACE0 \uBC1D\uD614\uB2E4";
     for (let i = 0; i < 30; i++) {
       await seedJobWithSummary(t, {
         url: `https://example.com/filler-${i}`,
@@ -1302,7 +1318,8 @@ describe("jobs related to a project", () => {
       // Korean prose keeps the English term and glues a particle onto it, so
       // the term only matches if the particle is split off.
       title: "\uC0C8\uB85C\uC6B4 \uC5B8\uC5B4\uBAA8\uB378 \uC18C\uC2DD",
-      summary: "Transformer\uB97C \uAC1C\uC120\uD55C \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uBC1C\uD45C\uD588\uC2B5\uB2C8\uB2E4",
+      summary:
+        "Transformer\uB97C \uAC1C\uC120\uD55C \uC0C8\uB85C\uC6B4 \uBAA8\uB378\uC744 \uBC1C\uD45C\uD588\uC2B5\uB2C8\uB2E4",
       keywords: [],
     });
     const related = await t.query(api.research.getRelatedJobs, { ...auth, researchId });

@@ -1,10 +1,10 @@
-import { v } from "convex/values";
+import { v, getDocumentSize } from "convex/values";
 import { mutation, query, type MutationCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
-import { canTransition, initialState, isValidState, nextStates, RESEARCH_KINDS, statesFor } from "@openworks/domain";
+import { initialState, isValidState, nextStates, RESEARCH_KINDS, statesFor } from "@openworks/domain";
 import { canEditProject, getUserId, requireOwner } from "./auth";
-import { fanOut } from "./agentTriggers";
 import { literals } from "./validators";
+import { writeProjectState, checkStateVersion } from "./researchState";
 
 const RESEARCH_KIND = literals(RESEARCH_KINDS);
 
@@ -26,6 +26,7 @@ export const upsert = mutation({
     title: v.string(),
     kind: RESEARCH_KIND,
     phase: v.string(),
+    expectedStateVersion: v.optional(v.number()),
     venue: v.optional(v.string()),
     deadline: v.optional(v.string()),
     notes: v.optional(v.string()),
@@ -34,7 +35,7 @@ export const upsert = mutation({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const { serviceKey: _serviceKey, ...fields } = args;
+    const { serviceKey: _serviceKey, expectedStateVersion: _version, ...fields } = args;
     const existing = await ctx.db
       .query("researchProjects")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
@@ -45,16 +46,34 @@ export const upsert = mutation({
     // longer has (researchChecklists:migrateLegacyPhases rewrites phases
     // without looking at kind), so validating unconditionally would throw on an
     // edit that never touched the phase and silently discard it.
+    if (existing?.deletionStartedAt !== undefined) throw new Error("Project deletion is in progress");
     const unchanged = existing?.kind === args.kind && existing?.phase === args.phase;
     if (!unchanged && !isValidState(args.kind, args.phase)) {
       throw new Error(`invalid state '${args.phase}' for kind ${args.kind}`);
     }
     const now = Date.now();
     if (existing) {
-      await ctx.db.patch(existing._id, { ...fields, updatedAt: now });
+      checkStateVersion(existing, args.expectedStateVersion);
+      const { kind: _kind, phase: _phase, ...metadata } = fields;
+      await ctx.db.patch(existing._id, { ...metadata, updatedAt: now });
+      if (!unchanged)
+        await writeProjectState(ctx, existing, {
+          kind: args.kind,
+          phase: args.phase,
+          actor: "upsert",
+          expectedStateVersion: args.expectedStateVersion,
+        });
       return existing._id;
     }
-    return await ctx.db.insert("researchProjects", { ...fields, updatedAt: now });
+    const id = await ctx.db.insert("researchProjects", { ...fields, stateVersion: 0, updatedAt: now });
+    await ctx.db.insert("researchTimeline", {
+      researchSlug: args.slug,
+      state: args.phase,
+      at: now,
+      actor: "upsert",
+      note: "created",
+    });
+    return id;
   },
 });
 
@@ -64,6 +83,7 @@ export const updatePhase = mutation({
   args: {
     id: v.id("researchProjects"),
     phase: v.string(),
+    expectedStateVersion: v.optional(v.number()),
     note: v.optional(v.string()),
     actor: v.optional(v.string()),
     serviceKey: v.optional(v.string()),
@@ -72,29 +92,7 @@ export const updatePhase = mutation({
     await requireOwner(ctx, args.serviceKey);
     const project = await ctx.db.get(args.id);
     if (!project) throw new Error("project not found");
-    if (!isValidState(project.kind, args.phase)) {
-      throw new Error(`invalid state '${args.phase}' for kind ${project.kind}`);
-    }
-    // Adjacency is deliberately NOT enforced here, unlike `advance`. The live
-    // caller is the per-project phase <select>, which offers every state of the
-    // kind, so gating on canTransition would make most of its options throw.
-    // Only the kind's vocabulary is enforced.
-    const now = Date.now();
-    await ctx.db.patch(args.id, { phase: args.phase, updatedAt: now });
-    await ctx.db.insert("researchTimeline", {
-      researchSlug: project.slug,
-      state: args.phase,
-      at: now,
-      note: args.note,
-      actor: args.actor,
-    });
-    await fanOut(ctx, {
-      eventType: "state.transitioned",
-      entityType: "research",
-      entityKey: project.slug,
-      researchSlug: project.slug,
-    });
-    return { slug: project.slug, phase: args.phase, at: now };
+    return writeProjectState(ctx, project, { ...args, mode: "direct" });
   },
 });
 
@@ -134,10 +132,8 @@ export const setVisibility = mutation({
 // being fixed. So each call does a small, guaranteed-affordable slice, and the
 // caller loops on `done`.
 //
-// Byte accounting is UTF-8, not string length. JSON.stringify does not escape
-// non-ASCII, so a Hangul syllable is one unit of `.length` and three bytes on
-// the wire; on this corpus that undercounts by ~3x.
-const encoder = new TextEncoder();
+// Use Convex document-size accounting, including raw binary revision chunks.
+// String length undercounts UTF-8, while JSON.stringify omits ArrayBuffer bytes.
 
 export const READ_CAP = 16_777_216; // Convex's per-transaction read limit
 export const MAX_DOC_BYTES = 1_048_576; // Convex's per-document ceiling
@@ -152,8 +148,7 @@ export const CASCADE_BYTES = 6_000_000;
 //
 // Every string column in the schema is unbounded, so no table can be shown to
 // be light; one derived size covers all of them. Half the headroom rather than
-// all of it, because `bytes` is measured with JSON.stringify and that is not
-// exactly what Convex bills.
+// all of it, reserving room for index reads and the project row.
 export const CASCADE_PAGE = Math.floor((READ_CAP - CASCADE_BYTES) / MAX_DOC_BYTES / 2);
 
 // Steps are written out one per table rather than looped over a table-name
@@ -161,6 +156,30 @@ export const CASCADE_PAGE = Math.floor((READ_CAP - CASCADE_BYTES) / MAX_DOC_BYTE
 // version only typechecks behind a cast, and a cast here would hide exactly the
 // mistake that matters (a table paired with an index it does not have).
 const cascadeSteps = (ctx: MutationCtx, slug: string, id: Id<"researchProjects">) => [
+  {
+    table: "contentRevisionChunks",
+    fetch: (n: number) =>
+      ctx.db
+        .query("contentRevisionChunks")
+        .withIndex("by_research", (q) => q.eq("researchSlug", slug))
+        .take(n),
+  },
+  {
+    table: "contentRevisions",
+    fetch: (n: number) =>
+      ctx.db
+        .query("contentRevisions")
+        .withIndex("by_research", (q) => q.eq("researchSlug", slug))
+        .take(n),
+  },
+  {
+    table: "contentHeads",
+    fetch: (n: number) =>
+      ctx.db
+        .query("contentHeads")
+        .withIndex("by_research", (q) => q.eq("researchSlug", slug))
+        .take(n),
+  },
   {
     table: "researchTimeline",
     fetch: (n: number) =>
@@ -325,6 +344,7 @@ export const remove = mutation({
     // loop is catching up.
     if (!project) return { done: true, deleted: 0, remainingIn: null as string | null };
     const slug = project.slug;
+    if (project.deletionStartedAt === undefined) await ctx.db.patch(args.id, { deletionStartedAt: Date.now() });
 
     // Math.floor(NaN) is NaN and Math.max(1, NaN) is NaN, so a NaN limit would
     // otherwise make every guard false and report pending work forever.
@@ -342,7 +362,7 @@ export const remove = mutation({
         const page = await step.fetch(Math.min(CASCADE_PAGE, rowBudget - deleted));
         if (page.length === 0) break;
         for (const row of page) {
-          bytes += encoder.encode(JSON.stringify(row)).length;
+          bytes += getDocumentSize(row);
           // Hard delete, not the soft delete comments use elsewhere: a tombstone
           // stays readable, so this loop would re-read it forever and never
           // terminate, and its target is being deleted anyway.
@@ -365,7 +385,8 @@ export const register = mutation({
   args: {
     slug: v.string(),
     title: v.string(),
-    kind: RESEARCH_KIND,
+    // Only a new project needs one; an existing project keeps its own unless told otherwise.
+    kind: v.optional(RESEARCH_KIND),
     venue: v.optional(v.string()),
     deadline: v.optional(v.string()),
     notes: v.optional(v.string()),
@@ -386,21 +407,30 @@ export const register = mutation({
       .first();
     const now = Date.now();
     if (existing) {
+      if (existing.deletionStartedAt !== undefined) throw new Error("Project deletion is in progress");
       // Updating an existing project requires edit permission.
       if (!(await canEditProject(ctx, existing, userId))) {
         throw new Error(`forbidden: cannot edit project ${args.slug}`);
       }
-      const { actor: _actor, serviceKey: _serviceKey, ...rest } = args;
+      const { actor: _actor, serviceKey: _serviceKey, kind: _kind, ...rest } = args;
       await ctx.db.patch(existing._id, { ...rest, updatedAt: now });
+      if (args.kind !== undefined && args.kind !== existing.kind)
+        await writeProjectState(ctx, existing, {
+          kind: args.kind,
+          phase: existing.phase,
+          actor: args.actor ?? userId ?? undefined,
+        });
       return { id: existing._id, slug: existing.slug, phase: existing.phase, created: false };
     }
     // Creating a new project: ownerId comes from auth when present (otherwise
     // legacy/single-tenant — leave undefined so canEditProject treats it as
     // open until backfilled).
-    const phase = initialState(args.kind);
+    const kind = args.kind ?? "own";
+    const phase = initialState(kind);
     const { actor, serviceKey: _serviceKey, ...rest } = args;
     const id = await ctx.db.insert("researchProjects", {
       ...rest,
+      kind,
       phase,
       ownerId: userId ?? undefined,
       visibility: args.visibility ?? (userId ? "private" : undefined),
@@ -430,6 +460,7 @@ export const advance = mutation({
   args: {
     slug: v.string(),
     state: v.string(),
+    expectedStateVersion: v.optional(v.number()),
     note: v.optional(v.string()),
     artifactRef: v.optional(v.string()),
     actor: v.optional(v.string()),
@@ -443,32 +474,7 @@ export const advance = mutation({
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .first();
     if (!project) throw new Error(`unknown project: ${args.slug}`);
-    if (!isValidState(project.kind, args.state)) {
-      throw new Error(`invalid state '${args.state}' for kind ${project.kind}`);
-    }
-    if (!args.force && !canTransition(project.kind, project.phase, args.state)) {
-      const allowed = nextStates(project.kind, project.phase).join(", ");
-      throw new Error(
-        `transition ${project.phase} → ${args.state} not allowed. valid: [${allowed}] (pass force:true to override)`,
-      );
-    }
-    const now = Date.now();
-    await ctx.db.patch(project._id, { phase: args.state, updatedAt: now });
-    await ctx.db.insert("researchTimeline", {
-      researchSlug: args.slug,
-      state: args.state,
-      at: now,
-      note: args.note,
-      artifactRef: args.artifactRef,
-      actor: args.actor,
-    });
-    await fanOut(ctx, {
-      eventType: "state.transitioned",
-      entityType: "research",
-      entityKey: args.slug,
-      researchSlug: args.slug,
-    });
-    return { slug: args.slug, phase: args.state, at: now };
+    return writeProjectState(ctx, project, { ...args, phase: args.state, mode: "advance" });
   },
 });
 
@@ -516,6 +522,7 @@ export const getStateInfo = query({
       phase: project.phase,
       next: nextStates(project.kind, project.phase),
       allStates: statesFor(project.kind),
+      stateVersion: project.stateVersion ?? 0,
       updatedAt: project.updatedAt,
     };
   },

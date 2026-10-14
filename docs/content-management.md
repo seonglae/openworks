@@ -94,3 +94,11 @@ output size. Timing is machine-dependent overhead for these pure adapters, not m
 latency, a reliability percentage, a baseline improvement or a SOTA comparison.
 The script also fails unless record count, unique IDs, stable order, unchanged source
 text, expected transformed text and retained processing metadata all hold.
+
+## Persisted content integrity
+
+The runtime-readonly `ContentList` above is not persisted revision history. The
+backend separately versions memos, sections, TeX and experiments, retaining exact
+snapshots and rejecting stale read tokens. Agent runs pin source revisions and
+config at enqueue time. See [Content integrity](/docs/content-integrity/) for
+migration, provenance and deletion semantics.
