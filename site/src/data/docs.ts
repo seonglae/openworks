@@ -39,6 +39,11 @@ export const DOC_GROUPS: DocGroup[] = [
         blurb: "Input, Processing and Output adapters around ordered content lists, and what each one does today.",
       },
       {
+        slug: "content-integrity",
+        title: "Content integrity",
+        blurb: "Persisted revisions, stale-write checks, exact run inputs and migration for existing content.",
+      },
+      {
         slug: "research",
         title: "Research",
         blurb:

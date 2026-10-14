@@ -62,6 +62,27 @@ function asError(err) {
   return { isError: true, content: [{ type: "text", text: msg }] };
 }
 
+// CAS tokens come from the caller's original read, never an automatic refresh.
+const provenanceSchema = {
+  runId: z.string().optional().describe("Claimed running agent run ID; binds output to its exact queued inputs"),
+  sourceRevisionIds: z
+    .array(z.string())
+    .max(32)
+    .optional()
+    .describe("Immutable source revision IDs; must exactly match run inputs when runId is supplied"),
+};
+const contentWriteSchema = {
+  expectedRevision: z
+    .number()
+    .int()
+    .nonnegative()
+    .optional()
+    .describe(
+      "Revision from get_* or get_content_head. Required after versioning; 0 adopts legacy content. Stale writes fail; reconcile, do not blindly retry.",
+    ),
+  ...provenanceSchema,
+};
+
 const server = new McpServer({ name: "research-mcp", version: "0.1.0" });
 
 server.registerTool(
@@ -72,7 +93,10 @@ server.registerTool(
     inputSchema: {
       slug: z.string().describe("unique identifier, e.g. 'vect-2026'"),
       title: z.string(),
-      kind: z.enum(["own", "review"]).default("own"),
+      kind: z
+        .enum(["own", "review"])
+        .optional()
+        .describe("'own' when omitted on a new project; omit it to keep an existing project's kind"),
       venue: z.string().optional(),
       deadline: z.string().optional(),
       notes: z.string().optional(),
@@ -115,6 +139,12 @@ server.registerTool(
     description:
       "Transition the project to a new state. Validated against the FSM; pass force:true to override (logs the override but skips edge validation).",
     inputSchema: {
+      expectedStateVersion: z
+        .number()
+        .int()
+        .nonnegative()
+        .optional()
+        .describe("State version returned by get_state; rejects stale transitions"),
       slug: z.string(),
       state: z.string(),
       note: z.string().optional(),
@@ -185,6 +215,65 @@ server.registerTool(
   },
 );
 
+const contentIdentitySchema = {
+  kind: z.enum(["memo", "section", "tex", "experiment", "research", "comment"]),
+  researchSlug: z.string(),
+  key: z.string(),
+  venueSlug: z.string().optional(),
+};
+server.registerTool(
+  "get_content_head",
+  {
+    title: "Get content revision head",
+    description:
+      "Read the CAS token, including a retained deletion tombstone. Null means unversioned or never created; get the live entity to distinguish.",
+    inputSchema: contentIdentitySchema,
+  },
+  async (args) => {
+    try {
+      return asContent(await convex("contentRevisions:head", args));
+    } catch (e) {
+      return asError(e);
+    }
+  },
+);
+server.registerTool(
+  "list_content_revisions",
+  {
+    title: "List immutable content revisions",
+    description:
+      "Newest first; use the last version as beforeVersion to page. Metadata only, including legacy version 0 and deletion tombstones.",
+    inputSchema: {
+      ...contentIdentitySchema,
+      beforeVersion: z.number().int().nonnegative().optional(),
+      limit: z.number().int().min(1).max(100).optional(),
+    },
+  },
+  async (args) => {
+    try {
+      return asContent(await convex("contentRevisions:list", args));
+    } catch (e) {
+      return asError(e);
+    }
+  },
+);
+server.registerTool(
+  "get_content_revision",
+  {
+    title: "Read an exact content revision",
+    description:
+      "Reconstruct the full immutable snapshot by ID. This is the pinned input API for agent runs; do not substitute mutable get_* results.",
+    inputSchema: { id: z.string() },
+  },
+  async (args) => {
+    try {
+      return asContent(await convex("contentRevisions:get", args));
+    } catch (e) {
+      return asError(e);
+    }
+  },
+);
+
 // ── Experiments ──────────────────────────────────────────────────────────
 
 server.registerTool(
@@ -194,6 +283,7 @@ server.registerTool(
     description:
       "Create or update an experiment record (upsert by researchSlug+expSlug). Venue-independent. Use to track planned/running/done/failed experiments with their params and metrics.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       expSlug: z.string().describe("unique within project, e.g. 'ablation-lr-3e4'"),
       name: z.string().optional(),
@@ -256,7 +346,11 @@ server.registerTool(
   {
     title: "Delete experiment",
     description: "Remove an experiment record by researchSlug+expSlug.",
-    inputSchema: { researchSlug: z.string(), expSlug: z.string() },
+    inputSchema: {
+      ...contentWriteSchema,
+      researchSlug: z.string(),
+      expSlug: z.string(),
+    },
   },
   async (args) => {
     try {
@@ -510,6 +604,7 @@ server.registerTool(
     description:
       "Create or update a paper section (upsert by researchSlug+venueSlug+sectionSlug). Omit venueSlug for the canonical/standalone version. Use 'fork_section' to copy across venues.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       sectionSlug: z.string().describe("e.g. 'abstract', 'intro', 'method', 'experiments'"),
       venueSlug: z.string().optional().describe("omit for canonical/standalone"),
@@ -579,6 +674,13 @@ server.registerTool(
     description:
       "Copy a section from one venue (or standalone) into another venue. Source must exist; destination is upserted. Use to adapt a canonical section for a specific venue.",
     inputSchema: {
+      ...contentWriteSchema,
+      expectedSourceRevision: z
+        .number()
+        .int()
+        .nonnegative()
+        .optional()
+        .describe("Revision from the source read; required for versioned sources"),
       researchSlug: z.string(),
       sectionSlug: z.string(),
       fromVenueSlug: z.string().optional().describe("omit to fork from canonical"),
@@ -600,6 +702,7 @@ server.registerTool(
     title: "Delete section",
     description: "Remove a section. Omit venueSlug to remove the canonical/standalone version.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       sectionSlug: z.string(),
       venueSlug: z.string().optional(),
@@ -623,6 +726,7 @@ server.registerTool(
     description:
       "Create or update a LaTeX source file (upsert by researchSlug+venueSlug+texPath). Omit venueSlug for canonical/standalone. Path is relative, e.g. 'main.tex' or 'sections/intro.tex'.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       texPath: z.string().describe("e.g. 'main.tex' or 'sections/intro.tex'"),
       venueSlug: z.string().optional(),
@@ -689,6 +793,13 @@ server.registerTool(
     description:
       "Copy a tex file from one venue (or standalone) into another. Source must exist; destination is upserted.",
     inputSchema: {
+      ...contentWriteSchema,
+      expectedSourceRevision: z
+        .number()
+        .int()
+        .nonnegative()
+        .optional()
+        .describe("Revision from the source read; required for versioned sources"),
       researchSlug: z.string(),
       texPath: z.string(),
       fromVenueSlug: z.string().optional(),
@@ -710,6 +821,7 @@ server.registerTool(
     title: "Delete tex file",
     description: "Remove a tex file. Omit venueSlug for canonical/standalone.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       texPath: z.string(),
       venueSlug: z.string().optional(),
@@ -784,6 +896,7 @@ server.registerTool(
     description:
       "Create or update a free-form markdown memo (upsert by researchSlug+memoSlug). Use for ideas, design notes, journal entries, decision logs. Reference other entities with add_reference.",
     inputSchema: {
+      ...contentWriteSchema,
       researchSlug: z.string(),
       memoSlug: z.string().describe("unique within project, e.g. 'mar-15-design'"),
       title: z.string().optional(),
@@ -840,7 +953,11 @@ server.registerTool(
   {
     title: "Delete memo",
     description: "Remove a memo by researchSlug+memoSlug. References pointing to/from it are NOT auto-deleted.",
-    inputSchema: { researchSlug: z.string(), memoSlug: z.string() },
+    inputSchema: {
+      ...contentWriteSchema,
+      researchSlug: z.string(),
+      memoSlug: z.string(),
+    },
   },
   async (args) => {
     try {
@@ -961,6 +1078,7 @@ server.registerTool(
       "For section/tex targets, pass targetVenueSlug to disambiguate between canonical and per-venue copies. " +
       "Threading: pass parentId to reply to an existing comment.",
     inputSchema: {
+      ...provenanceSchema,
       researchSlug: z.string(),
       targetType: ENTITY_TYPES,
       targetKey: z.string(),
@@ -1097,7 +1215,7 @@ server.registerTool(
     description:
       "Register an agent to react automatically when a matching entity event happens. " +
       "scope='global' subscribes everywhere; scope='project' requires scopeId=researchSlug. " +
-      "targetType limits which entity type triggers (omit for any). config is a free-form JSON string the worker can read for prompt templates etc.",
+      "targetType limits which entity type triggers (omit for any). config is a bounded JSON object string the worker can read for prompt templates etc.",
     inputSchema: {
       agentId: z.string().describe("e.g. 'gemini-method-checker', 'codex-baseline-auditor'"),
       eventType: z.enum(["entity.created", "entity.updated", "state.transitioned", "comment.posted"]),

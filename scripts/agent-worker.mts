@@ -14,7 +14,8 @@ import { resolve } from "path";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import * as os from "os";
 import { ORDERS, runActor } from "./actor.mts";
-import { OWN_STATES } from "@openworks/domain";
+import { statesFor } from "@openworks/domain";
+import { dispatchAgentRun, parsePhaseOutput, recordRunError } from "./agent-dispatch.mts";
 import { connectConvexWatcher, createConvexClient, loadEnvLocal, resolveConvexUrl } from "@openworks/node";
 
 const execFileP = promisify(execFile);
@@ -71,57 +72,34 @@ const convex = createConvexClient({
   cliFallback: convexCli,
 }) as (fn: string, args?: any) => Promise<any>;
 
-function buildPrompt(run) {
-  const entityRef = run.triggerEntityVenueSlug
-    ? `${run.triggerEntityType} '${run.triggerEntityKey}' (venue ${run.triggerEntityVenueSlug})`
-    : `${run.triggerEntityType} '${run.triggerEntityKey}'`;
-  const projectRef = run.researchSlug ?? "(global)";
-  return [
-    `You are research agent "${run.agentId}".`,
-    `You were triggered by event "${run.triggerType}" on ${entityRef} in project "${projectRef}".`,
-    `Use the research-mcp tools to inspect the entity (e.g. get_experiment, get_section, list_comments)`,
-    `and then post a single substantive comment using post_comment with authorType="agent" and authorId="${run.agentId}".`,
-    `Keep it short, specific, and actionable. If the trigger does not warrant a comment, do nothing.`,
-  ].join(" ");
-}
-
 async function processOne() {
   const runs = await convex("agentSubscriptions:listRuns", { status: "pending", limit: 1 });
   if (!runs || runs.length === 0) return false;
   const run = runs[0];
   const claimed = await convex("agentSubscriptions:claimRun", { id: run._id });
   if (!claimed) return false;
-  const prompt = buildPrompt(claimed);
   console.log(
     `[${new Date().toISOString()}] dispatch ${run.agentId} (${run.triggerType} ${run.triggerEntityType}/${run.triggerEntityKey})`,
   );
-  try {
-    const { provider, stdout } = await runActor({
-      order: ORDERS.agentRun,
-      prompt,
-      cwd: PROJECT_ROOT,
-      env: process.env,
-      mode: "agent",
-      timeoutMs: SPAWN_TIMEOUT_MS,
-      onAttempt: (e) => {
-        if (e.event === "fail") console.warn(`  × ${e.provider}: ${e.error}`);
-      },
-    });
-    await convex("agentSubscriptions:completeRun", {
-      id: run._id,
-      status: "done",
-      result: (stdout.trim() || "(no output)").slice(0, 4000),
-    });
-    console.log(`  ✓ ${provider} done`);
-    return true;
-  } catch (e) {
-    await convex("agentSubscriptions:completeRun", {
-      id: run._id,
-      status: "error",
-      error: String(e.message ?? e).slice(0, 1000),
-    });
-    return true;
-  }
+  const result = await dispatchAgentRun(claimed, {
+    invoke: (prompt) =>
+      runActor({
+        order: ORDERS.agentRun,
+        prompt,
+        cwd: PROJECT_ROOT,
+        env: process.env,
+        mode: "agent",
+        timeoutMs: SPAWN_TIMEOUT_MS,
+        onAttempt: (e) => {
+          if (e.event === "fail") console.warn(`  × ${e.provider}: ${e.error}`);
+        },
+      }),
+    complete: (args) => convex("agentSubscriptions:completeRun", args),
+  });
+  if (result.status === "done") console.log(`  ✓ ${result.provider} done`);
+  else console.error(`  × agent run failed: ${result.error}`);
+  if (!result.recorded) console.warn(`  × could not record run error: ${result.completionError}`);
+  return true;
 }
 
 // ── Per-research phase inference ────────────────────────────────────────
@@ -173,29 +151,30 @@ async function processPhaseInfer(): Promise<boolean> {
   if (!claimed) return false;
 
   try {
-    const slug = run.researchSlug as string;
-    const rootPath = (run.rootPath as string | undefined) || guessRootPath(slug);
+    const slug = claimed.researchSlug as string;
+    if (claimed.kindSnapshot !== "own" && claimed.kindSnapshot !== "review") {
+      throw new Error("Phase run has no supported enqueue-time kind snapshot; request a fresh inference");
+    }
+    const rootPath = (claimed.rootPath as string | undefined) || guessRootPath(slug);
     if (!rootPath || !existsSync(rootPath)) {
-      await convex("researchPhaseInfer:completeRun", {
-        id: run._id,
-        status: "error",
-        error: `rootPath not found (slug=${slug})`,
-      });
-      console.warn(`[phase-infer] ${slug}: no rootPath`);
-      return true;
+      throw new Error(`rootPath not found (slug=${slug})`);
     }
     const ctx = gitContextFor(rootPath);
-    const allowed = OWN_STATES.join(" | ");
+    const allowed = statesFor(claimed.kindSnapshot).join(" | ");
     const prompt = [
       `You are a research-state inference subagent.`,
       `Project slug: "${slug}". Folder: ${rootPath}.`,
+      `Queued project kind: ${claimed.kindSnapshot}. Queued phase: ${claimed.phaseSnapshot}.`,
       `Inspect the folder tree and git log below; infer the project's current FSM phase plus the sequence of phases it has visited with approximate timestamps and short reasons.`,
+      `The local folder is observed now, not an immutable snapshot of the files at enqueue time. Do not present it as pinned historical evidence.`,
       ``,
       `Allowed phases (use exactly these strings): ${allowed}.`,
       `Output STRICT JSON on a single line, no prose, no markdown fences:`,
       `{"phase": "<current>", "history": [{"state": "<state>", "at": <unix_ms_or_null>, "note": "<≤80 chars>"}, ...]}`,
       `Order history oldest→newest. The last entry's state should equal "phase".`,
-      `Heuristics: paper/ folder present → writing or later. references.bib has many entries → past literature. tags / commits mentioning "rebuttal" / "camera-ready" → rebuttal or accepted. "submit" / "neurips" / "iclr" branch names → submit_main. "workshop" → submit_workshop. Otherwise default to whichever state best matches the most recent commits.`,
+      claimed.kindSnapshot === "own"
+        ? `Heuristics: paper/ folder present → writing or later. references.bib has many entries → past literature. tags / commits mentioning "rebuttal" / "camera-ready" → rebuttal or accepted. "submit" / "neurips" / "iclr" branch names → submit_main. "workshop" → submit_workshop. Otherwise use the allowed state best supported by the recent commits.`
+        : `Infer the review workflow from evidence of setup, literature review, drafting, ranking, submission, rebuttal audit and final scoring. Do not substitute the author's writing/publication phases for the allowed review states.`,
       ``,
       `Folder tree (top-level):\n${ctx.tree}`,
       `paper subdirs: ${ctx.paperDirs.join(", ") || "(none)"} | references.bib: ${ctx.bibPresent}`,
@@ -215,29 +194,15 @@ async function processPhaseInfer(): Promise<boolean> {
       },
     });
 
-    // Pull the JSON object out of stdout (agents sometimes wrap with prose).
-    const m = result.stdout.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error(`no JSON in agent output: ${result.stdout.slice(0, 200)}`);
-    const parsed = JSON.parse(m[0]) as { phase: string; history: Array<{ state: string; at?: number; note?: string }> };
-
-    // Sanitize history: agents often emit `at: null` but Convex's
-    // v.optional(v.number()) rejects null. Drop the field entirely when
-    // missing so the validator accepts the row.
-    const cleanHistory = (parsed.history ?? [])
-      .filter((h) => h && typeof h.state === "string")
-      .map((h) => {
-        const out: { state: string; at?: number; note?: string } = { state: h.state };
-        if (typeof h.at === "number" && Number.isFinite(h.at)) out.at = h.at;
-        if (typeof h.note === "string") out.note = h.note;
-        return out;
-      });
+    const parsed = parsePhaseOutput(result.stdout);
     await convex("researchPhaseInfer:applyInferred", {
+      runId: claimed._id,
       researchSlug: slug,
       phase: parsed.phase,
-      history: cleanHistory,
+      history: parsed.history,
     });
     await convex("researchPhaseInfer:completeRun", {
-      id: run._id,
+      id: claimed._id,
       status: "done",
       inferredPhase: parsed.phase,
       inferredHistory: JSON.stringify(parsed.history),
@@ -246,11 +211,8 @@ async function processPhaseInfer(): Promise<boolean> {
     console.log(`[phase-infer] ${slug} → ${parsed.phase} (history ${parsed.history.length})`);
     return true;
   } catch (e) {
-    await convex("researchPhaseInfer:completeRun", {
-      id: run._id,
-      status: "error",
-      error: String((e as Error).message ?? e).slice(0, 1000),
-    });
+    const completion = await recordRunError(claimed._id, e, (args) => convex("researchPhaseInfer:completeRun", args));
+    if (!completion.recorded) console.warn(`[phase-infer] could not record run error: ${completion.completionError}`);
     console.error(`[phase-infer] failed: ${(e as Error).message}`);
     return true;
   }
