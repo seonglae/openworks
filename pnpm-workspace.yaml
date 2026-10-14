@@ -21,15 +21,25 @@ allowBuilds:
 # two different majors are in the tree and forcing either one onto the other
 # breaks the consumer that asked for it.
 overrides:
-  # onnxruntime-node > adm-zip: a crafted zip allocates 4GB
-  adm-zip: "^0.6.0"
-  # @huggingface/transformers > sharp: inherited libvips CVEs
-  sharp: "^0.35.0"
+  # onnxruntime-node > adm-zip: a crafted zip allocates 4GB; 0.6.1 closes the
+  # extraction and decompression advisories that followed
+  adm-zip: "^0.6.1"
+  # @huggingface/transformers and astro > sharp: inherited libvips CVEs
+  sharp: "^0.35.4"
   # @modelcontextprotocol/sdk > hono: ReDoS in CORS, DoS in language middleware
-  hono: "^4.12.34"
+  hono: "^4.13.7"
+  # @modelcontextprotocol/sdk > express and express-rate-limit, and ajv
+  qs: "^6.16.0"
+  ip-address: "^10.7.1"
+  fast-uri: "^3.1.6"
+  # astro, and unifont below it
+  devalue: "^5.9.3"
+  svgo: "^4.1.0"
+  js-yaml: "^4.3.2"
+  undici: "^8.10.2"
   # excalidraw > mermaid-to-excalidraw and below
   mermaid: "^11.16.1"
-  dompurify: "^3.4.13"
+  dompurify: "^3.4.16"
   lodash-es: "^4.17.24"
   nanoid@3: "^3.3.18"
   # mermaid-to-excalidraw resolves nanoid 4, which no patched release exists for.
