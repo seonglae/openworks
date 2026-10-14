@@ -1,5 +1,7 @@
 # Openworks (iOS)
 
+The phone is a personal content input/output client: capture and read material, manage the plan, and follow projects. The Research tab is one specialized workflow.
+
 A native SwiftUI client over the same Convex backend the browser reads. This
 replaces the Tauri shell that used to live in `src-tauri/`, which was a window
 pointing at the deployed web app rather than an app.

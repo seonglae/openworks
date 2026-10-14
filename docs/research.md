@@ -1,7 +1,10 @@
-# Research
+# Research use case
+
+Research is one use case of personal content input/output management. This page describes its existing project schema and lifecycle, not a restriction on the kinds of content Openworks can capture and process.
 
 A research project is a slug, a title, a kind, and a position in a state
-machine. Everything else hangs off it.
+machine. The research-specific entities on this page hang off that project; the
+broader [content loop](/docs/content-management/) also handles standalone material.
 
 ## The lifecycle
 
@@ -56,5 +59,5 @@ that changes a phase without telling the agents.
 
 Each project surfaces related jobs and plan items by vector similarity over the
 summaries already in your corpus, falling back to a keyword match when nothing
-is embedded yet. This is why intake and research are the same deployment: the
-papers you read are the corpus the projects search.
+is embedded yet. Intake and the research use case share a deployment so captured
+papers, articles and other reading material can inform a project's related work.

@@ -1,5 +1,7 @@
 # Digest
 
+The digest is an existing Output surface for personal content management: it turns captured and processed material into a reading update. Research progress is one part of that output.
+
 A daily and a weekly mail of what moved: what you archived, the papers you
 scored, where each project sits, your open PRs, and a few words to study.
 

@@ -1,5 +1,7 @@
 # Pull requests
 
+The PR queue is a software-work use case within personal content input/output management. It keeps external work items beside reading and writing material.
+
 Open pull requests across every account and org you have, in one queue, with a
 fix dispatchable to an agent CLI.
 

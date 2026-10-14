@@ -1,5 +1,7 @@
 # Keeping the workers alive (macOS)
 
+These jobs keep personal content intake, processing and output workers running on your machine. They do not add new source access or publishing permissions.
+
 `nohup ... & disown` starts a worker but nothing restarts one. A worker that
 takes a `SIGTERM` stays down, silently, until somebody notices the queue is not
 moving. One of them was dead for 52 minutes before anyone looked.

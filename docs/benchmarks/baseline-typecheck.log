@@ -1,0 +1,16 @@
+$ tsc -p tsconfig.json && tsc -p tsconfig.test.json && pnpm --filter openworks-browser typecheck && tsc -p convex/tsconfig.json && tsc -p convex/tsconfig.test.json && pnpm --filter @openworks/core typecheck && pnpm --filter @openworks/domain typecheck && pnpm --filter @openworks/node typecheck && pnpm --filter openworks-site typecheck
+$ tsc -b && tsc -p tsconfig.test.json
+$ tsc -p tsconfig.json && tsc -p tsconfig.test.json
+$ tsc -p tsconfig.json && tsc -p tsconfig.test.json
+$ tsc -p tsconfig.json && tsc -p tsconfig.test.json
+$ astro check
+[astro] `markdown.smartypants` is deprecated. Move it onto your processor instead (e.g. `satteri({ features: { gfm: false, smartPunctuation: false } })`, or `unified({ gfm: false, smartypants: false })` from `@astrojs/markdown-remark`). Will be removed in a future major.
+04:53:09 [content] Syncing content
+04:53:09 [content] Synced content
+04:53:09 [types] Generated 2.20s
+04:53:09 [check] Getting diagnostics for Astro files in <baseline-checkout>/site...
+Result (15 files): 
+- 0 errors
+- 0 warnings
+- 0 hints
+

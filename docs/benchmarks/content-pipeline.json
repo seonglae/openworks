@@ -1,0 +1,61 @@
+{
+  "benchmark": "content-pipeline",
+  "fixture": "synthetic-v1",
+  "runtime": "v24.19.0",
+  "platform": "linux-x64",
+  "scope": "capture -> trim -> feed preparation; no network/model/rendering",
+  "limitations": "Local timing only. No baseline, model quality, publication or SOTA comparison.",
+  "results": [
+    {
+      "records": 1,
+      "samples": 50,
+      "warmups": 10,
+      "p50_ms": 0.00902200000001585,
+      "p95_ms": 0.028680000000008476,
+      "output_records": 1,
+      "output_bytes": 314,
+      "invariant_checks": {
+        "record_count": true,
+        "unique_ids": true,
+        "stable_order": true,
+        "source_preserved": true,
+        "expected_transform": true,
+        "processing_preserved": true
+      }
+    },
+    {
+      "records": 100,
+      "samples": 50,
+      "warmups": 10,
+      "p50_ms": 0.28548299999999927,
+      "p95_ms": 0.8563289999999597,
+      "output_records": 100,
+      "output_bytes": 26315,
+      "invariant_checks": {
+        "record_count": true,
+        "unique_ids": true,
+        "stable_order": true,
+        "source_preserved": true,
+        "expected_transform": true,
+        "processing_preserved": true
+      }
+    },
+    {
+      "records": 1000,
+      "samples": 50,
+      "warmups": 10,
+      "p50_ms": 3.058594000000028,
+      "p95_ms": 5.06685200000004,
+      "output_records": 1000,
+      "output_bytes": 266615,
+      "invariant_checks": {
+        "record_count": true,
+        "unique_ids": true,
+        "stable_order": true,
+        "source_preserved": true,
+        "expected_transform": true,
+        "processing_preserved": true
+      }
+    }
+  ]
+}

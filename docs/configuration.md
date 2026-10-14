@@ -1,5 +1,7 @@
 # Configuration
 
+These settings run the personal content input, processing and output services. They do not change which sources may be read or which destinations are authorized.
+
 Two files and a deployment. `.env.local` is read by the workers and the MCP
 server; `browser/.env.local` is read by the browser build; and anything marked
 "deployment" also has to be set on Convex itself, which does not read either

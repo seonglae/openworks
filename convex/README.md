@@ -1,5 +1,7 @@
 # Welcome to your Convex functions directory!
 
+This backend supports Openworks personal content input/output management. Existing research-named tables and functions are retained for compatibility; shared content contracts live in `packages/domain/src/content/`.
+
 Write your Convex functions here.
 See https://docs.convex.dev/functions for more.
 

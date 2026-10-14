@@ -1,5 +1,7 @@
 # Agents
 
+Agents are the processing layer of personal content input/output management. They react to content changes; research review is one subscription use case.
+
 An agent subscription binds an agent to an event type, so that work happening
 in the project provokes a response without anyone asking for one. This is the
 part that makes an open process mean something: a state transition nobody

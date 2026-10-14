@@ -3,7 +3,7 @@
 // structured data is not. Sharing the opening sentence keeps the divergence to
 // the part that is meant to differ.
 export const PRODUCT_LEDE =
-  "Self-hosted open-source workspace where humans and AI agents work the same research material while it is still moving.";
+  "Self-hosted personal content input/output management: capture material, process it with agents and prepare reusable outputs.";
 
 // The one-click deploy target, defined once here and pasted into README.md and
 // docs/deploy.md, which cannot import it. A test asserts all three agree rather
@@ -19,8 +19,7 @@ const DEPLOY_PARAMS: Record<string, string> = {
   "project-name": "openworks",
   "repository-name": "openworks",
   "demo-title": "Openworks",
-  "demo-description":
-    "A self-hosted workspace where humans and AI agents work the same material while it is still moving.",
+  "demo-description": "Self-hosted personal content input/output management.",
   "demo-url": "https://openworksai.app",
   products: JSON.stringify([
     { type: "integration", integrationSlug: "convex", productSlug: "convex", protocol: "storage" },

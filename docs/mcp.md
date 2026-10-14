@@ -1,5 +1,7 @@
 # MCP server
 
+MCP exposes working content to agents within the personal content input/output loop. Existing research-named tools remain compatible; research is one use case, not the product boundary.
+
 `mcp/research-server.mjs` exposes the research graph to agent CLIs over stdio:
 ~50 tools covering every entity type, references, comments, reports
 and subscriptions.

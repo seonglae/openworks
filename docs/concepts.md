@@ -1,12 +1,30 @@
 # Concepts
 
-Everything in Openworks is a project, an entity hanging off it, a reference
-between two of them, or a comment on any of them. Features are views over that
-substrate rather than separate systems.
+Openworks manages personal content through **Input → Processing → Output**. Research
+is one use case alongside reading, collecting, organizing and writing.
+
+## Content loop
+
+The shared domain contracts use an ordered `ContentList` of `Content` records. Input
+adapters capture text or source references, Processing adapters transform working
+text while keeping the source, and Output adapters prepare destination-specific data.
+The stages are separate interfaces; source and output variants use discriminated
+unions rather than one large parent class.
+
+These contracts currently connect to intake prompt construction and standalone export
+preparation. Existing project, digest and agent workflows have not all migrated to
+them. See [Content architecture](/docs/content-management/) for the exact boundaries
+and [Product comparison and roadmap](/docs/product-comparison/) for future work.
+
+## Existing project graph
+
+The project graph below supports the research use case: projects, their entities,
+references between entities, and comments. Its research-specific schema and API names
+remain compatible. A captured content list does not have to become a research project.
 
 ## Projects
 
-A project is the unit of work. It has a slug, a title, a kind, and a phase in
+A research project has a slug, a title, a kind, and a phase in
 a state machine. There are two kinds:
 
 - **own**: research you are doing. Nineteen states, from `ideation` to

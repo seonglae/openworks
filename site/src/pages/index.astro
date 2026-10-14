@@ -9,6 +9,7 @@ const faq = [
   { q: "Do I need an OpenAI or Anthropic API key?", a: "No. Every model call is dispatched to an agent CLI already authenticated on your machine: codex, antigravity or claude. There is no provider key in the repo. Embeddings run locally on CPU through ONNX." },
   { q: "Is there a hosted version I can sign up for?", a: "No, deliberately. Hosting would mean executing your work on our keys, which is the metered product Openworks exists to avoid. That is a claim about whose keys run the work, not about how much setup you deserve: the deploy button provisions into a Vercel project and a Convex project that are yours, and the workers stay where your agent CLIs are signed in." },
   { q: "What does Openworks cost?", a: "Nothing. Convex has a free tier sufficient for a single operator, the agent CLIs run on subscriptions you already have, and embeddings run on your CPU. The licence is Apache-2.0." },
+  { q: "Is this only for academic research?", a: "No. Openworks manages personal content through Input, Processing and Output. Reading, collecting, organizing and writing share that scope; research is one use case. Current Notion and feed adapters prepare export data. Live publication and video rendering remain separate work." },
   { q: "Can agents act on their own?", a: "Yes. An agent subscription binds an agent to an event type and scope. On a matching event a run is queued, a worker claims it, spawns the CLI, and posts the result back as a comment." },
 ];
 
@@ -18,7 +19,7 @@ const schema = [
 ---
 
 <Base
-  title="Openworks: agent-native productivity"
+  title="Openworks: personal content input/output management"
   description={`${PRODUCT_LEDE} No API keys, no metered inference.`}
   path="/"
   schema={schema}
@@ -29,10 +30,10 @@ const schema = [
       <main id="top">
         <div class="wrap">
           <div class="hero">
-            <h1>Agent-native<br />productivity.</h1>
+            <h1>Personal content.<br />Input to output.</h1>
             <p class="lede">
-              A self-hosted workspace where humans and AI agents work the same material while it is still moving, and
-              every model call goes through an agent CLI you are already signed in to.
+              Capture links, screenshots, papers and notes. Process them into reusable content and prepare useful outputs
+              with the agent CLIs you already use. Research is one workflow in this personal content loop.
             </p>
             <ul class="claims">
               <li>No API keys</li>
@@ -84,44 +85,47 @@ const schema = [
           <section id="why">
             <h2>Why</h2>
             <p>
-              The unit of public discourse today is the finished artifact: the published paper, the merged PR, the
-              released product. Review and critique are bolted onto the end of the pipe, so by the time anyone outside
-              sees the work, the design space has already collapsed.
+              Personal material arrives in different forms and leaves through different tools. A screenshot, an
+              article, a paper and a note should not need four disconnected workflows to become a useful summary,
+              draft or reading feed.
             </p>
             <p>
-              Meanwhile AI agents have become collaborators inside the work, but their contributions stay locked in
-              private sessions. They cannot be cited mid-thought, cannot disagree with another agent on the record, cannot
-              be argued with by a human peer while it still matters.
+              <strong>Openworks separates Input, Processing and Output around canonical content lists.</strong>
+              Keep source references alongside working text, transform material through independent processors, and
+              prepare outputs for the tools where you want to use them.
             </p>
             <p>
-              <strong>Openworks treats the process itself as the addressable surface.</strong>
-              Every entity the work passes through, a memo, an experiment, a table, a figure, a draft section, a state
-              transition, is a stable target that can be referenced, commented on, and disagreed with while it is still
-              moving.
+              The shared adapters are an incremental foundation. Intake uses the input boundary today; existing
+              project, agent and digest workflows remain available. Notion and feed adapters prepare export data,
+              while live publication and video rendering are separate work.
             </p>
             <ul class="plain">
               <li>
-                <strong>Pre-publication, during the procedure.</strong> A half-run ablation and an unresolved design memo
-                are valid units to share and take critique on.
+                <strong>Input preserves the source.</strong> Capture supplied text and keep link, paper or screenshot
+                references explicit. A reference without text is not presented as already-read evidence.
               </li>
               <li>
-                <strong>Humans and agents on equal footing.</strong> A human peer's objection and a reviewer agent's
-                objection land in the same thread, separated only by a tag.
+                <strong>Processing keeps working content separate.</strong> Transform text while retaining the original
+                source and the names of the processing steps applied to it.
               </li>
               <li>
-                <strong>Cross-entity references are first class.</strong> Memos point at experiments, experiments at
-                tables, tables at sections. The graph is the substrate, and comments hang off any node in it.
+                <strong>Output has its own boundary.</strong> Preparing a Notion export plan or portable feed record
+                does not publish it. Transport and destination permissions belong to the caller.
               </li>
-              <li><strong>Agent-to-agent disagreement stays on the record.</strong></li>
+              <li><strong>Research is one use case</strong> alongside reading, collecting, organizing and writing.</li>
             </ul>
+            <p>
+              See the <a href="/docs/content-management/">content architecture</a> and
+              <a href="/docs/product-comparison/">product comparison and roadmap</a> for implemented boundaries and
+              the work still ahead.
+            </p>
           </section>
   
           <section id="no-subscription">
             <h2>Why there is no hosted tier</h2>
             <p>
-              Keeping a process open is not a display problem. It only means anything if agents are actually working the
-              material as it moves: reacting to a state transition, reading an experiment the moment it is saved,
-              answering a comment without being asked.
+              The content loop needs processing as well as storage. Existing workers distill intake jobs, and agent
+              subscriptions react when a project artifact changes, its state advances, or a comment arrives.
             </p>
             <p>
               <strong>Metered inference is the wrong shape for that.</strong> When each run bills per token, every
@@ -144,7 +148,14 @@ const schema = [
             <h2>What it does</h2>
             <div class="grid">
               <div class="cell">
-                <h3>Research</h3>
+                <h3>Content contracts</h3>
+                <p>
+                  Independent Input, Processing and Output adapters share ordered content lists. Notion and feed
+                  adapters prepare export data without publication.
+                </p>
+              </div>
+              <div class="cell">
+                <h3>Research use case</h3>
                 <p>
                   Projects on a state machine. Memos, experiments, tables, figures, sections, tex, venues,
                   cross-references and threaded comments.
@@ -266,10 +277,10 @@ pnpm --filter openworks-browser dev</code></pre>
             <details>
               <summary>Is this only for academic research?</summary>
               <p>
-                Research is the first vertical because its artifact taxonomy is already well defined: memos,
-                experiments, tables, figures, sections, venues. The substrate underneath is project, entities,
-                references, comments and agents, and none of those names anything research-specific. Whether that
-                generalises is not something this has shown yet.
+                No. Openworks is personal content input/output management. Research is one workflow alongside
+                reading, collecting and writing. Existing research-named APIs remain compatible. Input, Processing
+                and Output adapters share canonical content lists; Notion and feed adapters prepare export data.
+                Live publication and video rendering are separate capabilities, not implied by those contracts.
               </p>
             </details>
   
