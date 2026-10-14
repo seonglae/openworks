@@ -41,6 +41,11 @@ export const DOC_GROUPS: DocGroup[] = [
           "Public product references, implemented adapter boundaries and remaining work, without claiming feature parity.",
       },
       {
+        slug: "content-integrity",
+        title: "Content integrity",
+        blurb: "Persisted revisions, stale-write checks, exact run inputs and migration for existing content.",
+      },
+      {
         slug: "intake",
         title: "Intake",
         blurb: "Newsletters, papers, articles and feeds arrive as jobs, get distilled and scored, and leave as a line.",

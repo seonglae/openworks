@@ -88,15 +88,16 @@ processes that spend your agent quota stay where your logins already are.
 
 ## What it does
 
-| Surface       |                                                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Content contracts | separate Input, Processing and Output adapters sharing ordered content lists; Notion and feed export preparation, without publication |
-| Research use case | projects on a state machine, memos, experiments, tables, figures, sections, tex, venues, cross-references, threaded comments |
-| Agents        | subscriptions that fan out on entity events and queue autonomous runs, results posted back as comments                       |
-| MCP           | ~50 tools so `codex` / `antigravity` / `claude` can read and write the graph directly                                        |
-| Intake        | newsletters, arXiv papers, articles and RSS distilled and scored, so the queue is triage rather than reading                 |
-| Pull requests | open PRs across your accounts and orgs in one queue                                                                          |
-| Digest        | a daily or weekly email of what moved, what was cleared, and what is due                                                     |
+| Surface             |                                                                                                                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content contracts   | separate Input, Processing and Output adapters sharing ordered content lists; Notion and feed export preparation, without publication                                                       |
+| Research use case   | projects on a state machine, memos, experiments, tables, figures, sections, tex, venues, cross-references, threaded comments                                                                |
+| Persisted integrity | immutable memo/section/TeX/experiment revisions, required read tokens on versioned writes, pinned agent inputs and audited state changes; [migration and limits](docs/content-integrity.md) |
+| Agents              | subscriptions that fan out on entity events and queue autonomous runs, results posted back as comments                                                                                      |
+| MCP                 | ~50 tools so `codex` / `antigravity` / `claude` can read and write the graph directly                                                                                                       |
+| Intake              | newsletters, arXiv papers, articles and RSS distilled and scored, so the queue is triage rather than reading                                                                                |
+| Pull requests       | open PRs across your accounts and orgs in one queue                                                                                                                                         |
+| Digest              | a daily or weekly email of what moved, what was cleared, and what is due                                                                                                                    |
 
 ### Intake
 

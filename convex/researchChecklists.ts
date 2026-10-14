@@ -1,6 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireOwner } from "./auth";
+import { isValidState } from "@openworks/domain";
+import { writeProjectState } from "./researchState";
 
 // Count distinct times the project's phase has been pre_submit_check. New
 // rows get the next iteration number; subsequent ticks on the same iteration
@@ -79,14 +81,13 @@ export const migrateLegacyPhases = mutation({
     const projects = await ctx.db.query("researchProjects").collect();
     let migrated = 0;
     for (const p of projects) {
+      // A label can be retired for one kind and still valid for another.
+      if (isValidState(p.kind, p.phase)) continue;
       const next = mapping[p.phase];
-      if (!next) continue;
-      await ctx.db.patch(p._id, { phase: next, updatedAt: Date.now() });
-      // Record the migration in the timeline so it's auditable.
-      await ctx.db.insert("researchTimeline", {
-        researchSlug: p.slug,
-        state: next,
-        at: Date.now(),
+      if (!next || !isValidState(p.kind, next)) continue;
+      await writeProjectState(ctx, p, {
+        phase: next,
+        actor: "phase-migration",
         note: `migrated from legacy phase '${p.phase}'`,
       });
       migrated++;

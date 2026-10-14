@@ -15,6 +15,7 @@ const modules = (import.meta as unknown as { glob: (p: string) => Record<string,
 );
 
 export const withConvex = () => convexTest(schema, modules);
+export const withConvexLimits = () => convexTest({ schema, modules, transactionLimits: true });
 
 // An unconfigured deployment is closed, so the suite has to authenticate like
 // any other caller. It used to pass nothing and rely on the gate being open,

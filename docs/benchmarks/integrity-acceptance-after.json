@@ -1,0 +1,47 @@
+{
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "files": 1,
+  "success": true,
+  "results": [
+    {
+      "file": "convex/test/contentIntegrity.test.ts",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "content integrity acceptance cases queues workspace subscriptions only for projects in that workspace",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases pins canonical config and exact source revisions when queuing a run",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases routes phase changes in upsert through the timeline and trigger path",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases preserves human history while appending validated inference history",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases rejects a stale overwrite after first save instead of losing newer content",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases keeps immutable persisted snapshots after deletion",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases rejects completion of an unclaimed run",
+          "status": "passed"
+        },
+        {
+          "name": "content integrity acceptance cases preserves a large legacy document verbatim on its first save",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

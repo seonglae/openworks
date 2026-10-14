@@ -52,15 +52,15 @@ boundary extraction, not a claim that the entire worker has been decomposed.
 
 ## Capability matrix
 
-| Boundary | Implemented here | Separate or not yet implemented |
-| --- | --- | --- |
-| Screenshot input | Image locator and optional caller-supplied OCR text; preserves multiple screenshots from jobs | OCR execution, durable image snapshots, verification of OCR accuracy |
-| Paper input | Reference plus optional supplied text; absence remains explicit | Full-text retrieval stays in the existing worker; adapter does not prove that supplied text is complete |
-| Processing | Pure injected text transform; source and operation history preserved | Model quality evaluation, claim verification, asynchronous processor orchestration |
-| Notion output | Destination-specific export plan with canonical contents | Direct Notion API transport, API payload conversion, authorization and live publication |
-| Feed output | Portable ordered records with plain `content_text`, source evidence, completeness and processing history | Hosted endpoint, RSS/XML or JSON Feed standard serialization, access control and publication |
-| Existing outputs | Current digest, summaries, project artifacts and suggestions remain available | Migration of every legacy output path to the new adapters |
-| Video | No video adapter | Scene planning, rendering, rights review and export |
+| Boundary         | Implemented here                                                                                         | Separate or not yet implemented                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Screenshot input | Image locator and optional caller-supplied OCR text; preserves multiple screenshots from jobs            | OCR execution, durable image snapshots, verification of OCR accuracy                                    |
+| Paper input      | Reference plus optional supplied text; absence remains explicit                                          | Full-text retrieval stays in the existing worker; adapter does not prove that supplied text is complete |
+| Processing       | Pure injected text transform; source and operation history preserved                                     | Model quality evaluation, claim verification, asynchronous processor orchestration                      |
+| Notion output    | Destination-specific export plan with canonical contents                                                 | Direct Notion API transport, API payload conversion, authorization and live publication                 |
+| Feed output      | Portable ordered records with plain `content_text`, source evidence, completeness and processing history | Hosted endpoint, RSS/XML or JSON Feed standard serialization, access control and publication            |
+| Existing outputs | Current digest, summaries, project artifacts and suggestions remain available                            | Migration of every legacy output path to the new adapters                                               |
+| Video            | No video adapter                                                                                         | Scene planning, rendering, rights review and export                                                     |
 
 Source text, URLs, titles and model results remain untrusted. A locator is not
 permission to read or publish. Consumers must validate transport URLs, escape text
@@ -74,7 +74,9 @@ not a promise of conformance to an external feed specification.
 import { paperInput, textProcessor, feedOutput } from "@openworks/domain";
 
 const input = paperInput.capture({
-  id: "reading-1", reference: "doi:example", text: "Supplied source text",
+  id: "reading-1",
+  reference: "doi:example",
+  text: "Supplied source text",
 });
 const processed = textProcessor("local", "trim", (item) => item.text.trim()).process(input);
 const exportPlan = feedOutput("My reading").prepare(processed);
@@ -98,3 +100,11 @@ The sample is `docs/benchmarks/content-pipeline.json`; it also asserts record co
 unique IDs, stable order, unchanged source text, expected transformed text and retained
 processing metadata. Repository before/after checks and their limits are recorded in
 `docs/benchmarks/verification.md` and `docs/benchmarks/verification.json`.
+
+## Persisted content integrity
+
+The runtime-readonly `ContentList` above is not persisted revision history. The
+backend separately versions memos, sections, TeX and experiments, retaining exact
+snapshots and rejecting stale read tokens. Agent runs pin source revisions and
+config at enqueue time. See [Content integrity](/docs/content-integrity/) for
+migration, provenance, deletion semantics and new verification evidence.

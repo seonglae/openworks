@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "scope": "Public-only persisted content integrity follow-on, stacked on PR5; synthetic local checks, no provider/publication/deployment evaluation.",
+  "baseline_commit": "f57037ff3107203a668e452a190b46bc23e218d5",
+  "baseline_tree": "9862a9b065d8e98c42fa934538611274ff7aae3a",
+  "baseline_full_tests": {
+    "passed": 1123,
+    "total": 1123,
+    "files": 44,
+    "evidence": "candidate-tests.json from exact PR5 checkpoint; CI38512975888 passed same head"
+  },
+  "acceptance": {
+    "definition": "New eight-case fixture, not the unrecovered Oct13 eight cases",
+    "before": {
+      "passed": 0,
+      "failed": 8
+    },
+    "after": {
+      "passed": 8,
+      "failed": 0
+    }
+  },
+  "candidate": {
+    "base_commit": "f57037ff3107203a668e452a190b46bc23e218d5",
+    "source_manifest": "integrity-source-manifest.json",
+    "source_digest": "bd6e1c72257dc6b6bc9ad964bd38f08f11626d92a0049c03bf6b7ebe4cfbc9cf",
+    "source_files": 291,
+    "tests": {
+      "total": 1315,
+      "passed": 1315,
+      "failed": 0,
+      "files": 52
+    },
+    "frozen_install": "passed; ONNXRUNTIME_NODE_INSTALL_CUDA=skip, unchanged lockfile",
+    "typecheck": "passed; ASTRO_TELEMETRY_DISABLED=1",
+    "app_build": "passed",
+    "site_demo_build": "passed;18static routes excluding demo"
+  },
+  "test_identity_comparison": {
+    "retained_named_test_instances": 1120,
+    "intentionally_replaced_test_names": [
+      {
+        "file": "convex/test/research.test.ts",
+        "name": "FSM enforcement on advance answers identically to the domain FSM for every ordered pair of own-kind states"
+      },
+      {
+        "file": "convex/test/research.test.ts",
+        "name": "upsert by slug writes no timeline entry, unlike register"
+      },
+      {
+        "file": "convex/test/researchEntities.test.ts",
+        "name": "trigger fan-out from entity writes queues nothing for memo, table, figure and venue writes, which do not fan out today"
+      }
+    ],
+    "new_or_replacement_instances": 195,
+    "net_added_cases": 192
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "pnpm": "11.25.0",
+    "declared_pnpm": "11.15.1",
+    "ci_node_major": 22,
+    "lockfile_sha256": "e09f38022aa46a4b96c1fad16bef7b5a6fb8cbf46e46cb2634a7103f499af74d"
+  },
+  "benchmark": "integrity-benchmark.json",
+  "limits": [
+    "Local convex-test timing under shared-host load, not production latency, CPU/throughput, model quality, reliability or competitor performance.",
+    "Test-count growth is added coverage; three old behavior assertions were intentionally replaced and CRUD fixtures now supply read tokens.",
+    "Ordinary per-content deletion retains history; whole-project deletion removes the lifecycle, and numeric CAS tokens can repeat after full destruction/recreation.",
+    "No live providers, OCR execution, direct Notion publication, feed hosting, video rendering, merge or manual deployment performed.",
+    "Abandoned researchPhaseRuns recovery is not added; the existing agentRuns reaper is unchanged.",
+    "Prior adapter microbenchmark remains without an equivalent old-main baseline; this new CRUD benchmark does not supply one."
+  ]
+}

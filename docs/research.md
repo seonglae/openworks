@@ -32,14 +32,17 @@ Projects of kind `review` move through seven:
 setup -> lit_review -> drafting -> ranking -> submitted -> rebuttal_audit -> final
 ```
 
-Transitions are validated on the server. `force: true` overrides, for the case
-where the work really did skip a step.
+State vocabulary is validated on the server. `advance` also checks adjacency;
+`force: true` can bypass adjacency, never the kind’s vocabulary. The UI’s direct
+phase selection intentionally accepts any valid state of that kind.
 
 ## Entities on a project
 
 Memos, experiments, tables, figures, sections, tex and venues, described in
-[Concepts](/docs/concepts/). All writes are upserts: saving the same slug twice
-updates rather than duplicating, so an agent that retries does not litter.
+[Concepts](/docs/concepts/). Memo, section, TeX and experiment writes keep their existing upsert identities,
+but versioned rows require the caller’s `expectedRevision` read token. A stale
+request fails rather than silently overwriting newer content. See
+[Content integrity](/docs/content-integrity/) for the migration and retry contract.
 
 ## Venues
 
@@ -50,10 +53,25 @@ make the copy explicit at the moment you decide the two should differ.
 
 ## Phase inference
 
-The phase dropdown on each project row writes through the same validated
-transition as `advance` does, so picking a phase by hand fires the same
-`state.transitioned` event and the same agent subscriptions. There is no path
-that changes a phase without telling the agents.
+The dropdown, advance, changed upsert/kind registration, legacy migration and
+inference share state validation, audit and event handling. A repeated current-state
+selection does not append a phantom transition. Existing human history is retained.
+Legacy migration respects the project kind (for example, review `submitted` is
+still valid and must not be converted to an own-project state).
+
+Inference runs pin project ID, kind, phase and state version when queued. A late
+result cannot overwrite a newer human transition, including an away-and-back
+change to the same phase. All proposed history entries and timestamps are validated
+before any write; malformed entries are rejected atomically. New inference history
+is bounded to 256 entries and 128 KiB of serialized history; oversized results fail
+without partial application. Completion retains the server-applied history rather
+than trusting a replacement transcript supplied by the worker. Valid historical
+observations append without rewriting prior records. Rewording a note or omitting
+a timestamp on a repeated observation does not manufacture another transition.
+Applying the same run again is idempotent. Legacy queued runs without input snapshots
+must be requested again. Recovery/reaping of abandoned `researchPhaseRuns` is not
+added here; the existing `agentRuns` reaper is unchanged. Local filesystem/git evidence collected by the worker is
+labeled as a current observation, not an immutable historical capture.
 
 ## Related work
 

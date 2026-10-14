@@ -5,6 +5,12 @@ import { auth, withConvex } from "./harness.setup";
 
 type Harness = ReturnType<typeof withConvex>;
 
+// Existing CRUD fixtures explicitly adopt the CAS read/modify/write contract.
+// Stale and concurrent tokens are tested separately in contentPersistence.test.
+async function revisionFor(t: Harness, kind: "memo" | "experiment", researchSlug: string, key: string) {
+  return (await t.query(api.contentRevisions.head, { ...auth, kind, researchSlug, key }))?.version ?? 0;
+}
+
 // The five entity modules differ only in the name of their key field and of
 // their display field, so the shared upsert / get / list / remove contract is
 // exercised once through this adapter instead of five near-identical suites.
@@ -27,9 +33,10 @@ type EntityCase = {
 
 const experiments: EntityCase = {
   label: "experiment",
-  save: (t, research, key, opts) =>
+  save: async (t, research, key, opts) =>
     t.mutation(api.researchExperiments.save, {
       ...auth,
+      expectedRevision: await revisionFor(t, "experiment", research, key),
       researchSlug: research,
       expSlug: key,
       name: opts?.display,
@@ -43,8 +50,13 @@ const experiments: EntityCase = {
   list: (t, research) => t.query(api.researchExperiments.list, { ...auth, researchSlug: research }),
   keys: async (t, research) =>
     (await t.query(api.researchExperiments.list, { ...auth, researchSlug: research })).map((r) => r.expSlug),
-  remove: (t, research, key) =>
-    t.mutation(api.researchExperiments.remove, { ...auth, researchSlug: research, expSlug: key }),
+  remove: async (t, research, key) =>
+    t.mutation(api.researchExperiments.remove, {
+      ...auth,
+      researchSlug: research,
+      expSlug: key,
+      expectedRevision: await revisionFor(t, "experiment", research, key),
+    }),
   touch: async (t, research, key, at) => {
     await t.run(async (ctx) => {
       const row = await ctx.db
@@ -58,9 +70,10 @@ const experiments: EntityCase = {
 
 const memos: EntityCase = {
   label: "memo",
-  save: (t, research, key, opts) =>
+  save: async (t, research, key, opts) =>
     t.mutation(api.researchMemos.save, {
       ...auth,
+      expectedRevision: await revisionFor(t, "memo", research, key),
       researchSlug: research,
       memoSlug: key,
       title: opts?.display,
@@ -74,8 +87,13 @@ const memos: EntityCase = {
   list: (t, research) => t.query(api.researchMemos.list, { ...auth, researchSlug: research }),
   keys: async (t, research) =>
     (await t.query(api.researchMemos.list, { ...auth, researchSlug: research })).map((r) => r.memoSlug),
-  remove: (t, research, key) =>
-    t.mutation(api.researchMemos.remove, { ...auth, researchSlug: research, memoSlug: key }),
+  remove: async (t, research, key) =>
+    t.mutation(api.researchMemos.remove, {
+      ...auth,
+      researchSlug: research,
+      memoSlug: key,
+      expectedRevision: await revisionFor(t, "memo", research, key),
+    }),
   touch: async (t, research, key, at) => {
     await t.run(async (ctx) => {
       const row = await ctx.db
@@ -260,13 +278,13 @@ describe.each(CASES)("upsert semantics for a $label", (c) => {
   it("reports a delete of an existing row as removed", async () => {
     const t = withConvex();
     await c.save(t, "sae", "k1");
-    expect(await c.remove(t, "sae", "k1")).toEqual({ removed: true });
+    expect(await c.remove(t, "sae", "k1")).toMatchObject({ removed: true });
     expect(await c.get(t, "sae", "k1")).toBeNull();
   });
 
   it("reports a delete of a missing row as not removed", async () => {
     const t = withConvex();
-    expect(await c.remove(t, "sae", "missing")).toEqual({ removed: false });
+    expect(await c.remove(t, "sae", "missing")).toMatchObject({ removed: false });
   });
 
   it("does not delete the same key belonging to another project", async () => {
@@ -290,7 +308,13 @@ describe("experiment specifics", () => {
   it("keeps a status set on creation when a later save omits it", async () => {
     const t = withConvex();
     await t.mutation(api.researchExperiments.save, { ...auth, researchSlug: "sae", expSlug: "e1", status: "running" });
-    await t.mutation(api.researchExperiments.save, { ...auth, researchSlug: "sae", expSlug: "e1", metrics: "acc=0.9" });
+    await t.mutation(api.researchExperiments.save, {
+      ...auth,
+      researchSlug: "sae",
+      expSlug: "e1",
+      expectedRevision: 1,
+      metrics: "acc=0.9",
+    });
     const row = await t.query(api.researchExperiments.get, { ...auth, researchSlug: "sae", expSlug: "e1" });
     expect(row?.status).toBe("running");
     expect(row?.metrics).toBe("acc=0.9");
@@ -325,7 +349,13 @@ describe("memo specifics", () => {
   it("replaces the whole tag array rather than merging into it", async () => {
     const t = withConvex();
     await t.mutation(api.researchMemos.save, { ...auth, researchSlug: "sae", memoSlug: "m1", tags: ["idea", "todo"] });
-    await t.mutation(api.researchMemos.save, { ...auth, researchSlug: "sae", memoSlug: "m1", tags: ["done"] });
+    await t.mutation(api.researchMemos.save, {
+      ...auth,
+      researchSlug: "sae",
+      memoSlug: "m1",
+      expectedRevision: 1,
+      tags: ["done"],
+    });
     const row = await t.query(api.researchMemos.get, { ...auth, researchSlug: "sae", memoSlug: "m1" });
     expect(row?.tags).toEqual(["done"]);
   });
@@ -443,7 +473,13 @@ describe("trigger fan-out from entity writes", () => {
     await seedGlobalSub(t, "entity.created");
     await seedGlobalSub(t, "entity.updated");
     await t.mutation(api.researchExperiments.save, { ...auth, researchSlug: "sae", expSlug: "e1" });
-    await t.mutation(api.researchExperiments.save, { ...auth, researchSlug: "sae", expSlug: "e1", status: "running" });
+    await t.mutation(api.researchExperiments.save, {
+      ...auth,
+      researchSlug: "sae",
+      expSlug: "e1",
+      expectedRevision: 1,
+      status: "running",
+    });
     const queued = await runs(t);
     expect(queued.map((r) => r.triggerType)).toEqual(["entity.created", "entity.updated"]);
   });
@@ -486,11 +522,16 @@ describe("trigger fan-out from entity writes", () => {
     const t = withConvex();
     await seedGlobalSub(t, "entity.updated");
     await t.mutation(api.researchExperiments.save, { ...auth, researchSlug: "sae", expSlug: "e1" });
-    await t.mutation(api.researchExperiments.remove, { ...auth, researchSlug: "sae", expSlug: "e1" });
+    await t.mutation(api.researchExperiments.remove, {
+      ...auth,
+      researchSlug: "sae",
+      expSlug: "e1",
+      expectedRevision: 1,
+    });
     expect(await runs(t)).toHaveLength(0);
   });
 
-  it("queues nothing for memo, table, figure and venue writes, which do not fan out today", async () => {
+  it("queues a pinned memo run while unversioned table, figure and venue writes remain unchanged", async () => {
     const t = withConvex();
     await seedGlobalSub(t, "entity.created");
     await seedGlobalSub(t, "entity.updated");
@@ -498,7 +539,9 @@ describe("trigger fan-out from entity writes", () => {
     await t.mutation(api.researchTables.save, { ...auth, researchSlug: "sae", tableSlug: "t1" });
     await t.mutation(api.researchFigures.save, { ...auth, researchSlug: "sae", figureSlug: "f1" });
     await t.mutation(api.researchVenues.save, { ...auth, researchSlug: "sae", venueSlug: "neurips" });
-    expect(await runs(t)).toHaveLength(0);
+    expect(await runs(t)).toHaveLength(1);
+    expect((await runs(t))[0].triggerEntityType).toBe("memo");
+    expect((await runs(t))[0].sourceRevisionIds).toHaveLength(1);
   });
 });
 
