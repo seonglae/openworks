@@ -195,6 +195,17 @@ header nav a.icon svg {
   color: var(--rust);
   border-color: var(--rust-edge);
 }
+/* At phone width the wordmark and six controls need about 476px, so the page
+   scrolled sideways and the theme button sat off screen. The section anchors
+   go first: they point down the page a phone is already scrolling. */
+@media (max-width: 520px) {
+  header nav {
+    gap: 16px;
+  }
+  header nav a.anchor {
+    display: none;
+  }
+}
 
 /* ---- hero ---- */
 .hero {
