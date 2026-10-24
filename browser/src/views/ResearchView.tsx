@@ -98,20 +98,20 @@ export function ResearchView({ focusSlug }: { focusSlug?: string | null }) {
             const r = await requestPhaseInferAll({ kind });
             console.log(`queued ${r.queued} phase-infer runs`);
           }}
-          className="ml-auto mono text-[10px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-rust transition-colors rounded-full"
+          className="ml-auto mono text-[11px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-rust transition-colors rounded-full"
           title="Spawn one subagent per project: analyses folder + git log and updates phase and appends inferred evidence without replacing history"
         >
           infer phases all
         </button>
       </div>
 
-      <div
-        style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" }}
-        className="mb-6 flex justify-center"
-      >
+      <div style={{ marginLeft: "var(--bleed)", marginRight: "var(--bleed)" }} className="mb-6 flex justify-center">
         <div
           className="panel"
-          style={{ width: "min(calc(100vw - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)), 60rem)" }}
+          style={{
+            width:
+              "min(calc(100vw - var(--rail-w) - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)), 60rem)",
+          }}
         >
           <FsmGraph
             nodes={nodes}
@@ -350,11 +350,11 @@ function ResearchRow({
             {project.title}
           </span>
         )}
-        {project.venue && <span className="mono text-[10px] text-ink-4">{project.venue}</span>}
+        {project.venue && <span className="mono text-[11px] text-ink-4">{project.venue}</span>}
         <select
           value={project.phase}
           onChange={(e) => updatePhase(project._id, e.target.value)}
-          className="mono text-[10px] text-ink-2 bg-paper-warm px-1.5 py-0.5 rounded border-0 outline-none"
+          className="mono text-[11px] text-ink-2 bg-paper-warm px-1.5 py-0.5 rounded border-0 outline-none"
         >
           {nodes.map((n) => (
             <option key={n.id} value={n.id}>
@@ -410,10 +410,10 @@ function ResearchRow({
             ) : (
               <div className="flex flex-wrap gap-1">
                 {(project.keywords ?? []).length === 0 ? (
-                  <span className="mono text-[10px] text-ink-4 italic">none</span>
+                  <span className="mono text-[11px] text-ink-4 italic">none</span>
                 ) : (
                   (project.keywords ?? []).map((k) => (
-                    <span key={k} className="mono text-[10px] text-ink-3 bg-paper-warm px-1.5 py-0.5 rounded">
+                    <span key={k} className="mono text-[11px] text-ink-3 bg-paper-warm px-1.5 py-0.5 rounded">
                       {k}
                     </span>
                   ))
@@ -428,7 +428,7 @@ function ResearchRow({
               <div className="space-y-0.5 max-h-48 overflow-y-auto">
                 {timeline.map((t) => (
                   <div key={t._id} className="flex items-center gap-2 text-[11px]">
-                    <span className="mono text-[10px] text-ink-4 w-[110px] shrink-0">
+                    <span className="mono text-[11px] text-ink-4 w-[110px] shrink-0">
                       {new Date(t.at).toLocaleString(undefined, {
                         month: "2-digit",
                         day: "2-digit",
@@ -436,9 +436,9 @@ function ResearchRow({
                         minute: "2-digit",
                       })}
                     </span>
-                    <span className="mono text-[10px] text-rust w-[140px] shrink-0 truncate">{t.state}</span>
+                    <span className="mono text-[11px] text-rust w-[140px] shrink-0 truncate">{t.state}</span>
                     {t.actor && (
-                      <span className="mono text-[10px] text-ink-4 w-[70px] shrink-0 truncate">{t.actor}</span>
+                      <span className="mono text-[11px] text-ink-4 w-[70px] shrink-0 truncate">{t.actor}</span>
                     )}
                     <span className="text-ink-2 flex-1 truncate" title={t.note ?? ""}>
                       {t.note ?? ""}
@@ -455,7 +455,7 @@ function ResearchRow({
               <div className="mono text-xs font-bold text-ink-2 tracking-wide mb-1.5">files ({fileSummary.total})</div>
               <div className="flex flex-wrap gap-1">
                 {Object.entries(fileSummary.byType).map(([t, n]) => (
-                  <span key={t} className="mono text-[10px] text-ink-3 bg-paper-warm px-1.5 py-0.5 rounded">
+                  <span key={t} className="mono text-[11px] text-ink-3 bg-paper-warm px-1.5 py-0.5 rounded">
                     {t} {n}
                   </span>
                 ))}
@@ -515,7 +515,7 @@ function ResearchRow({
               related ({relatedJobs?.filter((rj) => rj.type === "paper" || rj.type === "article").length ?? "..."})
             </div>
             {relatedJobs && relatedJobs.length === 0 ? (
-              <div className="mono text-[10px] text-ink-4 italic">no matches — add keywords to find papers</div>
+              <div className="mono text-[11px] text-ink-4 italic">no matches — add keywords to find papers</div>
             ) : (
               <div className="space-y-0.5">
                 {relatedJobs
@@ -530,7 +530,7 @@ function ResearchRow({
                     >
                       <span className="mono text-[11px] text-ink-3 w-[40px]">{(rj.score * 100).toFixed(0)}%</span>
                       <span
-                        className={`mono text-[10px] tracking-wider w-[60px] shrink-0 ${
+                        className={`mono text-[11px] tracking-wider w-[60px] shrink-0 ${
                           rj.type === "paper" ? "text-rust" : "text-ink-3"
                         }`}
                       >
@@ -549,7 +549,7 @@ function ResearchRow({
               {relatedPlans?.filter((rp) => rp.score > (usingEmbedding ? 0.25 : 0.02)).length ?? "..."})
             </div>
             {relatedPlans && relatedPlans.filter((rp) => rp.score > (usingEmbedding ? 0.25 : 0.02)).length === 0 ? (
-              <div className="mono text-[10px] text-ink-4 italic">none</div>
+              <div className="mono text-[11px] text-ink-4 italic">none</div>
             ) : (
               <div className="space-y-0.5">
                 {relatedPlans
@@ -583,7 +583,7 @@ function ResearchRow({
                 <option value="public">public — metadata only</option>
               </select>
               {(project.visibility === "public" || project.visibility === "unlisted") && (
-                <span className="mono text-[10px] text-ink-4 truncate">
+                <span className="mono text-[11px] text-ink-4 truncate">
                   owner-only link: {window.location.origin}/?research={project.slug}
                 </span>
               )}
@@ -603,14 +603,14 @@ function ResearchRow({
           >
             <div className="flex items-start justify-between mb-3 sticky top-0">
               <div>
-                <div className="mono text-[10px] text-ink-4">{selectedJob.type ?? "newsletter"}</div>
+                <div className="mono text-[11px] text-ink-4">{selectedJob.type ?? "newsletter"}</div>
                 <h3 className="font-serif text-lg text-ink">{selectedJob.title || "(no title)"}</h3>
                 {selectedJob.url && (
                   <a
                     href={selectedJob.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mono text-[10px] text-rust hover:underline"
+                    className="mono text-[11px] text-rust hover:underline"
                   >
                     {selectedJob.url}
                   </a>
@@ -889,17 +889,17 @@ function FsmGraph({
         <div style={{ marginLeft: "auto", display: "flex", gap: 2, pointerEvents: "auto" }}>
           <button
             onClick={() => setZoom((z) => clampZoom(z / 1.25))}
-            className="mono text-[10px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
+            className="mono text-[11px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
             title="Zoom out (or scroll wheel)"
           >
             −
           </button>
-          <span className="mono text-[10px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 min-w-[44px] text-center rounded-full">
+          <span className="mono text-[11px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 min-w-[44px] text-center rounded-full">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => setZoom((z) => clampZoom(z * 1.25))}
-            className="mono text-[10px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
+            className="mono text-[11px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
             title="Zoom in (or scroll wheel)"
           >
             +
@@ -909,7 +909,7 @@ function FsmGraph({
               setZoom(1);
               setPan({ x: 0, y: 0 });
             }}
-            className="mono text-[10px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
+            className="mono text-[11px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-ink-2 rounded-full"
             title="Reset zoom + pan"
           >
             ⟲
@@ -927,7 +927,7 @@ function FsmGraph({
               setZoom(1);
               setPan({ x: 0, y: 0 });
             }}
-            className="mono text-[10px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-rust rounded-full"
+            className="mono text-[11px] px-2 py-0.5 bg-paper border border-rule-light text-ink-3 hover:text-rust rounded-full"
             title="Reset node positions + zoom + pan (fixes 'graph disappeared')"
           >
             reset

@@ -6,13 +6,13 @@
   --color-paper-warm: #f7f4ef;
   --color-ink: #1a1714;
   --color-ink-2: #4a4540;
-  --color-ink-3: #8a8478;
-  --color-ink-4: #b5afa5;
+  --color-ink-3: #655f56;
+  --color-ink-4: #736d63;
   --color-rule: #d5cfc5;
   --color-rule-light: #e5e0d6;
-  --color-rust: #c4553a;
+  --color-rust: #b34a30;
   --color-rust-deep: #a93a20;
-  --color-rust-dim: rgba(196, 85, 58, 0.08);
+  --color-rust-dim: rgba(179, 74, 48, 0.08);
   --color-slate: #3d5a80;
   --color-slate-dim: rgba(61, 90, 128, 0.08);
   --color-ochre: #c49a3a;
@@ -20,8 +20,10 @@
   --color-charcoal: #2d2926;
   --color-sage: #5a7a5a;
   --color-sage-dim: rgba(90, 122, 90, 0.08);
+  --color-accept: #2e8a52;
+  --color-decline: #c8372d;
   --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", "Menlo", monospace;
 }
 
@@ -47,8 +49,8 @@
     --color-paper-warm: #1c1c1e;
     --color-ink: #e8e2d8;
     --color-ink-2: #c5bfb5;
-    --color-ink-3: #8a8478;
-    --color-ink-4: #5a5550;
+    --color-ink-3: #a39d92;
+    --color-ink-4: #8f897f;
     --color-rule: #3a3530;
     --color-rule-light: #2e2a26;
     --color-rust: #e07058;
@@ -61,10 +63,14 @@
     --color-charcoal: #e8e2d8;
     --color-sage: #7a9a7a;
     --color-sage-dim: rgba(122, 154, 122, 0.12);
+    --color-accept: #5cc48a;
+    --color-decline: #f0705f;
     color-scheme: dark;
   }
 
   body {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
     min-height: 100vh;
     min-height: 100dvh;
     background: var(--color-paper);
@@ -128,10 +134,9 @@
   select {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%238a8478' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23655f56' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
     background-repeat: no-repeat;
     background-position: right 9px center;
-    padding-right: 26px;
   }
   select option {
     background: var(--color-paper-warm);
@@ -148,6 +153,24 @@
 }
 
 @layer components {
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  :root {
+    --rail-w: 0px;
+    --bleed: calc(50% - (100vw - var(--rail-w)) / 2);
+  }
+  @media (min-width: 40rem) {
+    :root {
+      --rail-w: 14rem;
+    }
+  }
+
   .mono {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
@@ -438,4 +461,8 @@
 .content-visibility-auto {
   content-visibility: auto;
   contain-intrinsic-size: auto 44px;
+}
+
+select {
+  padding-right: 26px;
 }

@@ -26,7 +26,7 @@ type InsightStatus = Doc<"insights">["status"];
 function InsightStatusPill({ status }: { status: string }) {
   return (
     <span
-      className={`mono text-[9px] tracking-wider px-1.5 py-0.5 rounded-full shrink-0 ${INSIGHT_STATUS_STYLE[status] ?? "text-ink-4"}`}
+      className={`mono text-[10px] tracking-wider px-1.5 py-0.5 rounded-full shrink-0 ${INSIGHT_STATUS_STYLE[status] ?? "text-ink-4"}`}
     >
       {status}
     </span>
@@ -151,11 +151,11 @@ export function InsightsView() {
           <button
             onClick={doAdd}
             disabled={!raw.trim()}
-            className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
+            className="droplet px-3 py-1.5 mono text-[11px] tracking-wider text-rust disabled:opacity-40"
           >
             + add insight
           </button>
-          <label className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+          <label className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
             + image
             <input
               type="file"
@@ -168,10 +168,10 @@ export function InsightsView() {
               }}
             />
           </label>
-          {msg && <span className="mono text-[10px] text-sage">{msg}</span>}
+          {msg && <span className="mono text-[11px] text-sage">{msg}</span>}
         </div>
         <details className="mt-2">
-          <summary className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
+          <summary className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust cursor-pointer">
             import from notion
           </summary>
           <div className="flex gap-2 mt-2">
@@ -184,7 +184,7 @@ export function InsightsView() {
             <button
               onClick={doImport}
               disabled={!notionPage.trim()}
-              className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40 shrink-0"
+              className="droplet px-3 py-1.5 mono text-[11px] tracking-wider text-rust disabled:opacity-40 shrink-0"
             >
               import
             </button>
@@ -200,7 +200,7 @@ export function InsightsView() {
             <button
               key={s ?? "all"}
               onClick={() => pickFilter(s)}
-              className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+              className={`mono text-[11px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
                 statusFilter === s ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
               }`}
             >
@@ -230,12 +230,12 @@ export function InsightsView() {
                     <AgentIcon provider={it.provider} size={11} />
                   </span>
                 )}
-                <InsightStatusPill status={it.status} />
+                {it.status !== "suggested" && <InsightStatusPill status={it.status} />}
               </button>
               {open && (
                 <div className="pl-5 pb-3 space-y-1.5">
                   {it.imageId && <InsightImage id={it._id} />}
-                  {it.source && <div className="mono text-[10px] text-ink-4">— {it.source}</div>}
+                  {it.source && <div className="mono text-[11px] text-ink-4">— {it.source}</div>}
                   {it.interpretation && <div className="text-[12px] text-ink-2">{it.interpretation}</div>}
                   {it.evaluation && <div className="text-[12px] text-ink-3 italic">{it.evaluation}</div>}
                   {it.tags && it.tags.length > 0 && (
@@ -243,7 +243,7 @@ export function InsightsView() {
                       {it.tags.map((t) => (
                         <span
                           key={t}
-                          className="mono text-[9px] tracking-wider px-1.5 py-0.5 rounded-full bg-paper-warm/60 text-ink-4"
+                          className="mono text-[10px] tracking-wider px-1.5 py-0.5 rounded-full bg-paper-warm/60 text-ink-4"
                         >
                           {t}
                         </span>
@@ -253,10 +253,10 @@ export function InsightsView() {
 
                   {it.status === "error" && (
                     <div className="flex items-center gap-2">
-                      <span className="mono text-[10px] text-rust break-words">{it.error}</span>
+                      <span className="mono text-[11px] text-rust break-words">{it.error}</span>
                       <button
                         onClick={() => setStatus({ id: it._id, status: "new" })}
-                        className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                        className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                       >
                         retry
                       </button>
@@ -266,7 +266,7 @@ export function InsightsView() {
                   {it.status === "suggested" &&
                     (it.notionPageId ? (
                       <div className="border border-rule-light rounded p-2 bg-paper-warm/30">
-                        <div className="mono text-[10px] text-ink-3">
+                        <div className="mono text-[11px] text-ink-3">
                           →{" "}
                           <a
                             href={it.notionPageUrl}
@@ -278,19 +278,19 @@ export function InsightsView() {
                           </a>
                         </div>
                         {it.notionContent && (
-                          <pre className="mono text-[10px] text-ink-2 whitespace-pre-wrap mt-1">{it.notionContent}</pre>
+                          <pre className="mono text-[11px] text-ink-2 whitespace-pre-wrap mt-1">{it.notionContent}</pre>
                         )}
                         <div className="flex gap-2 mt-2">
                           <button
                             onClick={() => doPlace(it._id)}
                             disabled={busy === it._id}
-                            className="droplet px-3 py-1 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
+                            className="droplet px-3 py-1 mono text-[11px] tracking-wider text-rust disabled:opacity-40"
                           >
                             {busy === it._id ? "placing…" : "place"}
                           </button>
                           <button
                             onClick={() => setStatus({ id: it._id, status: "dismissed" })}
-                            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                            className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                           >
                             dismiss
                           </button>
@@ -298,12 +298,12 @@ export function InsightsView() {
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="mono text-[10px] text-ink-4 break-words">
+                        <span className="mono text-[11px] text-ink-4 break-words">
                           no fitting Notion page{it.notionReason ? `: ${it.notionReason}` : ""}
                         </span>
                         <button
                           onClick={() => setStatus({ id: it._id, status: "dismissed" })}
-                          className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                          className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                         >
                           dismiss
                         </button>
@@ -311,7 +311,7 @@ export function InsightsView() {
                     ))}
 
                   {it.status === "placed" && (
-                    <div className="mono text-[10px] text-sage">
+                    <div className="mono text-[11px] text-sage">
                       ✓ placed
                       {it.notionPageUrl && (
                         <>
@@ -326,7 +326,7 @@ export function InsightsView() {
 
                   <button
                     onClick={() => removeInsight({ id: it._id })}
-                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
+                    className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
                   >
                     delete
                   </button>

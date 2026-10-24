@@ -1,6 +1,6 @@
 // The PR list state, split out of PRView so that file exports only its
 // component and stays Fast Refreshable.
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
@@ -33,7 +33,14 @@ export type PR = {
 export function usePRData() {
   const fetchPRs = useAction(api.github.listOpenPRs);
   const fetchPRDetails = useAction(api.github.listPRDetails);
-  const [grouped, setGrouped] = useState<Record<string, PR[]> | null>(null);
+  const [grouped, setGrouped] = useState<Record<string, PR[]> | null>(() => {
+    try {
+      const cached = localStorage.getItem("cache:github:openPRs");
+      return cached ? (JSON.parse(cached) as Record<string, PR[]>) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -74,6 +81,13 @@ export function usePRData() {
       console.error(e);
     }
   }, [fetchPRs, fetchPRDetails]);
+
+  useEffect(() => {
+    if (!grouped) return;
+    try {
+      localStorage.setItem("cache:github:openPRs", JSON.stringify(grouped));
+    } catch {}
+  }, [grouped]);
 
   const removePR = useCallback((repo: string, prId: number) => {
     setGrouped((prev) => {

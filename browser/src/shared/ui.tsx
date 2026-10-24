@@ -9,6 +9,14 @@ export function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
 }
 
+export function isTypingTarget(el: EventTarget | null): boolean {
+  return (
+    el instanceof HTMLElement &&
+    (el.isContentEditable ||
+      Boolean(el.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')))
+  );
+}
+
 // Footer under a paginated list. Doubles as the infinite-scroll sentinel, so
 // it takes the ref `useInfiniteScroll` returns. The empty state stays with the
 // list itself, since each one words it differently.
@@ -22,7 +30,7 @@ export function PaginationFooter({
   sentinelRef: React.Ref<HTMLDivElement>;
 }) {
   return (
-    <div ref={sentinelRef} className="py-6 text-center mono text-[10px] tracking-wider text-ink-4">
+    <div ref={sentinelRef} className="py-6 text-center mono text-[11px] tracking-wider text-ink-4">
       {status === "LoadingFirstPage" || status === "LoadingMore"
         ? "loading…"
         : status === "Exhausted" && count > 0
@@ -38,7 +46,7 @@ export function BlockSkeleton({ rows = 3, className = "" }: { rows?: number; cla
   return (
     <div className={`space-y-1.5 ${className}`} aria-busy="true">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="h-3 bg-paper-warm/60 animate-pulse rounded" style={{ width: `${100 - i * 12}%` }} />
+        <div key={i} className="h-3 bg-ink/[0.07] animate-pulse rounded" style={{ width: `${100 - i * 12}%` }} />
       ))}
     </div>
   );

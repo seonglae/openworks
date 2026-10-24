@@ -224,7 +224,7 @@ function SortableRow({
           {tab.label}
           {status && <StatusDot status={status} />}
         </div>
-        <div className="mono text-[10px] text-ink-4 truncate">{status?.label ?? tab.blurb}</div>
+        <div className="mono text-[11px] text-ink-4 truncate">{status?.label ?? tab.blurb}</div>
       </div>
       <button
         onClick={onInfo}
@@ -317,7 +317,7 @@ function GradientStrengthRow() {
     <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
       <div className="flex-1 min-w-0">
         <div className="serif text-sm text-ink">Background gradient</div>
-        <div className="mono text-[10px] text-ink-4">backdrop blob intensity (this device)</div>
+        <div className="mono text-[11px] text-ink-4">backdrop blob intensity (this device)</div>
       </div>
       <div className="flex items-center gap-2">
         <input
@@ -329,7 +329,7 @@ function GradientStrengthRow() {
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-28 accent-rust"
         />
-        <span className="mono text-[10px] text-ink-3 w-7 text-right">{Math.round(value * 100)}%</span>
+        <span className="mono text-[11px] text-ink-3 w-7 text-right">{Math.round(value * 100)}%</span>
       </div>
     </div>
   );
@@ -440,7 +440,7 @@ function NotificationRow() {
     <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
       <div className="flex-1 min-w-0">
         <div className="serif text-sm text-ink">Notifications</div>
-        <div className="mono text-[10px] text-ink-4">
+        <div className="mono text-[11px] text-ink-4">
           {!supported ? "not supported on this browser" : msg ? msg : "push recommended reads to this device"}
         </div>
       </div>
@@ -449,7 +449,7 @@ function NotificationRow() {
           <button
             onClick={test}
             disabled={busy}
-            className="mono text-[10px] tracking-wider px-2 py-0.5 rounded-full text-ink-4 hover:text-ink-3 disabled:opacity-40"
+            className="mono text-[11px] tracking-wider px-2 py-0.5 rounded-full text-ink-4 hover:text-ink-3 disabled:opacity-40"
           >
             Test
           </button>
@@ -457,7 +457,7 @@ function NotificationRow() {
         <button
           onClick={endpoint ? disable : enable}
           disabled={!supported || busy}
-          className={`mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
+          className={`mono text-[11px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
             endpoint ? "droplet text-rust" : "text-ink-3 hover:text-ink border border-ink/15"
           }`}
         >
@@ -498,12 +498,12 @@ function ReflectiveRow() {
           <Sparkles size={13} className="text-rust" />
           Reflective UI
         </div>
-        <div className="mono text-[10px] text-ink-4">{msg ?? "live front-camera behind the glass (this device)"}</div>
+        <div className="mono text-[11px] text-ink-4">{msg ?? "live front-camera behind the glass (this device)"}</div>
       </div>
       <button
         onClick={toggle}
         disabled={busy}
-        className={`mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
+        className={`mono text-[11px] tracking-wider px-2.5 py-0.5 rounded-full transition-colors disabled:opacity-40 ${
           on ? "droplet text-rust" : "text-ink-3 hover:text-ink border border-ink/15"
         }`}
       >
@@ -635,7 +635,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center gap-2">
             <SettingsIcon size={14} className="text-ink-3" />
             <span className="serif text-base text-ink">Settings</span>
-            <span className="mono text-[10px] text-ink-4">tabs · drag to reorder</span>
+            <span className="mono text-[11px] text-ink-4">tabs · drag to reorder</span>
           </div>
           <button onClick={onClose} className="text-ink-3 hover:text-ink-2" aria-label="Close settings">
             <X size={14} />
@@ -649,7 +649,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
               <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
                 <div className="flex-1 min-w-0">
                   <div className="serif text-sm text-ink">Output language</div>
-                  <div className="mono text-[10px] text-ink-4">
+                  <div className="mono text-[11px] text-ink-4">
                     used by summaries, tldr, and chat (applies to new runs)
                   </div>
                 </div>
@@ -685,7 +685,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
             </>
           )}
         </div>
-        <div className="mono text-[10px] text-ink-4 px-4 py-2 border-t border-ink/10">
+        <div className="mono text-[11px] text-ink-4 px-4 py-2 border-t border-ink/10">
           Self-hosted. One Convex deployment = one user. Settings sync across browsers on this deployment.
         </div>
       </div>
@@ -762,7 +762,7 @@ function InfoPanel({
           <div className="space-y-3 mb-5">
             {tab.requirements.map((r) => (
               <div key={r.label}>
-                <div className="mono text-[10px] tracking-wider text-rust mb-0.5">{r.label}</div>
+                <div className="mono text-[11px] tracking-wider text-rust mb-0.5">{r.label}</div>
                 <div className="text-sm text-ink-2">{r.detail}</div>
               </div>
             ))}
@@ -831,7 +831,7 @@ function TextSetting({
   const dirty = value !== initial;
   return (
     <div className="border-t border-ink/10 pt-3 mb-4">
-      <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">{label}</div>
+      <div className="mono text-[11px] tracking-wider text-ink-4 mb-1">{label}</div>
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -846,12 +846,12 @@ function TextSetting({
             onSave(value.trim());
             setSavedAt(Date.now());
           }}
-          className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 rounded-full"
+          className="mono text-[11px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 rounded-full"
         >
           {savedAt && !dirty ? "saved" : "save"}
         </button>
       </div>
-      <div className="mono text-[10px] text-ink-4 mt-1">{hint}</div>
+      <div className="mono text-[11px] text-ink-4 mt-1">{hint}</div>
     </div>
   );
 }
@@ -887,12 +887,12 @@ function SetupActions({
       : null;
   return (
     <div className="border-t border-ink/10 pt-3 space-y-3">
-      <div className="mono text-[10px] tracking-wider text-ink-4">{cli} setup</div>
+      <div className="mono text-[11px] tracking-wider text-ink-4">{cli} setup</div>
       <div className="flex flex-wrap gap-2">
         <button
           onClick={onInstall}
           disabled={running}
-          className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
+          className="mono text-[11px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
         >
           {running ? <Loader2 size={10} className="animate-spin" /> : <Download size={10} />}
           install {cli}
@@ -900,7 +900,7 @@ function SetupActions({
         <button
           onClick={onVerify}
           disabled={running}
-          className="mono text-[10px] tracking-wider px-2 py-1 text-ink-2 hover:text-ink disabled:text-ink-4 flex items-center gap-1 rounded-full"
+          className="mono text-[11px] tracking-wider px-2 py-1 text-ink-2 hover:text-ink disabled:text-ink-4 flex items-center gap-1 rounded-full"
         >
           {running ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
           verify
@@ -909,7 +909,7 @@ function SetupActions({
           <button
             onClick={onOauth}
             disabled={running}
-            className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
+            className="mono text-[11px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 rounded-full"
           >
             {running ? <Loader2 size={10} className="animate-spin" /> : <Download size={10} />}
             login (browser)
@@ -918,7 +918,7 @@ function SetupActions({
       </div>
       {oauthDevice && (
         <div className="bg-paper-warm/40 border border-rust/30 px-3 py-2 space-y-1">
-          <div className="mono text-[10px] tracking-wider text-rust">github oauth</div>
+          <div className="mono text-[11px] tracking-wider text-rust">github oauth</div>
           <div className="text-sm text-ink-2">
             Open{" "}
             <a
@@ -934,21 +934,21 @@ function SetupActions({
           <code className="block bg-paper-warm/40 px-2 py-1 mono text-base tracking-widest text-rust select-all rounded-lg">
             {oauthDevice.userCode}
           </code>
-          <div className="mono text-[10px] text-ink-4">worker polls until login completes — no terminal needed.</div>
+          <div className="mono text-[11px] text-ink-4">worker polls until login completes — no terminal needed.</div>
         </div>
       )}
       <div>
-        <div className="mono text-[10px] text-ink-4 mb-1">login (manual fallback)</div>
+        <div className="mono text-[11px] text-ink-4 mb-1">login (manual fallback)</div>
         <code className="block bg-paper-warm/40 px-2 py-1.5 text-[11px] text-ink-2 mono select-all">
           {loginCommand}
         </code>
       </div>
-      {versionLine && <div className="mono text-[10px] text-ink-3 truncate">version: {versionLine}</div>}
+      {versionLine && <div className="mono text-[11px] text-ink-3 truncate">version: {versionLine}</div>}
       {lastErr && (
-        <div className="mono text-[10px] text-red-500 break-words">last error: {String(lastErr).slice(0, 240)}</div>
+        <div className="mono text-[11px] text-red-500 break-words">last error: {String(lastErr).slice(0, 240)}</div>
       )}
       {latest?.stdout && (
-        <details className="mono text-[10px] text-ink-4">
+        <details className="mono text-[11px] text-ink-4">
           <summary className="cursor-pointer hover:text-ink-3">stdout</summary>
           <pre className="mt-1 bg-paper-warm/40 p-2 max-h-40 overflow-auto whitespace-pre-wrap break-all">
             {latest.stdout}

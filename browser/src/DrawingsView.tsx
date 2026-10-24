@@ -68,7 +68,7 @@ function DrawingsList({ onOpen }: { onOpen: (id: Id<"drawings">) => void }) {
           className="aspect-[4/3] border-2 border-dashed border-rule hover:border-ink-3 rounded-2xl flex flex-col items-center justify-center gap-2 transition-colors group"
         >
           <Plus size={24} className="text-ink-4 group-hover:text-ink-2" />
-          <span className="mono text-[10px] tracking-wider text-ink-4 group-hover:text-ink-2">New Drawing</span>
+          <span className="mono text-[11px] tracking-wider text-ink-4 group-hover:text-ink-2">New Drawing</span>
         </button>
         {drawings.map((d) => (
           <div
@@ -100,7 +100,7 @@ function DrawingsList({ onOpen }: { onOpen: (id: Id<"drawings">) => void }) {
               ) : (
                 <span className="mono text-[11px] text-ink truncate flex-1">{d.title}</span>
               )}
-              <span className="mono text-[9px] text-ink-4 shrink-0">{relTime(d.updatedAt)}</span>
+              <span className="mono text-[10px] text-ink-4 shrink-0">{relTime(d.updatedAt)}</span>
             </div>
             <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
@@ -204,7 +204,7 @@ function DrawingEditor({ id, onBack, backHref }: { id: Id<"drawings">; onBack: (
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onBack();
+      if (e.key === "Escape" && !document.querySelector('[aria-modal="true"]')) onBack();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -212,14 +212,14 @@ function DrawingEditor({ id, onBack, backHref }: { id: Id<"drawings">; onBack: (
 
   if (drawing === undefined) {
     return (
-      <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
+      <div className="fixed left-[var(--rail-w)] right-0 top-0 bottom-[calc(52px+env(safe-area-inset-bottom))] sm:bottom-0 z-20 bg-white flex items-center justify-center">
         <span className="mono text-xs text-ink-4">loading...</span>
       </div>
     );
   }
   if (drawing === null) {
     return (
-      <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
+      <div className="fixed left-[var(--rail-w)] right-0 top-0 bottom-[calc(52px+env(safe-area-inset-bottom))] sm:bottom-0 z-20 bg-white flex items-center justify-center">
         <span className="mono text-xs text-rust">drawing not found</span>
       </div>
     );
@@ -243,7 +243,7 @@ function DrawingEditor({ id, onBack, backHref }: { id: Id<"drawings">; onBack: (
   })();
 
   return (
-    <div className="fixed inset-0 z-50 bg-white">
+    <div className="fixed left-[var(--rail-w)] right-0 top-0 bottom-[calc(52px+env(safe-area-inset-bottom))] sm:bottom-0 z-20 bg-white">
       <a
         href={backHref}
         onClick={(e) => {

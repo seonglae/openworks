@@ -16,7 +16,6 @@ import { usePRData } from "./views/usePRData";
 import { ResearchView } from "./views/ResearchView";
 import { PlansView } from "./views/PlansView";
 import {
-  UniversalInput,
   NewsletterDistribution,
   DateDistribution,
   FeedsButton,
@@ -27,23 +26,26 @@ import {
 } from "./views/JobsView";
 import { MODE_KEYS, type Mode } from "./shared/types";
 import { MODES, fallbackMode } from "./shared/modes";
-import { useInfiniteScroll, useCachedQuery, useDropletRect } from "./shared/hooks";
-import { isModifiedClick } from "./shared/ui";
+import { useInfiniteScroll, useCachedQuery } from "./shared/hooks";
+import { isTypingTarget } from "./shared/ui";
+import { Rail } from "./shared/shell/Rail";
+import { TabBar } from "./shared/shell/TabBar";
+import { ThemeToggle } from "./shared/shell/ThemeToggle";
+import { CaptureSheet, type CaptureSeed } from "./shared/shell/CaptureSheet";
+import { CAPTURE_KINDS, captureKindFor } from "./shared/shell/capture";
+import { CommandPalette } from "./shared/shell/CommandPalette";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import {
-  DndContext,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  closestCenter,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-
 const AUTH_ENABLED = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-import { FileText, X, Archive, Search, Moon, Sun, Mail, Pencil, Settings as SettingsIcon, Menu } from "lucide-react";
+import {
+  FileText,
+  Archive,
+  Search,
+  Mail,
+  Pencil,
+  Settings as SettingsIcon,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 
 // ── LaTeX Copy Context Menu ────────────────────────────────────────────
 
@@ -145,154 +147,10 @@ function LatexContextMenu({ menu, onCopy }: { menu: { x: number; y: number; late
       >
         Copy LaTeX
       </button>
-      <div className="px-3 py-1 mono text-[10px] text-ink-4 truncate max-w-[300px] border-t border-rule-light mt-1 pt-1 rounded-full">
+      <div className="px-3 py-1 mono text-[11px] text-ink-4 truncate max-w-[300px] border-t border-rule-light mt-1 pt-1 rounded-full">
         {menu.latex}
       </div>
     </div>
-  );
-}
-
-// ── Masthead ───────────────────────────────────────────────────────────
-
-function Masthead({
-  onHome,
-  showDraw,
-  onToggleDraw,
-  onOpenSettings,
-  onToggleSidebar,
-}: {
-  onHome?: () => void;
-  showDraw?: boolean;
-  onToggleDraw?: () => void;
-  onOpenSettings?: () => void;
-  onToggleSidebar?: () => void;
-}) {
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
-  const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-  };
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") {
-      setDark(true);
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
-  return (
-    <header className="pt-10 pb-6 anim flex items-start justify-between">
-      <div className="flex items-start gap-2">
-        {onToggleSidebar && (
-          <button
-            onClick={onToggleSidebar}
-            className="p-2 -ml-2 mt-1 text-ink-3 hover:text-ink transition-colors sm:hidden"
-            title="Menu"
-          >
-            <Menu size={20} />
-          </button>
-        )}
-        <div>
-          <h1
-            className="serif text-[2.4rem] leading-tight tracking-tight text-ink cursor-pointer hover:text-rust transition-colors"
-            onClick={onHome}
-          >
-            Openworks AI
-          </h1>
-          <p className="mono text-ink-3 mt-1">
-            read &rarr; summarize &rarr; internalize &rarr; organize &rarr; express
-          </p>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 mt-2">
-        {AUTH_ENABLED && (
-          <>
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="mono text-[10px] tracking-wider text-ink-3 hover:text-ink px-2 py-0.5 rounded-full">
-                  Sign in
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton appearance={{ elements: { avatarBox: "w-6 h-6" } }} />
-            </SignedIn>
-          </>
-        )}
-        {onToggleDraw && (
-          <button
-            onClick={onToggleDraw}
-            className={`p-2 transition-colors ${showDraw ? "text-rust" : "text-ink-3 hover:text-ink"}`}
-            title="Draw"
-          >
-            <Pencil size={16} />
-          </button>
-        )}
-        {onOpenSettings && (
-          <button onClick={onOpenSettings} className="p-2 text-ink-3 hover:text-ink transition-colors" title="Settings">
-            <SettingsIcon size={16} />
-          </button>
-        )}
-        <button onClick={toggle} className="p-2 text-ink-3 hover:text-ink transition-colors" title="Toggle dark mode">
-          {dark ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
-      </div>
-    </header>
-  );
-}
-
-// ── Mode Nav ──────────────────────────────────────────────────────────
-
-function SortableTab({
-  m,
-  isActive,
-  href,
-  onSelect,
-}: {
-  m: (typeof MODES)[number];
-  isActive: boolean;
-  href: string;
-  onSelect: (k: Mode) => void;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: m.key });
-  const wasDragged = useRef(false);
-  useEffect(() => {
-    if (isDragging) wasDragged.current = true;
-  }, [isDragging]);
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.6 : 1,
-    cursor: isDragging ? "grabbing" : undefined,
-  };
-  const Icon = m.icon;
-  return (
-    <a
-      ref={setNodeRef}
-      style={{ ...style, touchAction: "pan-y" }}
-      {...attributes}
-      {...listeners}
-      href={href}
-      draggable={false}
-      onClick={(e) => {
-        if (wasDragged.current) {
-          e.preventDefault();
-          wasDragged.current = false;
-          return;
-        }
-        if (isModifiedClick(e)) return;
-        e.preventDefault();
-        onSelect(m.key);
-      }}
-      data-tabkey={m.key}
-      className={`relative z-10 flex w-full items-center gap-2.5 px-3 py-2 mono text-xs tracking-wider transition-colors cursor-pointer select-none outline-none rounded-xl whitespace-nowrap
-        ${isActive ? "text-rust" : "text-ink-3 hover:text-ink"}
-      `}
-    >
-      <Icon size={15} className="shrink-0" />
-      {m.label}
-    </a>
   );
 }
 
@@ -305,82 +163,6 @@ function useDebounced<T>(value: T, ms = 250) {
     return () => clearTimeout(t);
   }, [value, ms]);
   return debounced;
-}
-
-// Left sidebar navigation. On desktop it is an in-flow sticky column; on
-// mobile it becomes an off-canvas drawer toggled by the masthead hamburger.
-// Tabs are a vertical, reorderable list (dnd-kit). This replaces the old
-// horizontal pill nav that overflowed on narrow screens.
-function SideNav({
-  active,
-  onSelect,
-  tabHref,
-  modes,
-  onReorder,
-  open,
-  onClose,
-}: {
-  active: Mode;
-  onSelect: (m: Mode) => void;
-  tabHref: (m: Mode) => string;
-  modes: typeof MODES;
-  onReorder?: (next: Mode[]) => void;
-  open: boolean;
-  onClose: () => void;
-}) {
-  // Mouse drags start on distance, never on a hold: a stationary press is
-  // always a click, so no amount of dwelling on a tab can reorder the list.
-  // Touch keeps a hold delay because a finger cannot hover to signal intent.
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 400, tolerance: 8 } }),
-  );
-  const navRef = useRef<HTMLElement | null>(null);
-  const droplet = useDropletRect(navRef, active ?? null, [modes, open]);
-  const handleDragEnd = (e: DragEndEvent) => {
-    if (!onReorder || !e.over || e.active.id === e.over.id) return;
-    const oldIndex = modes.findIndex((m) => m.key === e.active.id);
-    const newIndex = modes.findIndex((m) => m.key === e.over!.id);
-    if (oldIndex < 0 || newIndex < 0) return;
-    onReorder(arrayMove(modes, oldIndex, newIndex).map((m) => m.key));
-  };
-  const pick = (m: Mode) => {
-    onSelect(m);
-    onClose();
-  };
-  return (
-    <>
-      {open && <div className="fixed inset-0 z-40 bg-ink/40 sm:hidden" onClick={onClose} aria-hidden />}
-      <aside
-        className={`glass-bar fixed inset-y-0 left-0 z-50 flex w-64 flex-col overflow-y-auto border-r border-rule px-3 py-5 transition-transform duration-200
-          ${open ? "translate-x-0" : "-translate-x-full"}
-          sm:sticky sm:top-0 sm:z-30 sm:h-screen sm:w-56 sm:translate-x-0 sm:transform-none`}
-      >
-        <div className="mb-5 flex items-center justify-between px-2">
-          <span className="serif text-2xl tracking-tight text-ink">Openworks</span>
-          <button onClick={onClose} className="p-1 text-ink-3 hover:text-ink sm:hidden" title="Close">
-            <X size={16} />
-          </button>
-        </div>
-        <nav ref={navRef} className="relative flex flex-1 flex-col gap-1">
-          {droplet && (
-            <span
-              aria-hidden
-              className="droplet droplet-v pointer-events-none absolute left-0 right-0 rounded-xl z-0"
-              style={{ top: droplet.top, height: droplet.height }}
-            />
-          )}
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={modes.map((m) => m.key)} strategy={verticalListSortingStrategy}>
-              {modes.map((m) => (
-                <SortableTab key={m.key} m={m} isActive={active === m.key} href={tabHref(m.key)} onSelect={pick} />
-              ))}
-            </SortableContext>
-          </DndContext>
-        </nav>
-      </aside>
-    </>
-  );
 }
 
 // ── Main App ───────────────────────────────────────────────────────────
@@ -631,8 +413,6 @@ export default function App() {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
-  const createJob = useMutation(api.jobs.create);
-  const generateUploadUrl = useMutation(api.jobs.generateUploadUrl);
   const deleteJob = useMutation(api.jobs.remove);
   const archiveJob = useMutation(api.jobs.archive);
   const unarchiveJob = useMutation(api.jobs.unarchive);
@@ -663,7 +443,7 @@ export default function App() {
       const el = document.activeElement;
       const typing =
         el instanceof HTMLElement && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
-      if (typing) return;
+      if (typing || document.querySelector('[aria-modal="true"]')) return;
       e.preventDefault();
       const id = activeJobId;
       setActiveJobId(null);
@@ -676,6 +456,8 @@ export default function App() {
   const [showMailbox, setShowMailbox] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [capture, setCapture] = useState<CaptureSeed | null>(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   // Optimistic tab order applied synchronously on drag end. Without it the new
   // order only lands after the Convex round-trip, so dnd-kit renders one frame
   // in the old order (the tab snaps back) then reflows when the server reply
@@ -739,7 +521,7 @@ export default function App() {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (isTypingTarget(e.target) || document.querySelector('[aria-modal="true"]')) return;
       if (e.key === "/") {
         e.preventDefault();
         searchRef.current?.focus();
@@ -748,6 +530,60 @@ export default function App() {
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.isComposing) return;
+      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
+        if (capture || showSettings || showMailbox || contentModal) return;
+        e.preventDefault();
+        setPaletteOpen((open) => !open);
+        return;
+      }
+      if (
+        showDraw ||
+        capture ||
+        paletteOpen ||
+        showSettings ||
+        showMailbox ||
+        contentModal ||
+        sidebarOpen ||
+        document.querySelector('[aria-modal="true"]')
+      )
+        return;
+      if (e.key !== "c" || e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;
+      e.preventDefault();
+      setCapture({});
+    };
+    const onPaste = (e: ClipboardEvent) => {
+      if (
+        showDraw ||
+        capture ||
+        paletteOpen ||
+        showSettings ||
+        showMailbox ||
+        contentModal ||
+        sidebarOpen ||
+        isTypingTarget(e.target) ||
+        document.querySelector('[aria-modal="true"]')
+      )
+        return;
+      const files = Array.from(e.clipboardData?.items ?? [])
+        .filter((item) => item.type.startsWith("image/"))
+        .map((item) => item.getAsFile())
+        .filter((file): file is File => file !== null);
+      const text = e.clipboardData?.getData("text/plain") ?? "";
+      if (!text.trim() && files.length === 0) return;
+      e.preventDefault();
+      setCapture({ text, files });
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("paste", onPaste);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("paste", onPaste);
+    };
+  }, [showDraw, capture, paletteOpen, showSettings, showMailbox, contentModal, sidebarOpen]);
 
   // Cursor pagination rather than skip/limit: the offset query re-read every
   // row before the requested window, so deep pages cost more and more.
@@ -764,6 +600,21 @@ export default function App() {
   // than stateful so switching tabs (which resets jobsStatus to LoadingFirstPage)
   // re-arms it on its own.
   const chartsReady = jobsStatus !== "LoadingFirstPage";
+  const [statsOpen, setStatsOpen] = useState(() => {
+    try {
+      return localStorage.getItem("openworks:stats-open") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const showStats = statsOpen || Boolean(dateFilter || sourceFilter);
+  const toggleStats = () =>
+    setStatsOpen((open) => {
+      try {
+        localStorage.setItem("openworks:stats-open", open ? "0" : "1");
+      } catch {}
+      return !open;
+    });
   const totalCount = useQuery(api.jobs.count, { type: mode, archived: showArchived });
   const debouncedSearch = useDebounced(search.trim());
   const searchResults = useQuery(
@@ -838,38 +689,6 @@ export default function App() {
   // Archiving / deleting the open item (or collapsing its fold) flushes ?item=.
   const flushIfOpen = (id: Id<"jobs">) => setOpenItem((prev) => (prev === id ? null : prev));
 
-  const handleSubmit = async (input: string, images?: File[]) => {
-    // Upload every attached image, in order, to one job.
-    const imageIds: Id<"_storage">[] = [];
-    for (const image of images ?? []) {
-      const postUrl = await generateUploadUrl({});
-      const res = await fetch(postUrl, {
-        method: "POST",
-        headers: { "Content-Type": image.type },
-        body: image,
-      });
-      const json = (await res.json()) as { storageId: Id<"_storage"> };
-      imageIds.push(json.storageId);
-    }
-    // Batch URL paste — split on whitespace/comma. When every non-empty token
-    // is an http(s) URL (and there are ≥2 of them), create one job per URL.
-    // Image upload still goes as a single job — multi-URL + image isn't useful.
-    const tokens = input.split(/[\s,]+/).filter(Boolean);
-    if (imageIds.length === 0 && tokens.length > 1 && tokens.every((t) => /^https?:\/\//i.test(t))) {
-      for (const url of tokens) {
-        await createJob({ url, type: jobType });
-      }
-      return;
-    }
-    const isUrl = /^https?:\/\//i.test(input);
-    await createJob({
-      ...(isUrl ? { url: input } : { url: "", ...(input ? { content: input } : {}) }),
-      type: jobType,
-      ...(imageIds.length > 0 ? { imageIds } : {}),
-    });
-  };
-
-  const currentMode = MODES.find((m) => m.key === mode)!;
   const emptyMessage = {
     newsletter: {
       title: "Paste a newsletter URL or content to get started",
@@ -881,16 +700,92 @@ export default function App() {
   };
 
   return (
-    <div className="sm:flex">
+    <div className="pb-[calc(52px+env(safe-area-inset-bottom))] sm:flex sm:pb-0">
       {latexMenu && <LatexContextMenu menu={latexMenu} onCopy={copyLatex} />}
       {contentModal && <ContentModal jobId={contentModal} onClose={() => setContentModal(null)} />}
       {showMailbox && <MailboxModal onClose={() => setShowMailbox(false)} />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
-      <SideNav
-        active={showDraw ? (null as unknown as Mode) : mode === "authors" ? "paper" : mode}
+      {capture && (
+        <CaptureSheet
+          seed={capture}
+          defaultKind={captureKindFor(mode)}
+          onClose={() => setCapture(null)}
+          onDone={(kind) => {
+            setCapture(null);
+            const tab = CAPTURE_KINDS.find((k) => k.key === kind)!.tab;
+            if (tab !== mode || showDraw) nav({ mode: tab, showDraw: false, drawingId: null });
+          }}
+        />
+      )}
+      {paletteOpen && (
+        <CommandPalette
+          modes={displayModes}
+          onClose={() => setPaletteOpen(false)}
+          onMode={setMode}
+          onCapture={() => setCapture({})}
+          onSettings={() => setShowSettings(true)}
+          onDraw={() => nav({ showDraw: true })}
+          hrefFor={modeHref}
+          onOpen={(id, targetMode) => {
+            setMode(targetMode);
+            setSearch("");
+            setSearchContent(false);
+            setDateFilter(null);
+            setSourceFilter(null);
+            setShowArchived(false);
+            setOpenItem(id);
+          }}
+        />
+      )}
+      <Rail
+        active={showDraw ? null : mode === "authors" ? "paper" : mode}
         onSelect={(m) => nav({ mode: m, showDraw: false, drawingId: null })}
         tabHref={modeHref}
         modes={displayModes}
+        onCapture={() => setCapture({})}
+        onSearch={() => setPaletteOpen(true)}
+        onHome={() => {
+          setMode(visibleModes[0]?.key ?? "newsletter");
+          setSidebarOpen(false);
+        }}
+        footer={
+          <>
+            <button
+              onClick={() => {
+                setSidebarOpen(false);
+                nav({ showDraw: !showDraw, drawingId: null });
+              }}
+              aria-pressed={showDraw}
+              className={`p-2 transition-colors ${showDraw ? "text-rust" : "text-ink-3 hover:text-ink"}`}
+              title="Draw"
+            >
+              <Pencil size={16} />
+            </button>
+            <button
+              onClick={() => {
+                setSidebarOpen(false);
+                setShowSettings(true);
+              }}
+              className="p-2 text-ink-3 hover:text-ink"
+              title="Settings"
+            >
+              <SettingsIcon size={16} />
+            </button>
+            <ThemeToggle />
+            {AUTH_ENABLED && (
+              <>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <button className="ml-auto text-[11px] text-ink-3">Sign in</button>
+                  </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton appearance={{ elements: { avatarBox: "w-6 h-6" } }} />
+                </SignedIn>
+              </>
+            )}
+          </>
+        }
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onReorder={(nextEnabled) => {
@@ -907,20 +802,7 @@ export default function App() {
         }}
       />
       <div className="min-w-0 flex-1">
-        <div className="max-w-4xl mx-auto px-6 pb-16">
-          <Masthead
-            onHome={() => setMode(visibleModes[0]?.key ?? "newsletter")}
-            showDraw={showDraw}
-            onToggleDraw={() => {
-              if (showDraw) {
-                nav({ showDraw: false, drawingId: null });
-              } else {
-                nav({ showDraw: true });
-              }
-            }}
-            onOpenSettings={() => setShowSettings(true)}
-            onToggleSidebar={() => setSidebarOpen((v) => !v)}
-          />
+        <div className="max-w-4xl mx-auto px-4 pt-6 pb-10 sm:px-6 sm:pt-8">
           {showDraw ? (
             <DrawingsView
               activeId={activeDrawingId}
@@ -948,18 +830,19 @@ export default function App() {
           ) : (
             <>
               {mode === "paper" && <PaperSubNav active="paper" hrefFor={modeHref} />}
-              <UniversalInput
-                placeholder={currentMode.placeholder}
-                onSubmit={handleSubmit}
-                loading={jobsStatus === "LoadingFirstPage"}
-                allowImage={mode === "paper" || mode === "article" || mode === "newsletter"}
-              />
-
               {mode === "article" && <FeedsButton />}
-              {chartsReady && (mode === "paper" || mode === "article") && (
+              <button
+                onClick={toggleStats}
+                aria-expanded={showStats}
+                className="mb-3 flex items-center gap-1.5 text-[12px] text-ink-3 hover:text-ink"
+              >
+                {showStats ? <ChevronDown size={13} /> : <ChevronRight size={13} />} Stats
+                {(dateFilter || sourceFilter) && <span className="text-rust">· filter active</span>}
+              </button>
+              {showStats && chartsReady && (mode === "paper" || mode === "article") && (
                 <ScoreDistribution kind={mode} archived={showArchived} />
               )}
-              {chartsReady && (mode === "paper" || mode === "article") && (
+              {showStats && chartsReady && (mode === "paper" || mode === "article") && (
                 <DateDistribution
                   kind={mode}
                   basis={paperDateBasis}
@@ -969,7 +852,7 @@ export default function App() {
                   archived={showArchived}
                 />
               )}
-              {chartsReady && mode === "newsletter" && (
+              {showStats && chartsReady && mode === "newsletter" && (
                 <NewsletterDistribution
                   selected={dateFilter}
                   onSelect={selectDate}
@@ -990,7 +873,7 @@ export default function App() {
                       setSearch(e.target.value);
                     }}
                     placeholder="Filter... (/)"
-                    className="bg-transparent outline-none mono text-[10px] text-ink-2 placeholder:text-ink-4 w-full border-b border-transparent focus:border-rule-light transition-colors"
+                    className="bg-transparent outline-none mono text-[11px] text-ink-2 placeholder:text-ink-4 w-full border-b border-transparent focus:border-rule-light transition-colors"
                   />
                 </div>
                 <div className="flex flex-wrap items-center justify-end gap-1">
@@ -998,7 +881,7 @@ export default function App() {
                     onClick={() => {
                       setSearchContent((v) => !v);
                     }}
-                    className={`mono text-[10px] tracking-wider px-2 py-0.5 transition-colors ${searchContent ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
+                    className={`mono text-[11px] tracking-wider px-2 py-0.5 transition-colors ${searchContent ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
                     title={
                       searchContent
                         ? "Filter scope: title + summary + chat + full content"
@@ -1011,7 +894,7 @@ export default function App() {
                   {mode === "newsletter" && (
                     <button
                       onClick={() => setShowMailbox(true)}
-                      className="mono text-[10px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-ink-3 transition-colors rounded-full"
+                      className="mono text-[11px] tracking-wider px-2 py-0.5 text-ink-4 hover:text-ink-3 transition-colors rounded-full"
                       title="Open inbox of unread newsletters"
                     >
                       <Mail size={10} className="inline mr-1" />
@@ -1022,7 +905,7 @@ export default function App() {
                     onClick={() => {
                       toggleArchived(!showArchived);
                     }}
-                    className={`mono text-[10px] tracking-wider px-2 py-0.5 transition-colors ${showArchived ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
+                    className={`mono text-[11px] tracking-wider px-2 py-0.5 transition-colors ${showArchived ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"} rounded-full`}
                   >
                     <Archive size={10} className="inline mr-1" />
                     {showArchived ? "Viewing archived" : "Archived"}
@@ -1091,6 +974,14 @@ export default function App() {
           )}
         </div>
       </div>
+      <TabBar
+        onHome={() => setMode(visibleModes[0]?.key ?? "newsletter")}
+        onSearch={() => setPaletteOpen(true)}
+        onCapture={() => setCapture({})}
+        onDraw={() => nav({ showDraw: !showDraw, drawingId: null })}
+        onMenu={() => setSidebarOpen(true)}
+        active={showDraw ? "draw" : mode === visibleModes[0]?.key ? "home" : undefined}
+      />
     </div>
   );
 }

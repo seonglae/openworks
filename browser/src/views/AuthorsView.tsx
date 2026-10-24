@@ -38,7 +38,7 @@ export function PaperSubNav({ active, hrefFor }: { active: "paper" | "authors"; 
             window.history.pushState(null, "", hrefFor(k));
             window.dispatchEvent(new PopStateEvent("popstate"));
           }}
-          className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+          className={`mono text-[11px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
             active === k ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
           }`}
         >
@@ -62,7 +62,7 @@ function AuthorPapers({ authorId }: { authorId: string }) {
     <div className="pl-6 pb-3 space-y-1">
       {papers.map((p) => (
         <div key={p.jobId} className="flex items-baseline gap-2 text-[12px]">
-          <span className="mono text-[9px] tracking-wider text-ink-4 w-12 shrink-0">{p.position}</span>
+          <span className="mono text-[10px] tracking-wider text-ink-4 w-12 shrink-0">{p.position}</span>
           {p.url ? (
             <a href={p.url} target="_blank" rel="noreferrer" className="flex-1 min-w-0 text-rust hover:underline">
               {p.title}
@@ -70,11 +70,11 @@ function AuthorPapers({ authorId }: { authorId: string }) {
           ) : (
             <span className="flex-1 min-w-0 text-ink-2">{p.title}</span>
           )}
-          {p.archived && <span className="mono text-[9px] tracking-wider text-ink-4">archived</span>}
-          {p.overall !== undefined && <span className="mono text-[10px] text-rust shrink-0">{p.overall}</span>}
+          {p.archived && <span className="mono text-[10px] tracking-wider text-ink-4">archived</span>}
+          {p.overall !== undefined && <span className="mono text-[11px] text-rust shrink-0">{p.overall}</span>}
         </div>
       ))}
-      <div ref={ref} className="mono text-[9px] tracking-wider text-ink-4 pt-1">
+      <div ref={ref} className="mono text-[10px] tracking-wider text-ink-4 pt-1">
         {status === "LoadingFirstPage" || status === "LoadingMore" ? "loading…" : ""}
       </div>
     </div>
@@ -124,7 +124,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
               setOpenId(null);
             }}
             title={m.hint}
-            className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+            className={`mono text-[11px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
               position === m.key ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
             }`}
           >
@@ -140,7 +140,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
               setOpenId(null);
             }}
             title={m.hint}
-            className={`mono text-[10px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
+            className={`mono text-[11px] tracking-wider px-2 py-0.5 rounded-full transition-colors ${
               metric === m.key ? "droplet text-rust" : "text-ink-4 hover:text-ink-3"
             }`}
           >
@@ -150,7 +150,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
         {progress && progress.pending > 0 && (
           <button
             onClick={() => void startSweep({})}
-            className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust ml-auto"
+            className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust ml-auto"
           >
             resolve {progress.pending} pending
           </button>
@@ -170,17 +170,17 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
                   size={12}
                   className={`shrink-0 text-ink-4 transition-transform ${open ? "rotate-90" : ""}`}
                 />
-                <span className="mono text-[10px] text-ink-4 w-6 shrink-0 text-right">{i + 1}</span>
+                <span className="mono text-[11px] text-ink-4 w-6 shrink-0 text-right">{i + 1}</span>
                 <span className="flex-1 min-w-0 truncate text-[13px] text-ink">
                   {r.name}
                   {(nameCounts.get(r.name) ?? 0) > 1 && (
-                    <span className="mono text-[9px] text-ink-4 ml-1.5" title="a different OpenAlex author entity">
+                    <span className="mono text-[10px] text-ink-4 ml-1.5" title="a different OpenAlex author entity">
                       {r.authorId}
                     </span>
                   )}
                 </span>
                 {r.institution && (
-                  <span className="mono text-[9px] text-ink-4 truncate max-w-[28%] hidden sm:inline">
+                  <span className="mono text-[10px] text-ink-4 truncate max-w-[28%] hidden sm:inline">
                     {r.institution}
                   </span>
                 )}
@@ -190,7 +190,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
               </button>
               {open && (
                 <>
-                  <div className="pl-6 pb-1 mono text-[10px] text-ink-4 flex flex-wrap gap-x-3">
+                  <div className="pl-6 pb-1 mono text-[11px] text-ink-4 flex flex-wrap gap-x-3">
                     <span>1st {r.firstCount}</span>
                     <span>corresponding {r.lastCount}</span>
                     <span>total {r.paperCount}</span>
@@ -223,7 +223,7 @@ export function AuthorsView({ subNav }: { subNav?: React.ReactNode }) {
       </div>
 
       <PaginationFooter status={status} count={rows.length} sentinelRef={sentinelRef} />
-      <p className="mono text-[9px] text-ink-4 leading-relaxed">
+      <p className="mono text-[10px] text-ink-4 leading-relaxed">
         Identities are OpenAlex author entities, not names, so researchers who share a name stay separate. Authors
         OpenAlex has no entity for are left off these rankings rather than merged by name.
       </p>

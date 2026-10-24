@@ -111,14 +111,14 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center gap-2">
             <Mail size={14} className="text-ink-3" />
             <span className="serif text-base text-ink">Inbox</span>
-            <span className="mono text-[10px] text-ink-4">unread newsletters</span>
+            <span className="mono text-[11px] text-ink-4">unread newsletters</span>
           </div>
           <div className="flex items-center gap-2">
             {!loading && visible.length > 0 && (
               <button
                 onClick={handleProcessAll}
                 disabled={processingAll}
-                className="mono text-[10px] tracking-wider text-rust hover:bg-rust-dim disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
+                className="mono text-[11px] tracking-wider text-rust hover:bg-rust-dim disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
               >
                 {processingAll ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
                 process all ({visible.length})
@@ -127,7 +127,7 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
             <button
               onClick={refresh}
               disabled={loading}
-              className="mono text-[10px] tracking-wider text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
+              className="mono text-[11px] tracking-wider text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-2 py-0.5 flex items-center gap-1 rounded-full"
             >
               {loading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
               refresh
@@ -154,12 +154,12 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
                 key={entry.id}
                 className="flex items-center gap-3 px-4 py-2 border-b border-ink/10 last:border-b-0 hover:bg-paper-warm/30"
               >
-                <span className="mono text-[10px] text-ink-4 w-[110px] shrink-0 truncate">{fromLabel(entry.from)}</span>
+                <span className="mono text-[11px] text-ink-4 w-[110px] shrink-0 truncate">{fromLabel(entry.from)}</span>
                 <span className="text-sm text-ink-2 flex-1 truncate">{entry.subject || "(no subject)"}</span>
                 <button
                   onClick={() => handleAdd(entry)}
                   disabled={adding.has(entry.id)}
-                  className="mono text-[10px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 shrink-0 rounded-full"
+                  className="mono text-[11px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4 flex items-center gap-1 shrink-0 rounded-full"
                 >
                   {adding.has(entry.id) ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
                   read &amp; process
@@ -167,7 +167,7 @@ export function MailboxModal({ onClose }: { onClose: () => void }) {
               </div>
             ))}
         </div>
-        <div className="mono text-[10px] text-ink-4 px-4 py-2 border-t border-ink/10">
+        <div className="mono text-[11px] text-ink-4 px-4 py-2 border-t border-ink/10">
           read &amp; process → creates a newsletter job and marks the email read.
         </div>
       </div>

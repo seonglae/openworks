@@ -30,7 +30,7 @@ export function PlansView() {
   const selData = useQuery(api.plans.getBySlug, selectedSlug ? { slug: selectedSlug } : "skip");
   // Always load the merged set: the calendar shows every event continuously
   // regardless of the selected tab (a plan is just a date-range anchor).
-  const allData = useQuery(api.plans.allItems, {});
+  const allData = useCachedQuery("cache:plans:allItems", useQuery(api.plans.allItems, {}));
   const toggleDone = useMutation(api.plans.toggleDone);
 
   if (allPlans === undefined) {
@@ -73,7 +73,7 @@ export function PlansView() {
   return (
     <div>
       {isOffline && (
-        <div className="mono text-[10px] text-ink-4 mb-2 flex items-center gap-1">
+        <div className="mono text-[11px] text-ink-4 mb-2 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-ochre" /> offline (cached)
         </div>
       )}
@@ -111,7 +111,7 @@ function TripsSidebar({
   const fmt = (d: string | null) => (d ? d.slice(5).replace("-", "/") : "");
   return (
     <div className="shrink-0 w-full sm:w-44">
-      <div className="mono text-[10px] tracking-wider text-ink-4 mb-2 px-1">Itineraries</div>
+      <div className="mono text-[11px] tracking-wider text-ink-4 mb-2 px-1">Itineraries</div>
       <div className="flex flex-row flex-wrap sm:flex-col gap-1">
         {plans.map((p) => {
           const active = p.slug === selectedSlug;
@@ -178,7 +178,7 @@ function PlanDetail({
   const toggleBtn = (v: "calendar" | "list" | "map", label: string) => (
     <button
       onClick={() => setView(v)}
-      className={`mono text-[10px] tracking-wider px-3 py-0.5 rounded-full transition-colors relative z-10 ${view === v ? "droplet text-rust" : "text-ink-3 hover:text-ink"}`}
+      className={`mono text-[11px] tracking-wider px-3 py-0.5 rounded-full transition-colors relative z-10 ${view === v ? "droplet text-rust" : "text-ink-3 hover:text-ink"}`}
     >
       {label}
     </button>
@@ -213,13 +213,13 @@ function PlanDetail({
           )}
         </div>
       ) : (
-        <div
-          style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" }}
-          className="flex justify-center"
-        >
+        <div style={{ marginLeft: "var(--bleed)", marginRight: "var(--bleed)" }} className="flex justify-center">
           <div
             className="panel anim d2 flex flex-col sm:flex-row gap-4"
-            style={{ width: "min(calc(100vw - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)), 84rem)" }}
+            style={{
+              width:
+                "min(calc(100vw - var(--rail-w) - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)), 84rem)",
+            }}
           >
             <TripsSidebar plans={plans} selectedSlug={selectedSlug} onSelect={onSelect} />
             <div className="flex-1 min-w-0">
@@ -754,7 +754,7 @@ function PlanCalendar({
                 <span className={`font-bold ${isToday ? "text-rust" : "text-ink"}`}>
                   {date.slice(5).replace("-", "/")}
                 </span>
-                <span className={`text-[10px] ${dow === 0 ? "text-rust" : dow === 6 ? "text-slate" : "text-ink-4"}`}>
+                <span className={`text-[11px] ${dow === 0 ? "text-rust" : dow === 6 ? "text-slate" : "text-ink-4"}`}>
                   {WEEKDAY[dow]}
                 </span>
                 {city && (
@@ -768,7 +768,7 @@ function PlanCalendar({
                 )}
               </div>
               {wx && (
-                <div className="text-[10px] text-ink-3 mb-1.5">
+                <div className="text-[11px] text-ink-3 mb-1.5">
                   {wx.icon} {wx.hi}°/{wx.lo}°
                 </div>
               )}
@@ -799,7 +799,7 @@ function PlanCalendar({
       <div className="flex justify-center mt-3">
         <button
           onClick={() => setWeeks((w) => w + 5)}
-          className="mono text-[10px] tracking-wider px-3 py-1 text-ink-4 hover:text-rust transition-colors rounded-full"
+          className="mono text-[11px] tracking-wider px-3 py-1 text-ink-4 hover:text-rust transition-colors rounded-full"
         >
           load more weeks
         </button>
@@ -820,7 +820,7 @@ function PlanCalendar({
                 </span>
                 <button
                   onClick={() => setModal(null)}
-                  className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                  className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                 >
                   close
                 </button>
@@ -835,20 +835,20 @@ function PlanCalendar({
                         <span className="font-bold text-ink text-[13px]">{date.replace(/-/g, "/")}</span>
                         <span className="mono text-[9px] text-ink-4">{WEEKDAY[dayOfWeek(date)]}</span>
                         {city && (
-                          <span className="mono text-[9px] text-ink-4">
+                          <span className="mono text-[10px] text-ink-4">
                             {cityFlag(city)} {city}
                           </span>
                         )}
                         <button
                           title="add event"
                           onClick={() => setEditor({ date, slug: its[0]?.planSlug ?? defaultSlug })}
-                          className="ml-auto mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                          className="ml-auto mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                         >
                           + add
                         </button>
                       </div>
                       {its.length === 0 ? (
-                        <div className="mono text-[10px] text-ink-4 italic pl-1">no events.</div>
+                        <div className="mono text-[11px] text-ink-4 italic pl-1">no events.</div>
                       ) : (
                         <ul className="flex flex-col gap-2 list-none m-0 p-0 pl-1">
                           {its.map((it) => {
@@ -861,20 +861,20 @@ function PlanCalendar({
                                     {it.time && <b className="text-ink">{it.time} </b>}
                                     {it.title}
                                   </span>
-                                  {it.notes && <div className="text-ink-3 text-[10px] mt-0.5">{it.notes}</div>}
+                                  {it.notes && <div className="text-ink-3 text-[11px] mt-0.5">{it.notes}</div>}
                                 </span>
                                 <span className="shrink-0 flex items-center gap-2 opacity-0 group-hover/ev:opacity-100 transition-opacity">
                                   <button
                                     title="edit"
                                     onClick={() => setEditor({ date: it.date, slug: it.planSlug, item: it })}
-                                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
+                                    className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                                   >
                                     edit
                                   </button>
                                   <button
                                     title={arch ? "restore" : "archive"}
                                     onClick={() => setArchived({ itemId: it._id, archived: !arch })}
-                                    className="mono text-[9px] tracking-wider text-ink-4 hover:text-rust"
+                                    className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
                                   >
                                     {arch ? "restore" : "archive"}
                                   </button>
@@ -973,7 +973,7 @@ function EventEditor({
       <div className="panel max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-3">
           <span className="mono text-[11px] tracking-wider text-rust">{it ? "edit event" : "new event"}</span>
-          <button onClick={onClose} className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust">
+          <button onClick={onClose} className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust">
             close
           </button>
         </div>
@@ -1012,7 +1012,7 @@ function EventEditor({
           <button
             onClick={save}
             disabled={!title.trim() || busy}
-            className="droplet px-3 py-1.5 mono text-[10px] tracking-wider text-rust disabled:opacity-40"
+            className="droplet px-3 py-1.5 mono text-[11px] tracking-wider text-rust disabled:opacity-40"
           >
             {it ? "save" : "add"}
           </button>
@@ -1023,7 +1023,7 @@ function EventEditor({
                   await onArchive({ itemId: it._id, archived: !archived });
                   onClose();
                 }}
-                className="mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                className="mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
               >
                 {archived ? "restore" : "archive"}
               </button>
@@ -1032,7 +1032,7 @@ function EventEditor({
                   await onDelete({ itemId: it._id });
                   onClose();
                 }}
-                className="ml-auto mono text-[10px] tracking-wider text-ink-4 hover:text-rust"
+                className="ml-auto mono text-[11px] tracking-wider text-ink-4 hover:text-rust"
               >
                 delete
               </button>
@@ -1201,7 +1201,7 @@ function PlanMap({ items, plans }: { items: Doc<"planItems">[]; plans: { locatio
       />
       <div className="flex flex-wrap gap-3 mt-3">
         {visited.map((v) => (
-          <span key={v.city} className="mono text-[10px] text-ink-3 flex items-center gap-1">
+          <span key={v.city} className="mono text-[11px] text-ink-3 flex items-center gap-1">
             <span className="w-2 h-2 rounded-full inline-block" style={{ background: v.meta.flagColor }} />
             {v.meta.flag} {v.city}
           </span>
@@ -1210,7 +1210,7 @@ function PlanMap({ items, plans }: { items: Doc<"planItems">[]; plans: { locatio
 
       {flights.length > 0 && (
         <div className="mt-5">
-          <div className="mono text-[10px] tracking-wider text-ink-4 mb-2">
+          <div className="mono text-[11px] tracking-wider text-ink-4 mb-2">
             travel records · {flights.length} flights
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -1228,10 +1228,10 @@ function PlanMap({ items, plans }: { items: Doc<"planItems">[]; plans: { locatio
                   <div className="flex items-center gap-2 mb-1">
                     <span className="shrink-0">{flag || "✈"}</span>
                     <span className="font-bold text-ink text-[12px]">{range}</span>
-                    {f.time && <span className="mono text-[10px] text-sage">{f.time}</span>}
+                    {f.time && <span className="mono text-[11px] text-sage">{f.time}</span>}
                   </div>
                   <div className="text-[11px] text-ink-2">{f.title}</div>
-                  {f.notes && <div className="text-[10px] text-ink-4 mt-0.5">{f.notes}</div>}
+                  {f.notes && <div className="text-[11px] text-ink-4 mt-0.5">{f.notes}</div>}
                 </div>
               );
             })}
@@ -1346,9 +1346,9 @@ function DayBlock({
       <div className="flex items-baseline gap-3 mb-2">
         <h2 className="font-serif text-lg text-ink">{day.date}</h2>
         {day.dayLabel && <span className="mono text-xs text-ink-3">{day.dayLabel}</span>}
-        {city && <span className="mono text-[10px] tracking-wide text-ink-3">{city}</span>}
+        {city && <span className="mono text-[11px] tracking-wide text-ink-3">{city}</span>}
         {wx && (
-          <span className="mono text-[10px] text-ink-3">
+          <span className="mono text-[11px] text-ink-3">
             {wx.icon} {wx.hi}°/{wx.lo}°
           </span>
         )}
@@ -1378,7 +1378,7 @@ function DayBlock({
         <div>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1.5 mono text-[10px] text-ink-4 hover:text-ink-2 tracking-wider mb-1 transition-colors"
+            className="flex items-center gap-1.5 mono text-[11px] text-ink-4 hover:text-ink-2 tracking-wider mb-1 transition-colors"
           >
             {expanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
             <span>
@@ -1412,10 +1412,10 @@ function DayBlock({
                         <span className={`text-sm ${it.done ? "line-through text-ink-4" : "text-ink"}`}>
                           {it.title}
                         </span>
-                        {it.tier !== undefined && <span className="mono text-[9px] text-ink-4">T{it.tier}</span>}
+                        {it.tier !== undefined && <span className="mono text-[10px] text-ink-4">T{it.tier}</span>}
                         {inConflict && (
                           <span
-                            className={`mono text-[9px] px-1 rounded ${
+                            className={`mono text-[10px] px-1 rounded ${
                               isRecommended ? "bg-sage text-paper" : "text-ink-4"
                             }`}
                           >
@@ -1423,16 +1423,16 @@ function DayBlock({
                           </span>
                         )}
                         {it.location && (
-                          <span className="mono text-[10px] text-ink-4 flex items-center gap-0.5">
+                          <span className="mono text-[11px] text-ink-4 flex items-center gap-0.5">
                             <MapPin size={8} /> {it.location}
                           </span>
                         )}
                       </div>
-                      {it.notes && <div className="mono text-[10px] text-ink-3 mt-0.5">{it.notes}</div>}
+                      {it.notes && <div className="mono text-[11px] text-ink-3 mt-0.5">{it.notes}</div>}
                       {it.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
                           {it.tags.map((t) => (
-                            <span key={t} className="mono text-[9px] text-ink-4 bg-paper-warm px-1 rounded">
+                            <span key={t} className="mono text-[10px] text-ink-4 bg-paper-warm px-1 rounded">
                               {t}
                             </span>
                           ))}

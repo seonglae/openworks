@@ -46,32 +46,28 @@ export function CitationsPanel({ researchSlug }: { researchSlug: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <div className="mono text-[10px] text-ink-4">
+        <div className="mono text-[11px] text-ink-4">
           citations {citations?.length !== undefined ? `(${citations.length})` : ""}
         </div>
         <button
           onClick={onSync}
           disabled={syncing || workerBusy}
-          className="mono text-[10px] text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-1.5 py-0.5 flex items-center gap-1"
+          className="mono text-[11px] text-ink-3 hover:text-ink-2 disabled:text-ink-4 px-1.5 py-0.5 flex items-center gap-1"
           title="Re-read references.bib from this host"
         >
           {syncing || workerBusy ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
           sync bib
         </button>
       </div>
-      {latest?.status === "error" && <div className="mono text-[10px] text-red-500 mb-1">{latest.error}</div>}
+      {latest?.status === "error" && <div className="mono text-[11px] text-red-500 mb-1">{latest.error}</div>}
       {citations === undefined ? (
         <div className="space-y-1" aria-busy="true">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-2.5 bg-paper-warm/60 animate-pulse rounded"
-              style={{ width: `${100 - i * 8}%` }}
-            />
+            <div key={i} className="h-2.5 bg-ink/[0.07] animate-pulse rounded" style={{ width: `${100 - i * 8}%` }} />
           ))}
         </div>
       ) : citations.length === 0 ? (
-        <div className="mono text-[10px] text-ink-4 italic">
+        <div className="mono text-[11px] text-ink-4 italic">
           no citations yet. set a host with bibRelPath, then sync.
         </div>
       ) : (
@@ -81,17 +77,17 @@ export function CitationsPanel({ researchSlug }: { researchSlug: string }) {
               <button
                 onClick={() => onPromote(c.key)}
                 disabled={promoting.has(c.key)}
-                className="mono text-[10px] text-rust hover:bg-rust-dim disabled:text-ink-4 shrink-0 px-1 mt-0.5"
+                className="mono text-[11px] text-rust hover:bg-rust-dim disabled:text-ink-4 shrink-0 px-1 mt-0.5"
                 title={c.pdfRelPath ? `add as paper (with text from ${c.pdfRelPath})` : "add as paper"}
               >
                 {promoting.has(c.key) ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
               </button>
-              <span className="mono text-[10px] text-ink-4 w-[36px] shrink-0 truncate">{c.year ?? ""}</span>
+              <span className="mono text-[11px] text-ink-4 w-[36px] shrink-0 truncate">{c.year ?? ""}</span>
               <span className="text-ink-2 flex-1 truncate" title={c.title}>
                 {c.title || c.key}
               </span>
               {c.pdfRelPath && (
-                <span className="mono text-[10px] text-ink-4 shrink-0" title={c.pdfRelPath}>
+                <span className="mono text-[11px] text-ink-4 shrink-0" title={c.pdfRelPath}>
                   <FileText size={10} className="inline" />
                 </span>
               )}
@@ -100,7 +96,7 @@ export function CitationsPanel({ researchSlug }: { researchSlug: string }) {
                   href={c.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mono text-[10px] text-ink-3 hover:text-rust shrink-0"
+                  className="mono text-[11px] text-ink-3 hover:text-rust shrink-0"
                 >
                   <ExternalLink size={10} className="inline" />
                 </a>
@@ -145,12 +141,12 @@ export function HostSetup({ researchSlug }: { researchSlug: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <div className="mono text-[10px] text-ink-4">
+        <div className="mono text-[11px] text-ink-4">
           hosts {hosts?.length !== undefined ? `(${hosts.length})` : ""}
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="mono text-[10px] text-ink-3 hover:text-ink-2 px-1.5 py-0.5"
+          className="mono text-[11px] text-ink-3 hover:text-ink-2 px-1.5 py-0.5"
         >
           {open ? "cancel" : "+ host"}
         </button>
@@ -158,20 +154,20 @@ export function HostSetup({ researchSlug }: { researchSlug: string }) {
       <div className="space-y-1">
         {(hosts ?? []).map((h) => (
           <div key={h.machineId} className="flex items-center gap-2 text-xs">
-            <span className="mono text-[10px] text-ink-3 w-[100px] truncate" title={h.machineId}>
+            <span className="mono text-[11px] text-ink-3 w-[100px] truncate" title={h.machineId}>
               {h.machineId}
             </span>
             <span className="text-ink-2 flex-1 truncate mono text-[11px]" title={h.rootPath}>
               {h.rootPath}
             </span>
             {h.bibRelPath && (
-              <span className="mono text-[10px] text-ink-4 shrink-0 truncate" title={h.bibRelPath}>
+              <span className="mono text-[11px] text-ink-4 shrink-0 truncate" title={h.bibRelPath}>
                 bib: {h.bibRelPath}
               </span>
             )}
             <button
               onClick={() => removeHost({ researchSlug, machineId: h.machineId })}
-              className="mono text-[10px] text-ink-4 hover:text-red-500"
+              className="mono text-[11px] text-ink-4 hover:text-red-500"
             >
               remove
             </button>
@@ -203,7 +199,7 @@ export function HostSetup({ researchSlug }: { researchSlug: string }) {
             <button
               onClick={onSave}
               disabled={saving || !machineId.trim() || !rootPath.trim()}
-              className="mono text-[10px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4"
+              className="mono text-[11px] tracking-wider px-2 py-0.5 text-rust hover:bg-rust-dim disabled:text-ink-4"
             >
               {saving ? "..." : "save"}
             </button>

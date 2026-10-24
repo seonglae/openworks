@@ -69,7 +69,7 @@ function CommentNode({
   const indent = depth > 0 ? `ml-${Math.min(depth * 4, 12)}` : "";
   return (
     <div className={`pt-2 ${indent}`}>
-      <div className="flex items-baseline gap-2 mono text-[10px] text-ink-4 mb-1">
+      <div className="flex items-baseline gap-2 mono text-[11px] text-ink-4 mb-1">
         <span className={isAgent ? "text-rust" : "text-ink-2"}>{comment.authorName ?? comment.authorId}</span>
         <span>{isAgent ? "agent" : "user"}</span>
         <span>·</span>
@@ -119,7 +119,7 @@ export function CommentsThread({ researchSlug, targetType, targetKey, targetVenu
         {Array.from({ length: 2 }).map((_, i) => (
           <div key={i} className="flex" style={{ justifyContent: i % 2 === 0 ? "flex-start" : "flex-end" }}>
             <div
-              className="h-6 bg-paper-warm/60 animate-pulse rounded"
+              className="h-6 bg-ink/[0.07] animate-pulse rounded"
               style={{ width: `${50 - i * 10}%`, maxWidth: "70%" }}
             />
           </div>
@@ -171,17 +171,17 @@ export function CommentsThread({ researchSlug, targetType, targetKey, targetVenu
 
   return (
     <div className="mt-3 pt-3 border-t border-rule-light">
-      <div className="mono text-[10px] tracking-wider text-ink-4 mb-1">
+      <div className="mono text-[11px] tracking-wider text-ink-4 mb-1">
         Comments {total > 0 && <span className="text-ink-3">({total})</span>}
       </div>
-      {tree.length === 0 && <div className="mono text-[10px] text-ink-4 py-1">no comments yet</div>}
+      {tree.length === 0 && <div className="mono text-[11px] text-ink-4 py-1">no comments yet</div>}
       {tree.map((c) => (
         <CommentNode key={c._id} comment={c} depth={0} onReply={setReplyTo} />
       ))}
       {AUTH_ENABLED && (
         <form onSubmit={handleSubmit} className="mt-3 space-y-1">
           {replyTo && (
-            <div className="mono text-[10px] text-ink-4 flex items-center gap-2">
+            <div className="mono text-[11px] text-ink-4 flex items-center gap-2">
               replying to comment...
               <button type="button" onClick={() => setReplyTo(null)} className="text-ink-3 hover:text-ink-2">
                 cancel
@@ -199,14 +199,14 @@ export function CommentsThread({ researchSlug, targetType, targetKey, targetVenu
             <button
               type="submit"
               disabled={posting || !body.trim()}
-              className="mono text-[10px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 disabled:hover:bg-transparent transition-colors rounded-full"
+              className="mono text-[11px] tracking-wider px-2 py-1 text-rust hover:bg-rust-dim disabled:text-ink-4 disabled:hover:bg-transparent transition-colors rounded-full"
             >
               {posting ? "posting..." : "post"}
             </button>
           </div>
         </form>
       )}
-      {!AUTH_ENABLED && <div className="mono text-[10px] text-ink-4 mt-2 italic">sign-in disabled — read-only.</div>}
+      {!AUTH_ENABLED && <div className="mono text-[11px] text-ink-4 mt-2 italic">sign-in disabled — read-only.</div>}
     </div>
   );
 }

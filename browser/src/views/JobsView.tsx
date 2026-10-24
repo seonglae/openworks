@@ -3,7 +3,8 @@ import { createPortal } from "react-dom";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id, Doc } from "../../../convex/_generated/dataModel";
-import { Md, MdNotion } from "../components/markdown";
+import { Md } from "../components/markdown";
+import { DiffBlock } from "../shared/diff";
 import { AgentIcon } from "../AgentIcons";
 import { SummaryView } from "../shared/summary";
 import { isTerminalJobStatus } from "@openworks/domain";
@@ -80,6 +81,8 @@ export function UniversalInput({
   onSubmit,
   loading,
   allowImage,
+  initialText,
+  initialFiles,
 }: {
   placeholder: string;
   onSubmit: (input: string, images?: File[]) => void | Promise<void>;
@@ -88,9 +91,19 @@ export function UniversalInput({
   // identifies the source from the image(s) and pulls the full text. Multiple
   // images can be attached (paste several, or pick files) and process together.
   allowImage?: boolean;
+  initialText?: string;
+  initialFiles?: File[];
 }) {
-  const [input, setInput] = useState("");
-  const [images, setImages] = useState<{ file: File; url: string }[]>([]);
+  const [input, setInput] = useState(initialText ?? "");
+  const [images, setImages] = useState<{ file: File; url: string }[]>(() =>
+    (initialFiles ?? [])
+      .filter((f) => f.type.startsWith("image/"))
+      .map((file) => ({ file, url: URL.createObjectURL(file) })),
+  );
+  const imagesRef = useRef(images);
+  imagesRef.current = images;
+  useEffect(() => () => imagesRef.current.forEach((image) => URL.revokeObjectURL(image.url)), []);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // Synchronous re-entry guard: `submitting` state updates async, so mashing
   // Enter fires handleSubmit several times before the first re-render. A ref
@@ -144,10 +157,13 @@ export function UniversalInput({
     if (!trimmed && images.length === 0) return;
     submittingRef.current = true;
     setSubmitting(true);
+    setSubmitError(null);
     try {
       await onSubmit(trimmed, images.length > 0 ? images.map((i) => i.file) : undefined);
       setInput("");
       clearImages();
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : String(error));
     } finally {
       submittingRef.current = false;
       setSubmitting(false);
@@ -170,8 +186,8 @@ export function UniversalInput({
   if (loading) {
     return (
       <div className="panel anim d2 mb-6 flex gap-2 items-start" aria-busy="true">
-        <div className="flex-1 h-6 bg-paper-warm/60 animate-pulse rounded" />
-        <div className="shrink-0 h-7 w-[100px] bg-paper-warm/60 animate-pulse rounded" />
+        <div className="flex-1 h-6 bg-ink/[0.07] animate-pulse rounded" />
+        <div className="shrink-0 h-7 w-[100px] bg-ink/[0.07] animate-pulse rounded" />
       </div>
     );
   }
@@ -180,6 +196,7 @@ export function UniversalInput({
     <form onSubmit={handleSubmit} className="panel anim d2 mb-6 space-y-2">
       <div className="flex gap-2 items-start">
         <textarea
+          aria-label={placeholder}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -220,6 +237,11 @@ export function UniversalInput({
           {submitting ? "Uploading" : "Process"}
         </button>
       </div>
+      {submitError && (
+        <p role="alert" className="text-[12px] text-decline">
+          {submitError}
+        </p>
+      )}
       {images.length > 0 && (
         <div className="flex items-center gap-2">
           <div className="flex gap-2 overflow-x-auto py-1">
@@ -241,7 +263,7 @@ export function UniversalInput({
               </div>
             ))}
           </div>
-          <span className="mono text-[10px] text-ink-4 shrink-0">
+          <span className="mono text-[11px] text-ink-4 shrink-0">
             {images.length} image{images.length === 1 ? "" : "s"} attached
           </span>
         </div>
@@ -346,8 +368,8 @@ export function NewsletterDistribution({
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] tracking-wider text-ink-4">Newsletter distribution</span>
-        <span className="mono text-[9px] text-ink-4">
+        <span className="mono text-[10px] tracking-wider text-ink-4">Newsletter distribution</span>
+        <span className="mono text-[10px] text-ink-4">
           {selected ? (
             <button onClick={() => onSelect(null)} className="text-rust hover:underline">
               {selected} ✕
@@ -478,7 +500,7 @@ export function DateDistribution({
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] tracking-wider text-ink-4">Date distribution</span>
+        <span className="mono text-[10px] tracking-wider text-ink-4">Date distribution</span>
         <div className="flex items-center gap-2">
           {kind === "paper" && (
             <div className="flex items-center gap-0.5 mono text-[8px]">
@@ -495,7 +517,7 @@ export function DateDistribution({
               ))}
             </div>
           )}
-          <span className="mono text-[9px] text-ink-4">
+          <span className="mono text-[10px] text-ink-4">
             {selected ? (
               <button onClick={() => onSelect(null)} className="text-rust hover:underline">
                 {selected} ✕
@@ -566,7 +588,7 @@ export function FeedsButton() {
       <div className="mb-3 flex justify-end">
         <button
           onClick={() => setOpen(true)}
-          className="mono inline-flex items-center gap-1 text-[10px] tracking-wider text-ink-3 hover:text-ink border border-ink/10 hover:border-ink/30 rounded-full px-2.5 py-1 transition-colors"
+          className="mono inline-flex items-center gap-1 text-[11px] tracking-wider text-ink-3 hover:text-ink border border-ink/10 hover:border-ink/30 rounded-full px-2.5 py-1 transition-colors"
         >
           <Rss size={11} /> Feeds
         </button>
@@ -654,7 +676,7 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
             <button
               onClick={submit}
               disabled={busy || !url.trim()}
-              className="mono text-[10px] tracking-wider text-paper bg-ink hover:bg-ink-2 rounded-md px-4 disabled:opacity-30 transition-colors"
+              className="mono text-[11px] tracking-wider text-paper bg-ink hover:bg-ink-2 rounded-md px-4 disabled:opacity-30 transition-colors"
             >
               Add
             </button>
@@ -681,10 +703,10 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
                 />
                 <div className="flex-1 min-w-0">
                   <div className={`text-[12px] truncate ${f.enabled ? "text-ink" : "text-ink-3"}`}>{f.title}</div>
-                  <div className="text-[10px] text-ink-3 truncate">{f.url}</div>
-                  {f.lastError && <div className="text-[10px] text-rust truncate">error: {f.lastError}</div>}
+                  <div className="text-[11px] text-ink-3 truncate">{f.url}</div>
+                  {f.lastError && <div className="text-[11px] text-rust truncate">error: {f.lastError}</div>}
                 </div>
-                <span className="text-[10px] text-ink-3 shrink-0 mono" title="items seen last poll">
+                <span className="text-[11px] text-ink-3 shrink-0 mono" title="items seen last poll">
                   {f.itemCount ?? 0}
                 </span>
                 <button onClick={() => removeFeed({ id: f._id })} className="text-ink-3 hover:text-rust" title="remove">
@@ -696,11 +718,11 @@ function FeedsModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex items-center justify-between mt-4 gap-3">
-          <span className="text-[10px] text-ink-2 truncate">{msg}</span>
+          <span className="text-[11px] text-ink-2 truncate">{msg}</span>
           <button
             onClick={poll}
             disabled={busy}
-            className="mono text-[10px] tracking-wider text-ink hover:text-paper hover:bg-ink border border-ink/30 rounded-full px-3 py-1 disabled:opacity-30 transition-colors shrink-0"
+            className="mono text-[11px] tracking-wider text-ink hover:text-paper hover:bg-ink border border-ink/30 rounded-full px-3 py-1 disabled:opacity-30 transition-colors shrink-0"
           >
             Poll now
           </button>
@@ -797,8 +819,8 @@ export function ScoreDistribution({ kind, archived }: { kind: "paper" | "article
   return (
     <div className="panel mb-3 anim d2">
       <div className="flex items-center justify-between mb-1">
-        <span className="mono text-[9px] tracking-wider text-ink-4">Score distribution</span>
-        <span className="mono text-[9px] text-ink-4">
+        <span className="mono text-[10px] tracking-wider text-ink-4">Score distribution</span>
+        <span className="mono text-[10px] text-ink-4">
           n {stats.count} · avg <span className="text-rust">{stats.avg.toFixed(1)}</span> · p50{" "}
           <span className="text-rust">{q50.toFixed(1)}</span> · {stats.min.toFixed(1)} to {stats.max.toFixed(1)}
         </span>
@@ -869,9 +891,9 @@ export function JobListSkeleton({ count = 4 }: { count?: number }) {
     <div className="space-y-0" aria-busy="true">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="ruled py-3 px-2 flex items-center gap-3">
-          <div className="w-20 h-3 bg-paper-warm/60 animate-pulse rounded" />
-          <div className="flex-1 h-3 bg-paper-warm/60 animate-pulse rounded" />
-          <div className="w-16 h-3 bg-paper-warm/60 animate-pulse rounded" />
+          <div className="w-20 h-3 bg-ink/[0.07] animate-pulse rounded" />
+          <div className="flex-1 h-3 bg-ink/[0.07] animate-pulse rounded" />
+          <div className="w-16 h-3 bg-ink/[0.07] animate-pulse rounded" />
         </div>
       ))}
     </div>
@@ -998,52 +1020,6 @@ export function ContentModal({ jobId, onClose }: { jobId: Id<"jobs">; onClose: (
   );
 }
 
-// ── Diff Block ─────────────────────────────────────────────────────────
-
-function DiffSection({ text, variant }: { text: string | undefined; variant: "context" | "add" }) {
-  if (!text?.trim()) {
-    return (
-      <div className="px-3 py-1 bg-paper-warm/30">
-        <span className="mono text-[10px] text-ink-4">···</span>
-      </div>
-    );
-  }
-  const bg = variant === "add" ? "bg-sage-dim" : "bg-paper-warm/30";
-  const border = variant === "add" ? "border-l-2 border-sage" : "";
-  const prefix = variant === "add" ? "+" : " ";
-  const prefixColor = variant === "add" ? "text-sage" : "text-ink-4";
-  const textColor =
-    variant === "add"
-      ? "[&_a]:text-rust [&_h1]:serif [&_h2]:serif [&_h3]:serif"
-      : "text-ink-3 [&_a]:text-ink-3 [&_h1]:text-ink-3 [&_h2]:text-ink-3 [&_h3]:text-ink-3 [&_p]:text-ink-3";
-  return (
-    <div className={`flex ${bg} ${border}`}>
-      <span className={`shrink-0 w-6 text-center mono text-xs leading-6 select-none ${prefixColor}`}>{prefix}</span>
-      <div className={`flex-1 min-w-0 px-2 py-1 prose prose-sm max-w-none break-words ${textColor}`}>
-        <MdNotion>{text}</MdNotion>
-      </div>
-    </div>
-  );
-}
-
-function DiffBlock({
-  contextBefore,
-  content,
-  contextAfter,
-}: {
-  contextBefore?: string;
-  content: string;
-  contextAfter?: string;
-}) {
-  return (
-    <div className="mt-2 border border-rule overflow-hidden text-sm">
-      <DiffSection text={contextBefore} variant="context" />
-      <DiffSection text={content} variant="add" />
-      <DiffSection text={contextAfter} variant="context" />
-    </div>
-  );
-}
-
 // ── Suggestion View ────────────────────────────────────────────────────
 
 function scorePct(score: number) {
@@ -1078,7 +1054,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
   return (
     <div className="space-y-8 py-2">
       <section>
-        <div className="mono text-[10px] tracking-wider text-ink-4 mb-3">Related research</div>
+        <div className="mono text-[11px] tracking-wider text-ink-4 mb-3">Related research</div>
         {links === undefined ? (
           <BlockSkeleton rows={2} />
         ) : links.length === 0 ? (
@@ -1098,9 +1074,9 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                     <div className="text-[13px] text-ink-2 mt-1 leading-relaxed">{l.reason}</div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    <span className="mono text-[10px] text-ink-4">{scorePct(l.score)}</span>
+                    <span className="mono text-[11px] text-ink-4">{scorePct(l.score)}</span>
                     {l.status === "linked" ? (
-                      <span className="mono text-[9px] tracking-wider text-sage px-1.5 py-0.5">linked</span>
+                      <span className="mono text-[10px] tracking-wider text-sage px-1.5 py-0.5">linked</span>
                     ) : (
                       <>
                         <button
@@ -1128,7 +1104,7 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
       </section>
 
       <section>
-        <div className="mono text-[10px] tracking-wider text-ink-4 mb-3">Related papers</div>
+        <div className="mono text-[11px] tracking-wider text-ink-4 mb-3">Related papers</div>
         {related === null ? (
           <BlockSkeleton rows={3} />
         ) : related.length === 0 ? (
@@ -1155,8 +1131,8 @@ function PaperSuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  {p.type && <span className="mono text-[9px] tracking-wider text-ink-4">{p.type}</span>}
-                  <span className="mono text-[10px] text-ink-4">{scorePct(p.score)}</span>
+                  {p.type && <span className="mono text-[10px] tracking-wider text-ink-4">{p.type}</span>}
+                  <span className="mono text-[11px] text-ink-4">{scorePct(p.score)}</span>
                 </div>
               </div>
             ))}
@@ -1257,7 +1233,7 @@ function SuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                 <div className="flex gap-1 shrink-0">
                   <button
                     onClick={() => approveAndExecute({ suggestionId: s._id })}
-                    className="p-1.5 text-slate hover:bg-slate-dim transition-colors"
+                    className="rounded-full bg-accept p-1.5 text-white transition hover:brightness-110"
                     title="Approve"
                   >
                     <Check size={14} />
@@ -1269,7 +1245,7 @@ function SuggestionView({ jobId }: { jobId: Id<"jobs"> }) {
                         status: "rejected",
                       })
                     }
-                    className="p-1.5 text-ink-3 hover:bg-paper-warm transition-colors"
+                    className="rounded-full bg-decline p-1.5 text-white transition hover:brightness-110"
                     title="Reject"
                   >
                     <X size={14} />
@@ -1327,7 +1303,7 @@ function ExecutionView({ jobId }: { jobId: Id<"jobs"> }) {
       ))}
       {rejected.length > 0 && (
         <div className="pt-4">
-          <p className="mono text-[10px] tracking-wider text-ink-4 mb-2">Rejected</p>
+          <p className="mono text-[11px] tracking-wider text-ink-4 mb-2">Rejected</p>
           {rejected.map((s) => (
             <div key={s._id} className="py-2 flex items-center gap-2 text-ink-4">
               <Minus size={12} />
@@ -1488,7 +1464,7 @@ export function JobRow({
               return (
                 <div key={i} className="text-xs text-ink-2 leading-relaxed flex gap-1.5">
                   {labelText ? (
-                    <span className="mono text-[9px] tracking-wider text-ink-4 shrink-0 w-14 mt-0.5">{labelText}</span>
+                    <span className="mono text-[10px] tracking-wider text-ink-4 shrink-0 w-14 mt-0.5">{labelText}</span>
                   ) : (
                     <span className="text-ink-4 shrink-0">•</span>
                   )}
@@ -1497,7 +1473,7 @@ export function JobRow({
               );
             })}
             {paperBadge && (
-              <div className="mt-2 pt-2 border-t border-rule-light flex items-center gap-3 mono text-[10px]">
+              <div className="mt-2 pt-2 border-t border-rule-light flex items-center gap-3 mono text-[11px]">
                 {paperBadge.overall != null && (
                   <span className="text-ink-3">
                     <span className="text-ink-4">overall</span>{" "}
@@ -1509,7 +1485,7 @@ export function JobRow({
               </div>
             )}
             {articleBadge && (
-              <div className="mt-2 pt-2 border-t border-rule-light space-y-1 mono text-[10px]">
+              <div className="mt-2 pt-2 border-t border-rule-light space-y-1 mono text-[11px]">
                 <div className="flex items-center gap-3">
                   <span className="text-ink-3">
                     <span className="text-ink-4">overall</span>{" "}
@@ -1576,7 +1552,7 @@ export function JobRow({
               onClick={(e) => e.stopPropagation()}
               onMouseEnter={hasTldr ? openTldr : undefined}
               onMouseLeave={hasTldr ? scheduleCloseTldr : undefined}
-              className="mono text-xs text-rust hover:underline"
+              className="text-[13.5px] font-medium text-ink hover:text-rust hover:underline"
             >
               {label}
             </a>
@@ -1588,7 +1564,7 @@ export function JobRow({
               }}
               onMouseEnter={hasTldr ? openTldr : undefined}
               onMouseLeave={hasTldr ? scheduleCloseTldr : undefined}
-              className="mono text-xs text-rust hover:underline cursor-pointer"
+              className="text-[13.5px] font-medium text-ink hover:text-rust hover:underline cursor-pointer"
             >
               {label}
             </span>
@@ -1596,7 +1572,7 @@ export function JobRow({
             <span
               onMouseEnter={hasTldr ? openTldr : undefined}
               onMouseLeave={hasTldr ? scheduleCloseTldr : undefined}
-              className="mono text-xs text-ink-2"
+              className="text-[13.5px] text-ink-2"
             >
               {label}
             </span>
@@ -1604,7 +1580,7 @@ export function JobRow({
         </span>
         {job.source && (
           <span
-            className="mono text-[9px] tracking-wider px-1.5 py-0.5 text-sage bg-sage/10 shrink-0 rounded-full max-w-[28%] truncate flex items-center gap-1"
+            className="mono text-[10px] tracking-wider px-1.5 py-0.5 text-sage bg-sage/10 shrink-0 rounded-full max-w-[28%] truncate flex items-center gap-1"
             title={`source: ${job.source}`}
           >
             <Rss size={8} />
@@ -1616,12 +1592,12 @@ export function JobRow({
             <AgentIcon provider={job.provider} size={11} />
           </span>
         )}
-        <span className="mono text-[9px] text-ink-4 shrink-0">
+        <span className="mono text-[10px] text-ink-4 shrink-0">
           {new Date(job.createdAt).toLocaleDateString("en", { month: "short", day: "numeric" })}
         </span>
-        <StatusBadge status={job.status} />
+        {job.status !== "suggested" && <StatusBadge status={job.status} />}
         {job.tldrPending && (
-          <span className="mono text-[9px] tracking-wider px-1.5 py-0.5 text-ochre bg-ochre-dim shrink-0 flex items-center gap-1 rounded-full">
+          <span className="mono text-[10px] tracking-wider px-1.5 py-0.5 text-ochre bg-ochre-dim shrink-0 flex items-center gap-1 rounded-full">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-ochre animate-pulse" />
             TL;DR
           </span>
@@ -1683,7 +1659,7 @@ export function JobRow({
         <div className="px-2 pb-4">
           {job.imageId &&
             (imageUrls === undefined ? (
-              <div className="mb-3 h-40 rounded-lg bg-paper-warm/60 animate-pulse" />
+              <div className="mb-3 h-40 rounded-lg bg-ink/[0.07] animate-pulse" />
             ) : (
               imageCount > 0 && (
                 <div className="mb-3 flex gap-2 overflow-x-auto pb-1">

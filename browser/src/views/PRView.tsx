@@ -37,13 +37,13 @@ function RepoTaskInput({ repo }: { repo: string }) {
       {localChats.length > 0 && (
         <div className="space-y-1 mb-2">
           {localChats.map((msg, i) => (
-            <div key={i} className={`mono text-[10px] ${msg.role === "user" ? "text-ink-3" : "text-ink-2"}`}>
+            <div key={i} className={`mono text-[11px] ${msg.role === "user" ? "text-ink-3" : "text-ink-2"}`}>
               <span className="text-ink-4">{msg.role === "user" ? "> " : "  "}</span>
               {msg.content}
             </div>
           ))}
           {acting && (
-            <div className="flex items-center gap-1 mono text-[10px] text-ink-4">
+            <div className="flex items-center gap-1 mono text-[11px] text-ink-4">
               <Loader2 size={8} className="animate-spin" /> working...
             </div>
           )}
@@ -67,12 +67,12 @@ function RepoTaskInput({ repo }: { repo: string }) {
           }}
           rows={input.split("\n").length || 1}
           placeholder="Task for this repo... (shift+enter for newline)"
-          className="flex-1 bg-transparent outline-none mono text-[10px] text-ink-2 placeholder:text-ink-4 py-1 border-b border-rule-light focus:border-rust transition-colors resize-none"
+          className="flex-1 bg-transparent outline-none mono text-[11px] text-ink-2 placeholder:text-ink-4 py-1 border-b border-rule-light focus:border-rust transition-colors resize-none"
         />
         <button
           type="submit"
           disabled={!input.trim() || acting}
-          className="mono text-[9px] px-1.5 py-0.5 w-[32px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
+          className="mono text-[10px] px-1.5 py-0.5 w-[32px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
         >
           {acting ? <Loader2 size={10} className="animate-spin" /> : "run"}
         </button>
@@ -87,7 +87,7 @@ function PRChatHistory({ url, isFixing }: { url: string; isFixing: boolean }) {
     if (isFixing) {
       return (
         <div className="px-3 pb-1 ml-5">
-          <div className="flex items-center gap-1 mono text-[10px] text-ink-4">
+          <div className="flex items-center gap-1 mono text-[11px] text-ink-4">
             <Loader2 size={8} className="animate-spin" /> working...
           </div>
         </div>
@@ -279,7 +279,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="mono text-[10px] text-ink-4 flex items-center gap-2">
+        <span className="mono text-[11px] text-ink-4 flex items-center gap-2">
           {totalPRs} open across {repos.length} repos
           {topCounts.green > 0 && (
             <span className="text-green-800 dark:text-green-400">{topCounts.green} mergeable</span>
@@ -296,7 +296,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
       <div className="space-y-4">
         {Object.entries(byOwner).map(([owner, ownerRepos]) => (
           <div key={owner}>
-            <div className="mono text-[10px] text-ink-4 tracking-wider pb-1 mb-1 border-b border-rule-light flex items-center gap-2">
+            <div className="mono text-[11px] text-ink-4 tracking-wider pb-1 mb-1 border-b border-rule-light flex items-center gap-2">
               {owner}
               <span>{ownerRepos.reduce((s, [, p]) => s + p.length, 0)}</span>
               {(() => {
@@ -333,7 +333,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                       >
                         {repo}
                       </a>
-                      <span className="mono text-[10px] ml-auto flex items-center gap-1.5">
+                      <span className="mono text-[11px] ml-auto flex items-center gap-1.5">
                         {(() => {
                           const c = prCounts(prs);
                           return (
@@ -379,23 +379,23 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                     #{pr.number} {pr.title}
                                   </a>
                                   {(prFixing[pr.id] || workingPrUrls.has(pr.url)) && (
-                                    <span className="flex items-center gap-1 mono text-[10px] text-yellow-700 dark:text-yellow-400">
+                                    <span className="flex items-center gap-1 mono text-[11px] text-yellow-700 dark:text-yellow-400">
                                       <Loader2 size={10} className="animate-spin" /> working...
                                     </span>
                                   )}
                                   <div className="flex items-center gap-2 mt-0.5 flex-wrap overflow-hidden">
-                                    <span className="mono text-[10px] text-ink-4">{pr.author}</span>
+                                    <span className="mono text-[11px] text-ink-4">{pr.author}</span>
                                     {pr.branch && (
                                       <span
-                                        className="mono text-[10px] text-ink-3 bg-paper-warm px-1 rounded truncate max-w-[200px]"
+                                        className="mono text-[11px] text-ink-3 bg-paper-warm px-1 rounded truncate max-w-[200px]"
                                         title={pr.branch}
                                       >
                                         {pr.branch}
                                       </span>
                                     )}
-                                    <span className="mono text-[10px] text-ink-4">{timeAgo(pr.updatedAt)}</span>
+                                    <span className="mono text-[11px] text-ink-4">{timeAgo(pr.updatedAt)}</span>
                                     {pr.comments > 0 && (
-                                      <span className="flex items-center gap-0.5 mono text-[10px] text-ink-4">
+                                      <span className="flex items-center gap-0.5 mono text-[11px] text-ink-4">
                                         <MessageSquare size={8} />
                                         {pr.comments}
                                       </span>
@@ -404,14 +404,14 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                       const c = checks[pr.id];
                                       if (!c)
                                         return (
-                                          <span className="flex items-center gap-0.5 mono text-[10px] text-ink-4">
+                                          <span className="flex items-center gap-0.5 mono text-[11px] text-ink-4">
                                             <Loader2 size={8} className="animate-spin" />
                                           </span>
                                         );
                                       if (c.checksState === "loading" || c.checksTotal === 0) return null;
                                       return (
                                         <span
-                                          className={`flex items-center gap-0.5 mono text-[10px] ${
+                                          className={`flex items-center gap-0.5 mono text-[11px] ${
                                             c.checksState === "success"
                                               ? "text-green-800 dark:text-green-400"
                                               : c.checksState === "failure"
@@ -433,24 +433,24 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                       );
                                     })()}
                                     {pr.changedFiles > 0 && (
-                                      <span className="mono text-[10px] text-ink-2">{pr.changedFiles} files</span>
+                                      <span className="mono text-[11px] text-ink-2">{pr.changedFiles} files</span>
                                     )}
                                     {pr.commits > 0 && (
-                                      <span className="mono text-[10px] text-ink-2">{pr.commits} commits</span>
+                                      <span className="mono text-[11px] text-ink-2">{pr.commits} commits</span>
                                     )}
                                     {(pr.additions > 0 || pr.deletions > 0) && (
-                                      <span className="mono text-[10px]">
+                                      <span className="mono text-[11px]">
                                         <span className="text-green-800 dark:text-green-400">+{pr.additions}</span>
                                         <span className="text-red-500 ml-0.5">-{pr.deletions}</span>
                                       </span>
                                     )}
                                     {pr.draft && (
-                                      <span className="mono text-[9px] text-ink-4 bg-paper-warm px-1 rounded">
+                                      <span className="mono text-[10px] text-ink-4 bg-paper-warm px-1 rounded">
                                         draft
                                       </span>
                                     )}
                                     {pr.labels.map((l) => (
-                                      <span key={l} className="mono text-[9px] text-ink-4 bg-paper-warm px-1 rounded">
+                                      <span key={l} className="mono text-[10px] text-ink-4 bg-paper-warm px-1 rounded">
                                         {l}
                                       </span>
                                     ))}
@@ -458,10 +458,10 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                 </div>
                                 <div className="flex items-center gap-1 shrink-0">
                                   {(pr.mergeable === false || checks[pr.id]?.mergeable === false) && (
-                                    <span className="mono text-[9px] text-red-500 px-1">conflict</span>
+                                    <span className="mono text-[10px] text-red-500 px-1">conflict</span>
                                   )}
                                   {pr.behindBy > 0 && pr.mergeable !== false && (
-                                    <span className="mono text-[9px] text-yellow-700 dark:text-yellow-400 px-1">
+                                    <span className="mono text-[10px] text-yellow-700 dark:text-yellow-400 px-1">
                                       behind
                                     </span>
                                   )}
@@ -498,7 +498,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                             return n;
                                           });
                                         }}
-                                        className="mono text-[9px] px-1.5 py-0.5 w-[42px] h-[20px] flex items-center justify-center bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
+                                        className="mono text-[10px] px-1.5 py-0.5 w-[42px] h-[20px] flex items-center justify-center bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
                                       >
                                         {acting.has(`merge-${pr.id}`) ? (
                                           <Loader2 size={10} className="animate-spin" />
@@ -539,7 +539,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                         return n;
                                       });
                                     }}
-                                    className="mono text-[9px] px-1.5 py-0.5 w-[46px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-50"
+                                    className="mono text-[10px] px-1.5 py-0.5 w-[46px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-50"
                                   >
                                     {acting.has(`rebase-${pr.id}`) ? (
                                       <Loader2 size={10} className="animate-spin" />
@@ -564,7 +564,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                         return n;
                                       });
                                     }}
-                                    className="mono text-[9px] px-1.5 py-0.5 w-[36px] h-[20px] flex items-center justify-center text-ink-2 bg-paper-warm rounded hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50"
+                                    className="mono text-[10px] px-1.5 py-0.5 w-[36px] h-[20px] flex items-center justify-center text-ink-2 bg-paper-warm rounded hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50"
                                   >
                                     {acting.has(`close-${pr.id}`) ? (
                                       <Loader2 size={10} className="animate-spin" />
@@ -616,12 +616,12 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                   value={prInputs[pr.id] || ""}
                                   onChange={(e) => setPrInputs((p) => ({ ...p, [pr.id]: e.target.value }))}
                                   placeholder="Ask or describe fix..."
-                                  className="flex-1 bg-transparent outline-none mono text-[10px] text-ink-2 placeholder:text-ink-4 py-1 border-b border-rule-light focus:border-rust transition-colors"
+                                  className="flex-1 bg-transparent outline-none mono text-[11px] text-ink-2 placeholder:text-ink-4 py-1 border-b border-rule-light focus:border-rust transition-colors"
                                 />
                                 <button
                                   type="submit"
                                   disabled={!(prInputs[pr.id] || "").trim() || acting.has(`ask-${pr.id}`)}
-                                  className="mono text-[9px] px-1.5 py-0.5 w-[28px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
+                                  className="mono text-[10px] px-1.5 py-0.5 w-[28px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
                                 >
                                   {acting.has(`ask-${pr.id}`) ? <Loader2 size={10} className="animate-spin" /> : "ask"}
                                 </button>
@@ -659,7 +659,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                       return n;
                                     });
                                   }}
-                                  className="mono text-[9px] px-1.5 py-0.5 w-[28px] h-[20px] flex items-center justify-center text-rust bg-paper-warm rounded hover:bg-rust hover:text-white transition-colors disabled:opacity-30"
+                                  className="mono text-[10px] px-1.5 py-0.5 w-[28px] h-[20px] flex items-center justify-center text-rust bg-paper-warm rounded hover:bg-rust hover:text-white transition-colors disabled:opacity-30"
                                 >
                                   {acting.has(`fix-input-${pr.id}`) ? (
                                     <Loader2 size={10} className="animate-spin" />
@@ -700,7 +700,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
                                       return n;
                                     });
                                   }}
-                                  className="mono text-[9px] px-1.5 py-0.5 w-[32px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
+                                  className="mono text-[10px] px-1.5 py-0.5 w-[32px] h-[20px] flex items-center justify-center text-ink-3 bg-paper-warm rounded hover:text-ink transition-colors disabled:opacity-30"
                                 >
                                   {acting.has(`eval-${pr.id}`) ? (
                                     <Loader2 size={10} className="animate-spin" />
@@ -720,7 +720,7 @@ export function PRView({ prData, focus }: { prData: ReturnType<typeof usePRData>
               {!showAllRepos.has(owner) && ownerRepos.length > REPOS_PER_PAGE && (
                 <button
                   onClick={() => setShowAllRepos((p) => new Set(p).add(owner))}
-                  className="mono text-[10px] text-ink-4 hover:text-ink-2 transition-colors px-2 py-2"
+                  className="mono text-[11px] text-ink-4 hover:text-ink-2 transition-colors px-2 py-2"
                 >
                   Show {ownerRepos.length - REPOS_PER_PAGE} more repos
                 </button>

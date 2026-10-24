@@ -14,7 +14,7 @@ function Bookmark({ href, children }: { href: string; children: React.ReactNode 
     >
       <div className="flex-1 px-3 py-2 min-w-0">
         <div className="text-ink text-sm truncate">{children}</div>
-        <div className="mono text-[10px] text-ink-4 truncate mt-0.5">{href}</div>
+        <div className="mono text-[11px] text-ink-4 truncate mt-0.5">{href}</div>
       </div>
       <div className="w-9 shrink-0 bg-paper-warm/50 border-l border-rule-light flex items-center justify-center">
         <ExternalLink size={12} className="text-ink-4" />
