@@ -160,7 +160,11 @@ const newsletterDays = (rows: number[][]) =>
 
 export const queries: Record<string, unknown> = {
   "jobs:count": 11,
-  "settings:get": { tabs: ["newsletter", "paper", "article", "pr", "research", "vocab"] },
+  "settings:get": {
+    tabs: ["newsletter", "paper", "article", "pr", "research", "vocab"],
+    onboarding: { inputs: ["links", "gmail", "github"], outputs: ["notion"], doneAt: 1 },
+  },
+  "connectors:list": [],
   "summaries:scoreStats": { paper: scoreBuckets(paperScores), article: scoreBuckets(articleScores) },
   "jobs:jobDateStats": {
     created: dateSeries([2, 5, 3, 8, 6, 4, 7, 9, 5, 3, 6, 8, 4, 7]),

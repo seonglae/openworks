@@ -82,7 +82,7 @@ export const get = query({
       updatedAt: 0,
       github: undefined,
       google: undefined,
-      notion: undefined,
+      onboarding: undefined,
     };
   },
 });
@@ -182,27 +182,44 @@ export const setGoogle = mutation({
   },
 });
 
-export const setNotion = mutation({
+// The onboarding's answers as it goes, so a sign-in that leaves the page for
+// Notion and comes back resumes where it was. `done` closes it.
+export const saveOnboarding = mutation({
   args: {
-    workspace: v.optional(v.string()),
-    rootPageId: v.optional(v.string()),
-    databaseId: v.optional(v.string()),
-    configured: v.optional(v.boolean()),
+    inputs: v.array(v.string()),
+    outputs: v.array(v.string()),
+    done: v.optional(v.boolean()),
     serviceKey: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
     const existing = await getOrInit(ctx);
-    const { serviceKey: _serviceKey, ...fields } = args;
-    const patch = { notion: { ...(existing?.notion ?? {}), ...fields }, updatedAt: Date.now() };
+    const onboarding = {
+      inputs: args.inputs,
+      outputs: args.outputs,
+      ...(args.done ? { doneAt: Date.now() } : {}),
+    };
     if (existing) {
-      await ctx.db.patch(existing._id, patch);
+      await ctx.db.patch(existing._id, { onboarding, updatedAt: Date.now() });
       return existing._id;
     }
     return await ctx.db.insert("appSettings", {
       slug: DEFAULT_SLUG,
       tabs: defaultTabs(),
-      ...patch,
+      onboarding,
+      updatedAt: Date.now(),
     });
+  },
+});
+
+// Settings' "Run onboarding again": keeps the answers, opens it again.
+export const reopenOnboarding = mutation({
+  args: { serviceKey: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.serviceKey);
+    const existing = await getOrInit(ctx);
+    if (!existing) return;
+    const { inputs = [], outputs = [] } = existing.onboarding ?? {};
+    await ctx.db.patch(existing._id, { onboarding: { inputs, outputs }, updatedAt: Date.now() });
   },
 });

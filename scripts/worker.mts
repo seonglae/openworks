@@ -6,8 +6,8 @@
  */
 
 import { execSync, execFile, execFileSync } from "child_process";
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { resolve } from "path";
+import { readFileSync, statSync, writeFileSync, mkdirSync } from "fs";
+import { join, resolve } from "path";
 import { ORDERS, orderFor, nextProvider as actorNextProvider, runActor, spawnProvider } from "./actor.mts";
 import { embed, EMBED_MODEL } from "./embed.mts";
 import { buildMime, digestsDue, gwsSendArgs, renderDigest, type DigestPR } from "./digest.mts";
@@ -1755,7 +1755,7 @@ function pollChats() {
 
 // ── Setup queue (install + verify CLIs for plug-n-play) ─────────────────
 
-type SetupKind = "install_gh" | "verify_gh" | "oauth_gh" | "install_gws" | "verify_gws";
+type SetupKind = "install_gh" | "verify_gh" | "oauth_gh" | "install_gws" | "verify_gws" | "verify_obsidian";
 
 // gh's public OAuth client_id — same one the official gh CLI uses for its
 // own device-code login. Public per github.com/cli/cli source. Scopes match
@@ -1787,9 +1787,32 @@ function tailLog(s: string, n = 4000): string {
   return "…" + s.slice(s.length - n);
 }
 
+// An Obsidian vault is a folder holding `.obsidian/`. Counts the notes a level
+// or two down so Settings can say it found the right one.
+function checkVault(raw: string): Record<string, unknown> {
+  const path = resolve(raw.replace(/^~(?=\/|$)/, os.homedir()));
+  if (!existsSync(path) || !statSync(path).isDirectory()) return { isVault: false, reason: `no folder at ${path}` };
+  if (!existsSync(join(path, ".obsidian"))) return { isVault: false, reason: `${path} has no .obsidian folder` };
+  let notes = 0;
+  const walk = (dir: string, depth: number) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith(".")) continue;
+      if (entry.isDirectory() && depth < 2) walk(join(dir, entry.name), depth + 1);
+      else if (entry.name.endsWith(".md")) notes++;
+    }
+  };
+  walk(path, 0);
+  return { isVault: true, path, notes };
+}
+
 async function runSetup(
   kind: SetupKind,
+  params?: string,
 ): Promise<{ result: Record<string, unknown>; stdout: string; ok: boolean; error?: string }> {
+  if (kind === "verify_obsidian") {
+    const vaultPath = (JSON.parse(params ?? "{}") as { vaultPath?: string }).vaultPath ?? "";
+    return { result: checkVault(vaultPath), stdout: "", ok: true };
+  }
   const plat = detectPlatform();
   let stdoutBuf = "";
   const collect = (label: string, r: { code: number; stdout: string; stderr: string }) => {
@@ -2026,7 +2049,7 @@ async function handleSetup(pendingKnown = false) {
   }
   const raw = convexRun("setup:claim");
   if (!raw || raw === "null") return;
-  let req: { _id: string; kind: SetupKind } | null = null;
+  let req: { _id: string; kind: SetupKind; params?: string } | null = null;
   try {
     req = JSON.parse(raw);
   } catch {
@@ -2036,7 +2059,7 @@ async function handleSetup(pendingKnown = false) {
   setupRunning = true;
   try {
     console.log(`[setup] running ${req.kind} (${req._id})`);
-    const r = req.kind === "oauth_gh" ? await runOauthGh(req._id) : await runSetup(req.kind);
+    const r = req.kind === "oauth_gh" ? await runOauthGh(req._id) : await runSetup(req.kind, req.params);
     convexRun(
       "setup:complete",
       JSON.stringify({

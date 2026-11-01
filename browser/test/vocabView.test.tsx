@@ -258,14 +258,14 @@ describe("vocab deck", () => {
 
 describe("vocab notion sync", () => {
   it("prefills the saved database id and exports to it", async () => {
-    convex.queries.set("settings:get", { notion: { databaseId: "db-1" } });
+    convex.queries.set("connectors:list", [{ type: "notion", config: { databaseId: "db-1" } }]);
     convex.fn("notion:exportVocab").mockResolvedValue({ count: 7 });
     render(<VocabView />);
     expect(screen.getByPlaceholderText("Notion database id")).toHaveValue("db-1");
 
     await click(screen.getByRole("button", { name: "export to Notion" }));
 
-    expect(convex.fn("settings:setNotion")).toHaveBeenCalledWith({ databaseId: "db-1" });
+    expect(convex.fn("connectors:setNotionConfig")).toHaveBeenCalledWith({ databaseId: "db-1" });
     expect(convex.fn("notion:exportVocab")).toHaveBeenCalledWith({ databaseId: "db-1" });
     expect(await screen.findByText("exported 7 to Notion")).toBeInTheDocument();
   });

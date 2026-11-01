@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { action, internalMutation } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { requireOwner } from "./auth";
+import { notionToken } from "./connectors";
 
 // Notion accepts a page/database id either hyphenated or bare, but its REST
 // paths want it bare. Stripping it inline was written out at every call site.
@@ -204,8 +205,7 @@ export const executeNotionInsert = action({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const cleanPageId = bareId(args.pageId);
     const blocks = parseContentToBlocks(args.content);
@@ -230,8 +230,7 @@ export const exportVocab = action({
   args: { databaseId: v.string(), serviceKey: v.optional(v.string()) },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const dbId = bareId(args.databaseId);
 
     const db = await notionFetch(token, `/databases/${dbId}`);
@@ -274,8 +273,7 @@ export const importVocabFromNotion = action({
   args: { pageId: v.string(), serviceKey: v.optional(v.string()) },
   handler: async (ctx, args): Promise<{ databases: number; found: number; imported: number; truncated: boolean }> => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const rootId = bareId(args.pageId);
 
     // Discover databases: child_database blocks under the page, else treat the
@@ -349,8 +347,7 @@ export const approveAndExecute = action({
       status: "approved",
     });
 
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const cleanPageId = bareId(suggestion.pageId);
     const blocks = parseContentToBlocks(suggestion.content);
@@ -380,8 +377,7 @@ export const approveAllAndExecute = action({
     await requireOwner(ctx, args.serviceKey);
     const pending = await ctx.runQuery(internal.suggestions.internalGetPendingByJob, { jobId: args.jobId });
 
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     for (const suggestion of pending) {
       await ctx.runMutation(internal.suggestions.internalSetStatus, {
@@ -425,8 +421,7 @@ export const importInsightsFromNotion = action({
   args: { pageId: v.string(), serviceKey: v.optional(v.string()) },
   handler: async (ctx, args): Promise<{ found: number; imported: number; skipped: number }> => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const rootId = bareId(args.pageId);
     const blocks = await fetchAllBlocks(token, rootId);
     const TYPES = new Set([
@@ -467,8 +462,7 @@ export const placeInsight = action({
       throw new Error("Insight has no Notion target to place");
     }
 
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const cleanPageId = bareId(insight.notionPageId);
     const blocks = parseContentToBlocks(insight.notionContent);
@@ -491,8 +485,7 @@ export const searchPages = action({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const data = await notionFetch(token, "/search", "POST", {
       query: args.query,
@@ -543,8 +536,7 @@ export const fetchPageBlocks = action({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const cleanPageId = bareId(args.pageId);
     const blocks = await fetchAllBlocks(token, cleanPageId);
@@ -564,8 +556,7 @@ export const fetchPageAsMarkdown = action({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
 
     const cleanPageId = bareId(args.pageId);
     const blocks = (await fetchAllBlocks(token, cleanPageId)) as Record<string, unknown>[];
@@ -636,8 +627,7 @@ export const getDatabaseDetails = action({
   args: { dbIds: v.array(v.string()), serviceKey: v.optional(v.string()) },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const results = [];
     for (const dbId of args.dbIds) {
       const cleanId = bareId(dbId);
@@ -656,8 +646,7 @@ export const queryDatabasePages = action({
   args: { dbIds: v.array(v.string()), serviceKey: v.optional(v.string()) },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const results = [];
     for (const dbId of args.dbIds) {
       const cleanId = bareId(dbId);
@@ -690,8 +679,7 @@ export const getPageParent = action({
   },
   handler: async (ctx, args) => {
     await requireOwner(ctx, args.serviceKey);
-    const token = process.env.NOTION_TOKEN;
-    if (!token) throw new Error("NOTION_TOKEN not set");
+    const token = await notionToken(ctx);
     const cleanId = bareId(args.pageId);
     try {
       const res = await notionFetch(token, `/pages/${cleanId}`);

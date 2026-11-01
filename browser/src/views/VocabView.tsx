@@ -30,8 +30,8 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
   const addExpr = useMutation(api.expressions.add);
   const reviewExpr = useMutation(api.expressions.review);
   const removeExpr = useMutation(api.expressions.remove);
-  const settings = useQuery(api.settings.get, {});
-  const setNotion = useMutation(api.settings.setNotion);
+  const connectors = useQuery(api.connectors.list, {});
+  const setNotionConfig = useMutation(api.connectors.setNotionConfig);
   const exportVocab = useAction(api.notion.exportVocab);
   const importFromNotion = useAction(api.notion.importVocabFromNotion);
 
@@ -49,15 +49,16 @@ export function VocabView({ focusId }: { focusId?: string | null }) {
   const [form, setForm] = useState({ en: "", jp: "", reading: "", meaning: "", example: "" });
   const [dbId, setDbId] = useState("");
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const savedDbId = connectors?.find((c) => c.type === "notion")?.config?.databaseId;
   useEffect(() => {
-    if (settings?.notion?.databaseId != null) setDbId(settings.notion.databaseId);
-  }, [settings?.notion?.databaseId]);
+    if (savedDbId != null) setDbId(savedDbId);
+  }, [savedDbId]);
 
   const doExport = async () => {
     if (!dbId.trim()) return;
     setExportMsg("exporting...");
     try {
-      await setNotion({ databaseId: dbId.trim() });
+      await setNotionConfig({ databaseId: dbId.trim() });
       const r = await exportVocab({ databaseId: dbId.trim() });
       setExportMsg(`exported ${r.count} to Notion`);
     } catch (e) {

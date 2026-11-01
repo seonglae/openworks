@@ -13,6 +13,7 @@ const KIND = v.union(
   v.literal("oauth_gh"),
   v.literal("install_gws"),
   v.literal("verify_gws"),
+  v.literal("verify_obsidian"),
 );
 
 export const request = mutation({
@@ -89,6 +90,21 @@ export const complete = mutation({
       error: args.error,
       updatedAt: Date.now(),
     });
+    // A vault check answers its connector row either way: a worker that
+    // could not run it leaves the row in error rather than checking forever.
+    if (row.kind === "verify_obsidian") {
+      const params = row.params ? safeJSON(row.params) : null;
+      const id = params?.connectorId ? ctx.db.normalizeId("connectors", params.connectorId) : null;
+      const result = args.result ? safeJSON(args.result) : null;
+      const ok = args.status === "done" && Boolean(result?.isVault);
+      if (id && (await ctx.db.get(id)))
+        await ctx.db.patch(id, {
+          status: ok ? "connected" : "error",
+          error: ok ? undefined : (args.error ?? result?.reason ?? "not an Obsidian vault"),
+          checkedAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+    }
     // On successful verify, mirror status into appSettings so the UI can
     // render badges without polling setupRequests per tab.
     if (args.status === "done") {

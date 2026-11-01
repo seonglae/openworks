@@ -1,6 +1,7 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
+import { exchangeNotionCode } from "./connectors";
 
 // Single ingest endpoint for mobile clients: a share sheet, a photo-roll sync,
 // anything that can POST bytes with a bearer token. No such client ships here,
@@ -52,6 +53,35 @@ const ingestScreenshot = httpAction(async (ctx, request) => {
   return Response.json({ jobId });
 });
 
+// Where Notion sends the owner back after they pick pages to share. There is
+// no session here: the state Notion carries back is the proof that this
+// deployment started the sign-in, and it works once. Every outcome but a
+// forged or stale state returns to the page the sign-in began on, with
+// `connector=` saying how it went, since an error page would strand the owner
+// outside the app.
+const notionCallback = httpAction(async (ctx, request) => {
+  const params = new URL(request.url).searchParams;
+  const state = params.get("state");
+  const returnTo = state
+    ? await ctx.runMutation(internal.connectors.consumeState, { provider: "notion", state })
+    : null;
+  if (!returnTo) return new Response("unknown or expired sign-in", { status: 400 });
+  const back = (outcome: string) => {
+    const url = new URL(returnTo);
+    url.searchParams.set("connector", outcome);
+    return new Response(null, { status: 302, headers: { Location: url.toString() } });
+  };
+  const code = params.get("code");
+  if (!code) return back("notion-denied");
+  try {
+    await ctx.runMutation(internal.connectors.saveNotion, { auth: "oauth", ...(await exchangeNotionCode(code)) });
+  } catch {
+    return back("notion-error");
+  }
+  return back("notion");
+});
+
 const http = httpRouter();
 http.route({ path: "/screenshot", method: "POST", handler: ingestScreenshot });
+http.route({ path: "/oauth/notion/callback", method: "GET", handler: notionCallback });
 export default http;

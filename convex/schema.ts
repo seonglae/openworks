@@ -3,12 +3,15 @@ import { v } from "convex/values";
 import {
   AGENT_EVENT_TYPES,
   AUTHOR_TYPES,
+  CONNECTOR_AUTHS,
+  CONNECTOR_STATUSES,
   ENTITY_TYPES,
   EXPERIMENT_STATUSES,
   JOB_STATUSES,
   JOB_TYPES,
   PAPER_SOURCES,
   RESEARCH_KINDS,
+  STORED_CONNECTOR_KEYS,
   SUBSCRIPTION_SCOPES,
 } from "@openworks/domain";
 import { literals } from "./validators";
@@ -58,17 +61,59 @@ export default defineSchema({
         lastVerifiedAt: v.optional(v.number()),
       }),
     ),
-    notion: v.optional(
+    // What the owner said comes in and goes out, asked first on a fresh
+    // deployment; `doneAt` unset is what shows the onboarding.
+    onboarding: v.optional(
       v.object({
-        workspace: v.optional(v.string()),
-        rootPageId: v.optional(v.string()),
-        // Target Notion database for tab exports (e.g. vocab sync).
-        databaseId: v.optional(v.string()),
-        configured: v.optional(v.boolean()),
+        inputs: v.array(v.string()),
+        outputs: v.array(v.string()),
+        doneAt: v.optional(v.number()),
       }),
     ),
     updatedAt: v.number(),
   }).index("by_slug", ["slug"]),
+
+  // A connected source or destination of one of the types in @openworks/domain's
+  // CONNECTOR_TYPES: a Notion workspace, an Obsidian vault. Gmail and GitHub
+  // sign in through their CLIs and keep that state in appSettings instead.
+  connectors: defineTable({
+    type: literals(STORED_CONNECTOR_KEYS),
+    name: v.string(),
+    auth: literals(CONNECTOR_AUTHS),
+    status: literals(CONNECTOR_STATUSES),
+    config: v.optional(
+      v.object({
+        // Where Notion search and inserts are kept to, and the database a
+        // tab exports into.
+        rootPageId: v.optional(v.string()),
+        databaseId: v.optional(v.string()),
+        vaultPath: v.optional(v.string()),
+      }),
+    ),
+    // Never sent to a client: connectors:list drops it.
+    secret: v.optional(
+      v.object({
+        accessToken: v.string(),
+        refreshToken: v.optional(v.string()),
+        botId: v.optional(v.string()),
+        workspaceId: v.optional(v.string()),
+      }),
+    ),
+    error: v.optional(v.string()),
+    checkedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_type", ["type"]),
+
+  // A Notion sign-in in flight. The callback has no session, so the state it
+  // carries back is checked against this row, used once, and only within ten
+  // minutes.
+  oauthStates: defineTable({
+    provider: v.string(),
+    state: v.string(),
+    returnTo: v.string(),
+    createdAt: v.number(),
+  }).index("by_state", ["state"]),
 
   // Setup queue — UI enqueues install/verify requests, worker.mts polls and
   // shell-execs them. Mirrors mailboxRequests: pending → running → done|error.
@@ -79,6 +124,7 @@ export default defineSchema({
       v.literal("oauth_gh"),
       v.literal("install_gws"),
       v.literal("verify_gws"),
+      v.literal("verify_obsidian"),
     ),
     // JSON-encoded args (e.g. {"username":"octocat"}).
     params: v.optional(v.string()),

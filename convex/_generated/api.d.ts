@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as contentRevisions from "../contentRevisions.js";
 import type * as agentSubscriptions from "../agentSubscriptions.js";
 import type * as agentTriggers from "../agentTriggers.js";
 import type * as apnsToken from "../apnsToken.js";
@@ -18,6 +17,10 @@ import type * as calendar from "../calendar.js";
 import type * as chats from "../chats.js";
 import type * as cleanup from "../cleanup.js";
 import type * as comments from "../comments.js";
+import type * as connectors from "../connectors.js";
+import type * as contentRevisions from "../contentRevisions.js";
+import type * as contentSnapshot from "../contentSnapshot.js";
+import type * as contentStore from "../contentStore.js";
 import type * as crons from "../crons.js";
 import type * as diet from "../diet.js";
 import type * as digest from "../digest.js";
@@ -50,6 +53,7 @@ import type * as researchPhaseInfer from "../researchPhaseInfer.js";
 import type * as researchRefs from "../researchRefs.js";
 import type * as researchReports from "../researchReports.js";
 import type * as researchSections from "../researchSections.js";
+import type * as researchState from "../researchState.js";
 import type * as researchTables from "../researchTables.js";
 import type * as researchTex from "../researchTex.js";
 import type * as researchVenues from "../researchVenues.js";
@@ -68,7 +72,6 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  contentRevisions: typeof contentRevisions;
   agentSubscriptions: typeof agentSubscriptions;
   agentTriggers: typeof agentTriggers;
   apnsToken: typeof apnsToken;
@@ -78,6 +81,10 @@ declare const fullApi: ApiFromModules<{
   chats: typeof chats;
   cleanup: typeof cleanup;
   comments: typeof comments;
+  connectors: typeof connectors;
+  contentRevisions: typeof contentRevisions;
+  contentSnapshot: typeof contentSnapshot;
+  contentStore: typeof contentStore;
   crons: typeof crons;
   diet: typeof diet;
   digest: typeof digest;
@@ -110,6 +117,7 @@ declare const fullApi: ApiFromModules<{
   researchRefs: typeof researchRefs;
   researchReports: typeof researchReports;
   researchSections: typeof researchSections;
+  researchState: typeof researchState;
   researchTables: typeof researchTables;
   researchTex: typeof researchTex;
   researchVenues: typeof researchVenues;

@@ -4,6 +4,7 @@ import { api } from "../../convex/_generated/api";
 import type { Id, Doc } from "../../convex/_generated/dataModel";
 import { MailboxModal } from "./MailboxModal";
 import { SettingsModal } from "./SettingsModal";
+import { Onboarding } from "./Onboarding";
 import { DrawingsView } from "./DrawingsView";
 import { DietView } from "./views/DietView";
 import { VocabView } from "./views/VocabView";
@@ -454,7 +455,16 @@ export default function App() {
     return () => document.removeEventListener("keydown", onKey);
   }, [activeJobId, showArchived, archiveJob]);
   const [showMailbox, setShowMailbox] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  // Back from a Notion sign-in started in Settings, Settings opens again.
+  const [showSettings, setShowSettings] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("settings") !== "connections") return false;
+    params.delete("settings");
+    params.delete("connector");
+    const query = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+    return true;
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [capture, setCapture] = useState<CaptureSeed | null>(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -704,6 +714,7 @@ export default function App() {
       {latexMenu && <LatexContextMenu menu={latexMenu} onCopy={copyLatex} />}
       {contentModal && <ContentModal jobId={contentModal} onClose={() => setContentModal(null)} />}
       {showMailbox && <MailboxModal onClose={() => setShowMailbox(false)} />}
+      {appSettingsRaw && !appSettingsRaw.onboarding?.doneAt && <Onboarding />}
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
       {capture && (
         <CaptureSheet

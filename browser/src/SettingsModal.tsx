@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { ConnectionsSection } from "./Connections";
 import {
   X,
   GripVertical,
@@ -72,7 +73,7 @@ const TAB_META: Record<TabKey, TabMeta> = {
         label: "Mailbox fetch (optional)",
         detail: "gws CLI authed to your Gmail to pull unread newsletters straight into the queue.",
       },
-      { label: "Notion (optional)", detail: "NOTION_TOKEN env var on the worker for the suggestion-drop step." },
+      { label: "Notion (optional)", detail: "Connect Notion under Connections for the suggestion-drop step." },
     ],
   },
   paper: {
@@ -129,7 +130,10 @@ const TAB_META: Record<TabKey, TabMeta> = {
     icon: Languages,
     blurb: "EN / JP expression study with spaced-repetition review and due reminders.",
     requirements: [
-      { label: "Notion (optional)", detail: "NOTION_TOKEN to export learned expressions to a Notion database." },
+      {
+        label: "Notion (optional)",
+        detail: "Connect Notion under Connections to export learned expressions to a database.",
+      },
     ],
   },
   insights: {
@@ -143,7 +147,7 @@ const TAB_META: Record<TabKey, TabMeta> = {
         label: "Agent CLI",
         detail: "codex / antigravity / claude on PATH to enrich each insight and pick its Notion home.",
       },
-      { label: "NOTION_TOKEN", detail: "Convex env var; required to place a quote block into a Notion page." },
+      { label: "Notion", detail: "Connect it under Connections; required to place a quote block into a page." },
     ],
   },
 };
@@ -524,7 +528,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
   const latestGwsVerify = useQuery(api.setup.latestByKind, { kind: "verify_gws" });
   const requestSetup = useMutation(api.setup.request);
   const setGithub = useMutation(api.settings.setGithub);
-  const setNotion = useMutation(api.settings.setNotion);
+  const reopenOnboarding = useMutation(api.settings.reopenOnboarding);
   const [info, setInfo] = useState<TabKey | null>(null);
 
   // Auto-verify on open if we don't have a recent (≤5 min) result — keeps
@@ -665,6 +669,22 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   ))}
                 </select>
               </div>
+              <ConnectionsSection />
+              <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
+                <div className="flex-1 min-w-0">
+                  <div className="serif text-sm text-ink">Onboarding</div>
+                  <div className="mono text-[11px] text-ink-4">ask again what comes in and goes out</div>
+                </div>
+                <button
+                  onClick={() => {
+                    void reopenOnboarding({});
+                    onClose();
+                  }}
+                  className="mono text-[11px] rounded-full px-2.5 py-1 border border-ink/15 text-ink-2 hover:text-ink"
+                >
+                  Run again
+                </button>
+              </div>
               <GradientStrengthRow />
               <NotificationRow />
               <ReflectiveRow />
@@ -702,7 +722,6 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
           onInstallGws={() => void requestSetup({ kind: "install_gws" })}
           onVerifyGws={() => void requestSetup({ kind: "verify_gws" })}
           onSaveGithubScope={(orgs) => void setGithub({ orgs })}
-          onSaveNotionRoot={(rootPageId) => void setNotion({ rootPageId, configured: rootPageId.length > 0 })}
           onClose={() => setInfo(null)}
         />
       )}
@@ -722,7 +741,6 @@ function InfoPanel({
   onInstallGws,
   onVerifyGws,
   onSaveGithubScope,
-  onSaveNotionRoot,
   onClose,
 }: {
   tab: TabMeta;
@@ -736,7 +754,6 @@ function InfoPanel({
   onInstallGws: () => void;
   onVerifyGws: () => void;
   onSaveGithubScope: (orgs: string) => void;
-  onSaveNotionRoot: (rootPageId: string) => void;
   onClose: () => void;
 }) {
   const Icon = tab.icon;
@@ -796,13 +813,6 @@ function InfoPanel({
                 loginCommand="gws auth login"
                 onInstall={onInstallGws}
                 onVerify={onVerifyGws}
-              />
-              <TextSetting
-                label="Notion root page id"
-                placeholder="32-char page id from the page URL"
-                hint="restricts Notion search/insert to this page subtree. NOTION_TOKEN must be set on the worker env."
-                initial={settings?.notion?.rootPageId ?? ""}
-                onSave={onSaveNotionRoot}
               />
             </>
           )}

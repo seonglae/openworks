@@ -34,7 +34,8 @@ See [Auth and sharing](/docs/auth/).
 | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `OPENWORKS_DIGEST_TO`, `OPENWORKS_DIGEST_HOUR`, `OPENWORKS_APP_URL` | no digest is ever sent                                                          |
 | `GITHUB_TOKEN`                                                      | PR calls are anonymous: no private repos, and the rate limit runs out           |
-| `NOTION_TOKEN`                                                      | insights and newsletters still enrich and score, they just cannot write back    |
+| `NOTION_OAUTH_CLIENT_ID`, `NOTION_OAUTH_CLIENT_SECRET`              | Settings offers no Notion sign-in, only a pasted integration token. Deployment  |
+| `NOTION_TOKEN`                                                      | Notion is connected only from Settings; without either, edits are not written   |
 | `NOTION_INSIGHTS_ROOT`                                              | the agent searches the whole workspace, and picks a worse page the bigger it is |
 | `SCREENSHOT_INGEST_SECRET`                                          | the mobile ingest endpoint answers 503, so no open ingest exists by accident    |
 | `OPENALEX_MAILTO`                                                   | author lookups use the common pool instead of the polite one                    |
@@ -42,6 +43,12 @@ See [Auth and sharing](/docs/auth/).
 | `OUTLOOK_CALENDAR_ID`, `OUTLOOK_EXTRA_CALENDAR_IDS`                 | the sync reads the account's default calendar                                   |
 | `OPENWORKS_USAGE_RETENTION_DAYS`                                    | usage rows are kept 180 days                                                    |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`            | no web push. All three are required for any. Deployment.                        |
+
+## Connectors
+
+Settings, and the onboarding on a fresh deployment, list where content comes in and where it goes: links, the iPhone app, Gmail, GitHub, Notion and Obsidian. Gmail and GitHub sign in through the `gws` and `gh` CLIs on the worker's machine. An Obsidian vault is a folder on that machine, which the worker checks for `.obsidian/`; it connects, but nothing reads or writes through it yet.
+
+Notion connects one of two ways. A pasted internal-integration token works on any deployment. The sign-in button needs a public integration of your own: at notion.so/profile/integrations make one, set its redirect URI to `<your deployment>.convex.site/oauth/notion/callback`, and set its client id and secret as `NOTION_OAUTH_CLIENT_ID` and `NOTION_OAUTH_CLIENT_SECRET` on the deployment. `NOTION_TOKEN`, set on the deployment, is the fallback when no workspace is connected.
 
 ## Machine-local
 
