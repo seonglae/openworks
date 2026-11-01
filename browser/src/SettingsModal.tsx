@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { asUiLanguage } from "@openworks/domain";
 import { ConnectionsSection } from "./Connections";
 import {
   X,
@@ -528,6 +529,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
   const latestGwsVerify = useQuery(api.setup.latestByKind, { kind: "verify_gws" });
   const requestSetup = useMutation(api.setup.request);
   const setGithub = useMutation(api.settings.setGithub);
+  const setUiLanguage = useMutation(api.settings.setUiLanguage);
   const reopenOnboarding = useMutation(api.settings.reopenOnboarding);
   const [info, setInfo] = useState<TabKey | null>(null);
 
@@ -669,7 +671,21 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   ))}
                 </select>
               </div>
-              <ConnectionsSection />
+              <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
+                <div className="flex-1 min-w-0">
+                  <div className="serif text-sm text-ink">Display language</div>
+                  <div className="mono text-[11px] text-ink-4">tab and menu names, apart from what agents write in</div>
+                </div>
+                <select
+                  value={settings.uiLanguage ?? "en"}
+                  onChange={(e) => void setUiLanguage({ uiLanguage: e.target.value === "en" ? "en" : "ko" })}
+                  className="glass border-ink/10 px-2 py-1 mono text-[11px] text-ink outline-none focus:border-rust rounded-full"
+                >
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+              <ConnectionsSection lang={asUiLanguage(settings.uiLanguage)} />
               <div className="flex items-center justify-between px-3 py-3 border-b border-ink/10">
                 <div className="flex-1 min-w-0">
                   <div className="serif text-sm text-ink">Onboarding</div>

@@ -43,8 +43,14 @@ describe("the first-run onboarding", () => {
     convex.settings = fresh();
     render(<Onboarding />);
     expect(screen.getByText("Language")).toBeTruthy();
-    await click("한국어");
-    expect(convex.calls.at(-1)).toEqual(["settings:setLanguage", { language: "ko" }]);
+    await act(async () => {
+      fireEvent.click(screen.getAllByText("한국어")[0]);
+    });
+    expect(convex.calls.at(-1)).toEqual(["settings:setUiLanguage", { uiLanguage: "ko" }]);
+    await act(async () => {
+      fireEvent.click(screen.getAllByText("日本語")[0]);
+    });
+    expect(convex.calls.at(-1)).toEqual(["settings:setLanguage", { language: "ja" }]);
     await click("Next");
 
     expect(screen.getByText("What comes in?")).toBeTruthy();
@@ -74,6 +80,13 @@ describe("the first-run onboarding", () => {
       "settings:saveOnboarding",
       { inputs: ["links", "gmail"], outputs: ["notion"], done: true },
     ]);
+  });
+
+  it("speaks the language the deployment is set to", () => {
+    convex.settings = { ...fresh(), uiLanguage: "ko" };
+    render(<Onboarding />);
+    expect(screen.getByText("언어")).toBeTruthy();
+    expect(screen.getByText("다음")).toBeTruthy();
   });
 
   it("resumes at the connect step when a Notion sign-in returns", async () => {

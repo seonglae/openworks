@@ -2,6 +2,7 @@
 // deployment per user. UI calls `get` to render; mutations upsert the
 // single "default" row.
 
+import { asUiLanguage } from "@openworks/domain";
 import { v } from "convex/values";
 import { mutation, query, type QueryCtx } from "./_generated/server";
 import { requireOwner } from "./auth";
@@ -68,7 +69,7 @@ export const get = query({
         ...row.tabs.filter((t) => (TAB_KEYS as readonly string[]).includes(t.key)),
         ...TAB_KEYS.filter((k) => !known.has(k)).map((k) => ({ key: k, enabled: false })),
       ];
-      return { ...row, language: row.language ?? "en", tabs: merged };
+      return { ...row, language: row.language ?? "en", uiLanguage: asUiLanguage(row.uiLanguage), tabs: merged };
     }
     // Inline default so the UI never sees null while it waits for first write.
     // Carries the same optional integration keys as the stored row: without
@@ -78,6 +79,7 @@ export const get = query({
       _id: null,
       slug: DEFAULT_SLUG,
       language: "en",
+      uiLanguage: "en" as const,
       tabs: defaultTabs(),
       updatedAt: 0,
       github: undefined,
@@ -99,6 +101,24 @@ export const setLanguage = mutation({
     return await ctx.db.insert("appSettings", {
       slug: DEFAULT_SLUG,
       language: args.language,
+      tabs: defaultTabs(),
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+export const setUiLanguage = mutation({
+  args: { uiLanguage: v.union(v.literal("ko"), v.literal("en")), serviceKey: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.serviceKey);
+    const existing = await getOrInit(ctx);
+    if (existing) {
+      await ctx.db.patch(existing._id, { uiLanguage: args.uiLanguage, updatedAt: Date.now() });
+      return existing._id;
+    }
+    return await ctx.db.insert("appSettings", {
+      slug: DEFAULT_SLUG,
+      uiLanguage: args.uiLanguage,
       tabs: defaultTabs(),
       updatedAt: Date.now(),
     });

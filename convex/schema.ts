@@ -31,6 +31,9 @@ export default defineSchema({
     // ISO 639-1 language code for agent output (summary, tldr, chat).
     // Defaults to "en"; the onboarding asks for it first.
     language: v.optional(v.string()),
+    // The app's own labels ("ko" | "en"), apart from the language agents
+    // write in. Defaults to "en".
+    uiLanguage: v.optional(v.string()),
     // Ordered list of mode tabs. UI renders MODES filtered + reordered by
     // this. Unknown keys are ignored (forward-compat). Tabs added by future
     // versions but missing from this row are appended at the end disabled.

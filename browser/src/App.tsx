@@ -5,6 +5,7 @@ import type { Id, Doc } from "../../convex/_generated/dataModel";
 import { MailboxModal } from "./MailboxModal";
 import { SettingsModal } from "./SettingsModal";
 import { Onboarding } from "./Onboarding";
+import { UI_LABELS, type UiLabelKey, asUiLanguage, uiLabel } from "@openworks/domain";
 import { DrawingsView } from "./DrawingsView";
 import { DietView } from "./views/DietView";
 import { VocabView } from "./views/VocabView";
@@ -481,9 +482,14 @@ export default function App() {
   const appSettingsRaw = useQuery(api.settings.get, {});
   const appSettings = useCachedQuery("cache:settings:get", appSettingsRaw);
   const setTabsMutation = useMutation(api.settings.setTabs);
+  const uiLang = asUiLanguage(appSettings?.uiLanguage);
   const visibleModes = useMemo(() => {
-    if (!appSettings) return MODES;
-    const byKey = new Map(MODES.map((m) => [m.key, m] as const));
+    const modes = MODES.map((m) => ({
+      ...m,
+      label: m.key in UI_LABELS ? uiLabel(m.key as UiLabelKey, uiLang) : m.label,
+    }));
+    if (!appSettings) return modes;
+    const byKey = new Map(modes.map((m) => [m.key, m] as const));
     const enabled = appSettings.tabs
       .filter((t) => t.enabled)
       .map((t) => byKey.get(t.key as Mode))
@@ -491,11 +497,11 @@ export default function App() {
     // Append modes that ship after the user's saved tab list was written, so
     // new tabs (e.g. Diet) appear automatically without a settings migration.
     const known = new Set(appSettings.tabs.map((t) => t.key));
-    const fresh = MODES.filter((m) => !known.has(m.key));
+    const fresh = modes.filter((m) => !known.has(m.key));
     // If user disabled every tab, fall back to the full list so they can
     // still re-enable from Settings — empty nav would leave them stranded.
-    return enabled.length > 0 ? [...enabled, ...fresh] : MODES;
-  }, [appSettings]);
+    return enabled.length > 0 ? [...enabled, ...fresh] : modes;
+  }, [appSettings, uiLang]);
 
   // Render order: optimistic override while a reorder is in flight, otherwise
   // the server order. Maps override keys through the current enabled set so a

@@ -1,13 +1,72 @@
 import { useAction, useMutation, useQuery } from "convex/react";
 import { Check, Loader2, Plug, RefreshCw, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { connectorsFor, type ConnectorDirection, type ConnectorType } from "@openworks/domain";
+import { connectorsFor, type ConnectorDirection, type ConnectorType, type UiLanguage } from "@openworks/domain";
 import { api } from "../../convex/_generated/api";
 import { ConnectorIcon } from "./ConnectorIcons";
 
 // Each connector type's own way in: Notion through its sign-in or a pasted
 // token, a vault by its folder, Gmail and GitHub through the CLI the worker
 // runs. Settings and the onboarding draw the same cards.
+
+const WORDS = {
+  ko: {
+    signIn: "Notion으로 로그인",
+    noOAuth:
+      "이 배포에는 Notion OAuth가 아직 설정되지 않았습니다(NOTION_OAUTH_CLIENT_ID). 아래 integration token으로 연결하세요.",
+    tokenHint: "Notion Developer portal에서 internal connection을 만들고, 쓸 페이지에 추가하세요",
+    connect: "연결",
+    save: "저장",
+    disconnect: "연결 해제",
+    rootHint: "Notion 검색과 삽입을 이 페이지 아래로 한정",
+    now: "지금",
+    envSwitch: "배포 env 대신 OAuth나 token으로 연결",
+    vaultHint: "이 컴퓨터의 worker가 폴더와 .obsidian을 확인합니다",
+    check: "확인",
+    install: (cli: string) => `${cli} 설치`,
+    ghLogin: "GitHub 로그인",
+    alwaysOn: "항상 켜짐",
+    onApp: "앱에서 로그인",
+    connected: "연결됨",
+    connectOnly: "연결됨 · 읽기/쓰기 준비 중",
+    notConnected: "연결 안 됨",
+    checking: "확인 중",
+    failed: "확인 실패",
+    iphone: "iPhone 앱에서 로그인하면 스크린샷과 공유 시트로 보낸 것이 들어옵니다.",
+    title: "연결 · Connections",
+    sub: "어디서 들어오고 어디로 나가는지",
+    input: "Input · 들어오는 것",
+    output: "Output · 나가는 것",
+  },
+  en: {
+    signIn: "Sign in with Notion",
+    noOAuth:
+      "This deployment has no Notion OAuth client yet (NOTION_OAUTH_CLIENT_ID). Connect with an integration token below.",
+    tokenHint: "Make an internal connection in Notion's Developer portal and add it to the pages it should write to",
+    connect: "Connect",
+    save: "Save",
+    disconnect: "Disconnect",
+    rootHint: "Keeps Notion search and inserts under this page",
+    now: "Now",
+    envSwitch: "Connect with OAuth or a token instead of the deployment env",
+    vaultHint: "The worker on this machine checks the folder and its .obsidian",
+    check: "Check",
+    install: (cli: string) => `Install ${cli}`,
+    ghLogin: "Sign in to GitHub",
+    alwaysOn: "Always on",
+    onApp: "Sign in on the app",
+    connected: "Connected",
+    connectOnly: "Connected · read and write coming",
+    notConnected: "Not connected",
+    checking: "Checking",
+    failed: "Check failed",
+    iphone: "Sign in on the iPhone app, and screenshots and the share sheet come in.",
+    title: "Connections",
+    sub: "where content comes in and where it goes",
+    input: "Input",
+    output: "Output",
+  },
+};
 
 type Tone = "on" | "off" | "busy" | "bad";
 
@@ -74,7 +133,8 @@ function Field({
   );
 }
 
-function NotionConnect({ returnTo }: { returnTo: string }) {
+function NotionConnect({ returnTo, lang }: { returnTo: string; lang: UiLanguage }) {
+  const t = WORDS[lang];
   const rows = useQuery(api.connectors.list, {});
   const begin = useAction(api.connectors.beginNotionOAuth);
   const paste = useAction(api.connectors.connectNotionToken);
@@ -98,19 +158,11 @@ function NotionConnect({ returnTo }: { returnTo: string }) {
     <div className="space-y-2">
       <button onClick={() => void signIn()} disabled={starting} className={button}>
         {starting ? <Loader2 size={11} className="animate-spin" /> : <Plug size={11} />}
-        Sign in with Notion
+        {t.signIn}
       </button>
-      {noOAuth && (
-        <div className="text-[12px] text-ink-3">
-          This deployment has no Notion OAuth client yet (NOTION_OAUTH_CLIENT_ID). Connect with an integration token
-          below.
-        </div>
-      )}
-      <Labelled
-        label="Integration token"
-        hint="Create an internal integration at notion.so/profile/integrations, then add it to the pages it should write to"
-      >
-        <Field placeholder="ntn_…" action="Connect" secret onSubmit={(token) => paste({ token })} />
+      {noOAuth && <div className="text-[12px] text-ink-3">{t.noOAuth}</div>}
+      <Labelled label="Integration token" hint={t.tokenHint}>
+        <Field placeholder="ntn_…" action={t.connect} secret onSubmit={(token) => paste({ token })} />
       </Labelled>
     </div>
   );
@@ -126,25 +178,19 @@ function NotionConnect({ returnTo }: { returnTo: string }) {
         </span>
         {row.auth !== "env" && (
           <button onClick={() => void remove({ id: row._id })} className={`${button} ml-auto`}>
-            <Trash2 size={11} /> Disconnect
+            <Trash2 size={11} /> {t.disconnect}
           </button>
         )}
       </div>
       <Labelled
         label="Root page id"
-        hint={
-          row.config?.rootPageId
-            ? `Now ${row.config.rootPageId}; keeps Notion search and inserts under this page`
-            : "Keeps Notion search and inserts under this page"
-        }
+        hint={row.config?.rootPageId ? `${t.now}: ${row.config.rootPageId} · ${t.rootHint}` : t.rootHint}
       >
-        <Field placeholder="page id" action="Save" onSubmit={(rootPageId) => setConfig({ rootPageId })} />
+        <Field placeholder="page id" action={t.save} onSubmit={(rootPageId) => setConfig({ rootPageId })} />
       </Labelled>
       {row.auth === "env" && (
         <details className="text-[12px] text-ink-3">
-          <summary className="cursor-pointer hover:text-ink">
-            Connect with OAuth or a token instead of the deployment env
-          </summary>
+          <summary className="cursor-pointer hover:text-ink">{t.envSwitch}</summary>
           <div className="mt-2">{connect}</div>
         </details>
       )}
@@ -152,7 +198,8 @@ function NotionConnect({ returnTo }: { returnTo: string }) {
   );
 }
 
-function ObsidianConnect() {
+function ObsidianConnect({ lang }: { lang: UiLanguage }) {
+  const t = WORDS[lang];
   const rows = useQuery(api.connectors.list, {});
   const add = useMutation(api.connectors.addObsidian);
   const remove = useMutation(api.connectors.remove);
@@ -173,14 +220,15 @@ function ObsidianConnect() {
           </button>
         </div>
       ))}
-      <Labelled label="Vault folder" hint="The worker on this machine checks the folder and its .obsidian">
-        <Field placeholder="~/Documents/Vault" action="Connect" onSubmit={(vaultPath) => add({ vaultPath })} />
+      <Labelled label="Vault folder" hint={t.vaultHint}>
+        <Field placeholder="~/Documents/Vault" action={t.connect} onSubmit={(vaultPath) => add({ vaultPath })} />
       </Labelled>
     </div>
   );
 }
 
-function CliConnect({ cli }: { cli: "gh" | "gws" }) {
+function CliConnect({ cli, lang }: { cli: "gh" | "gws"; lang: UiLanguage }) {
+  const t = WORDS[lang];
   const verifyKind = cli === "gh" ? "verify_gh" : "verify_gws";
   const latest = useQuery(api.setup.latestByKind, { kind: verifyKind });
   const request = useMutation(api.setup.request);
@@ -191,7 +239,7 @@ function CliConnect({ cli }: { cli: "gh" | "gws" }) {
       <div className="flex flex-wrap items-center gap-2">
         <button onClick={() => void request({ kind: verifyKind })} disabled={running} className={button}>
           {running ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} />}
-          Check
+          {t.check}
         </button>
         {result?.installed === false && (
           <button
@@ -199,12 +247,12 @@ function CliConnect({ cli }: { cli: "gh" | "gws" }) {
             disabled={running}
             className={button}
           >
-            Install {cli}
+            {t.install(cli)}
           </button>
         )}
         {cli === "gh" && (
           <button onClick={() => void request({ kind: "oauth_gh" })} disabled={running} className={button}>
-            Sign in to GitHub
+            {t.ghLogin}
           </button>
         )}
       </div>
@@ -236,49 +284,50 @@ export function ConnectorBadge({ type }: { type: string }) {
 
 // Whether a type is connected, from wherever its state lives: its row, the
 // CLI login the worker last verified, or nothing to connect at all.
-export function useConnectorState(): (type: ConnectorType) => { tone: Tone; label: string } {
+export function useConnectorState(lang: UiLanguage): (type: ConnectorType) => { tone: Tone; label: string } {
+  const t = WORDS[lang];
   const rows = useQuery(api.connectors.list, {});
   const settings = useQuery(api.settings.get, {});
   return (type) => {
-    if (type.auth.includes("none")) return { tone: "on", label: "Always on" };
-    if (type.key === "iphone") return { tone: "off", label: "Sign in on the app" };
+    if (type.auth.includes("none")) return { tone: "on", label: t.alwaysOn };
+    if (type.key === "iphone") return { tone: "off", label: t.onApp };
     if (type.key === "gmail" || type.key === "github") {
       const cli = type.key === "gmail" ? settings?.google : settings?.github;
-      return cli?.loggedIn ? { tone: "on", label: "Connected" } : { tone: "off", label: "Not connected" };
+      return cli?.loggedIn ? { tone: "on", label: t.connected } : { tone: "off", label: t.notConnected };
     }
     const mine = rows?.filter((r) => r.type === type.key) ?? [];
     if (mine.some((r) => r.status === "connected"))
-      return { tone: "on", label: type.connectOnly ? "Connected · read and write coming" : "Connected" };
-    if (mine.some((r) => r.status === "checking")) return { tone: "busy", label: "Checking" };
-    if (mine.some((r) => r.status === "error")) return { tone: "bad", label: "Check failed" };
-    return { tone: "off", label: "Not connected" };
+      return { tone: "on", label: type.connectOnly ? t.connectOnly : t.connected };
+    if (mine.some((r) => r.status === "checking")) return { tone: "busy", label: t.checking };
+    if (mine.some((r) => r.status === "error")) return { tone: "bad", label: t.failed };
+    return { tone: "off", label: t.notConnected };
   };
 }
 
 export function ConnectorCard({
   type,
+  lang,
   returnTo,
   open: initiallyOpen = false,
 }: {
   type: ConnectorType;
+  lang: UiLanguage;
   returnTo: string;
   open?: boolean;
 }) {
   const [open, setOpen] = useState(initiallyOpen);
-  const state = useConnectorState()(type);
+  const state = useConnectorState(lang)(type);
   const body =
     type.key === "notion" ? (
-      <NotionConnect returnTo={returnTo} />
+      <NotionConnect returnTo={returnTo} lang={lang} />
     ) : type.key === "obsidian" ? (
-      <ObsidianConnect />
+      <ObsidianConnect lang={lang} />
     ) : type.key === "gmail" ? (
-      <CliConnect cli="gws" />
+      <CliConnect cli="gws" lang={lang} />
     ) : type.key === "github" ? (
-      <CliConnect cli="gh" />
+      <CliConnect cli="gh" lang={lang} />
     ) : type.key === "iphone" ? (
-      <div className="text-[12px] text-ink-3">
-        Sign in on the iPhone app and screenshots and the share sheet come in.
-      </div>
+      <div className="text-[12px] text-ink-3">{WORDS[lang].iphone}</div>
     ) : null;
   return (
     <div className="rounded-xl border border-ink/10 bg-paper/60">
@@ -290,7 +339,7 @@ export function ConnectorCard({
         <ConnectorBadge type={type.key} />
         <div className="flex-1 min-w-0">
           <div className="text-[14px] text-ink">{type.label}</div>
-          <div className="text-[12px] text-ink-3 truncate">{type.blurb.en}</div>
+          <div className="text-[12px] text-ink-3 truncate">{type.blurb[lang]}</div>
         </div>
         <Pill tone={state.tone}>{state.label}</Pill>
       </button>
@@ -299,24 +348,25 @@ export function ConnectorCard({
   );
 }
 
-export function ConnectionsSection() {
+export function ConnectionsSection({ lang }: { lang: UiLanguage }) {
+  const t = WORDS[lang];
   const returnTo = `${window.location.origin}${window.location.pathname}?settings=connections`;
   const group = (direction: ConnectorDirection, title: string) => (
     <div className="space-y-2">
       <div className="mono text-[11px] uppercase tracking-wider text-ink-4">{title}</div>
       {connectorsFor(direction).map((t) => (
-        <ConnectorCard key={`${direction}:${t.key}`} type={t} returnTo={returnTo} />
+        <ConnectorCard key={`${direction}:${t.key}`} type={t} lang={lang} returnTo={returnTo} />
       ))}
     </div>
   );
   return (
     <div className="px-3 py-3 border-b border-ink/10 space-y-3">
       <div>
-        <div className="serif text-sm text-ink">Connections</div>
-        <div className="mono text-[11px] text-ink-4">where content comes in and where it goes</div>
+        <div className="serif text-sm text-ink">{t.title}</div>
+        <div className="mono text-[11px] text-ink-4">{t.sub}</div>
       </div>
-      {group("input", "Input")}
-      {group("output", "Output")}
+      {group("input", t.input)}
+      {group("output", t.output)}
     </div>
   );
 }
