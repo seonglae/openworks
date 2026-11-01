@@ -3,6 +3,7 @@ import { Check, Loader2, Plug, RefreshCw, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { connectorsFor, type ConnectorDirection, type ConnectorType } from "@openworks/domain";
 import { api } from "../../convex/_generated/api";
+import { ConnectorIcon } from "./ConnectorIcons";
 
 // Each connector type's own way in: Notion through its sign-in or a pasted
 // token, a vault by its folder, Gmail and GitHub through the CLI the worker
@@ -224,6 +225,15 @@ function Labelled({ label, hint, children }: { label: string; hint: string; chil
   );
 }
 
+// A connector's mark on a tile, the same in Settings and the onboarding.
+export function ConnectorBadge({ type }: { type: string }) {
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-ink/10 bg-paper text-ink">
+      <ConnectorIcon type={type} size={17} />
+    </span>
+  );
+}
+
 // Whether a type is connected, from wherever its state lives: its row, the
 // CLI login the worker last verified, or nothing to connect at all.
 export function useConnectorState(): (type: ConnectorType) => { tone: Tone; label: string } {
@@ -277,6 +287,7 @@ export function ConnectorCard({
         disabled={!body}
         className="w-full flex items-center gap-3 px-3 py-2.5 text-left"
       >
+        <ConnectorBadge type={type.key} />
         <div className="flex-1 min-w-0">
           <div className="text-[14px] text-ink">{type.label}</div>
           <div className="text-[12px] text-ink-3 truncate">{type.blurb.en}</div>

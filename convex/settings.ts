@@ -68,7 +68,7 @@ export const get = query({
         ...row.tabs.filter((t) => (TAB_KEYS as readonly string[]).includes(t.key)),
         ...TAB_KEYS.filter((k) => !known.has(k)).map((k) => ({ key: k, enabled: false })),
       ];
-      return { ...row, language: row.language ?? "ko", tabs: merged };
+      return { ...row, language: row.language ?? "en", tabs: merged };
     }
     // Inline default so the UI never sees null while it waits for first write.
     // Carries the same optional integration keys as the stored row: without
@@ -77,7 +77,7 @@ export const get = query({
     return {
       _id: null,
       slug: DEFAULT_SLUG,
-      language: "ko",
+      language: "en",
       tabs: defaultTabs(),
       updatedAt: 0,
       github: undefined,

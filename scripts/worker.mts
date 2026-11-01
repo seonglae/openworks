@@ -287,7 +287,7 @@ function getLanguageName(): string {
     const raw = convexRun("settings:get");
     if (raw) {
       const row = JSON.parse(raw);
-      const code = (row?.language as string | undefined) ?? "ko";
+      const code = (row?.language as string | undefined) ?? "en";
       resolved = LANGUAGE_NAMES[code] ?? "Korean";
     }
   } catch {}

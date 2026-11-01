@@ -658,7 +658,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                   </div>
                 </div>
                 <select
-                  value={settings.language ?? "ko"}
+                  value={settings.language ?? "en"}
                   onChange={(e) => void setLanguage({ language: e.target.value })}
                   className="glass border-ink/10 px-2 py-1 mono text-[11px] text-ink outline-none focus:border-rust rounded-full"
                 >

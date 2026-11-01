@@ -39,9 +39,14 @@ afterEach(() => {
 });
 
 describe("the first-run onboarding", () => {
-  it("asks what comes in and goes out first, connects those, then which tabs to keep", async () => {
+  it("asks the language first, then what comes in and goes out, connects those, then which tabs to keep", async () => {
     convex.settings = fresh();
     render(<Onboarding />);
+    expect(screen.getByText("Language")).toBeTruthy();
+    await click("한국어");
+    expect(convex.calls.at(-1)).toEqual(["settings:setLanguage", { language: "ko" }]);
+    await click("Next");
+
     expect(screen.getByText("What comes in?")).toBeTruthy();
     await click("Gmail");
     await click("Next");
