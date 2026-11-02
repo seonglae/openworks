@@ -146,9 +146,10 @@ export function Onboarding() {
   const lang = asUiLanguage(settings.uiLanguage);
   const t = WORDS[lang];
   const index = STEPS.indexOf(step);
-  const go = async (next: Step) => {
-    await save({ inputs, outputs });
+  // The step changes at once; the answers are saved behind it.
+  const go = (next: Step) => {
     setStep(next);
+    void save({ inputs, outputs });
   };
   const toConnect = [...new Set([...inputs, ...outputs])]
     .map((key) => connectorType(key))

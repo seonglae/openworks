@@ -62,7 +62,8 @@ describe("the first-run onboarding", () => {
     await click("Notion");
     await click("Next");
     expect(screen.getByText("Sign in with Notion")).toBeTruthy();
-    expect(screen.getByText("gws auth login")).toBeTruthy();
+    expect(screen.getByText("Check")).toBeTruthy();
+    expect(screen.queryByText(/auth login/)).toBeNull();
 
     await click("Next");
     await click("Vocab");

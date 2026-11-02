@@ -12,27 +12,26 @@ import { ConnectorIcon } from "./ConnectorIcons";
 const WORDS = {
   ko: {
     signIn: "Notion으로 로그인",
-    noOAuth:
-      "이 배포에는 Notion OAuth가 아직 설정되지 않았습니다(NOTION_OAUTH_CLIENT_ID). 아래 integration token으로 연결하세요.",
+    noOAuth: "Notion 로그인은 아직 준비되지 않았어요. 아래 integration token으로 연결하세요.",
     tokenHint: "Notion Developer portal에서 internal connection을 만들고, 쓸 페이지에 추가하세요",
     connect: "연결",
     save: "저장",
     disconnect: "연결 해제",
     rootHint: "Notion 검색과 삽입을 이 페이지 아래로 한정",
     now: "지금",
-    envSwitch: "배포 env 대신 OAuth나 token으로 연결",
-    vaultHint: "이 컴퓨터의 worker가 폴더와 .obsidian을 확인합니다",
+    envSwitch: "다른 방법으로 연결",
+    vaultHint: "Quire가 이 컴퓨터에서 vault 폴더를 확인합니다",
     check: "확인",
-    install: (cli: string) => `${cli} 설치`,
+    install: "설치",
     ghLogin: "GitHub 로그인",
     alwaysOn: "항상 켜짐",
-    onApp: "앱에서 로그인",
     connected: "연결됨",
     connectOnly: "연결됨 · 읽기/쓰기 준비 중",
     notConnected: "연결 안 됨",
     checking: "확인 중",
     failed: "확인 실패",
-    iphone: "iPhone 앱에서 로그인하면 스크린샷과 공유 시트로 보낸 것이 들어옵니다.",
+    iphone: "iPhone에서 앱에 로그인하면 여기 바로 연결됨으로 바뀝니다.",
+    lastUpload: "마지막 스크린샷",
     title: "연결 · Connections",
     sub: "어디서 들어오고 어디로 나가는지",
     input: "Input · 들어오는 것",
@@ -40,27 +39,26 @@ const WORDS = {
   },
   en: {
     signIn: "Sign in with Notion",
-    noOAuth:
-      "This deployment has no Notion OAuth client yet (NOTION_OAUTH_CLIENT_ID). Connect with an integration token below.",
+    noOAuth: "Notion sign-in is not set up yet. Connect with an integration token below.",
     tokenHint: "Make an internal connection in Notion's Developer portal and add it to the pages it should write to",
     connect: "Connect",
     save: "Save",
     disconnect: "Disconnect",
     rootHint: "Keeps Notion search and inserts under this page",
     now: "Now",
-    envSwitch: "Connect with OAuth or a token instead of the deployment env",
-    vaultHint: "The worker on this machine checks the folder and its .obsidian",
+    envSwitch: "Connect another way",
+    vaultHint: "Quire checks the vault folder on this computer",
     check: "Check",
-    install: (cli: string) => `Install ${cli}`,
+    install: "Install",
     ghLogin: "Sign in to GitHub",
     alwaysOn: "Always on",
-    onApp: "Sign in on the app",
     connected: "Connected",
     connectOnly: "Connected · read and write coming",
     notConnected: "Not connected",
     checking: "Checking",
     failed: "Check failed",
-    iphone: "Sign in on the iPhone app, and screenshots and the share sheet come in.",
+    iphone: "Sign in to the iPhone app and this shows as connected right away.",
+    lastUpload: "Last screenshot",
     title: "Connections",
     sub: "where content comes in and where it goes",
     input: "Input",
@@ -173,9 +171,7 @@ function NotionConnect({ returnTo, lang }: { returnTo: string; lang: UiLanguage 
       <div className="flex items-center gap-2 text-[13px] text-ink-2">
         <Check size={13} className="text-emerald-600" />
         {row.name}
-        <span className="mono text-[11px] text-ink-4">
-          {row.auth === "oauth" ? "OAuth" : row.auth === "token" ? "integration token" : "deployment env"}
-        </span>
+        <span className="mono text-[11px] text-ink-4">{row.auth === "oauth" ? "OAuth" : "integration token"}</span>
         {row.auth !== "env" && (
           <button onClick={() => void remove({ id: row._id })} className={`${button} ml-auto`}>
             <Trash2 size={11} /> {t.disconnect}
@@ -247,7 +243,7 @@ function CliConnect({ cli, lang }: { cli: "gh" | "gws"; lang: UiLanguage }) {
             disabled={running}
             className={button}
           >
-            {t.install(cli)}
+            {t.install}
           </button>
         )}
         {cli === "gh" && (
@@ -256,9 +252,6 @@ function CliConnect({ cli, lang }: { cli: "gh" | "gws"; lang: UiLanguage }) {
           </button>
         )}
       </div>
-      <code className="block rounded-lg bg-paper-warm/40 px-2 py-1 mono text-[11px] text-ink-3 select-all">
-        {cli === "gh" ? "gh auth login --web" : "gws auth login"}
-      </code>
     </div>
   );
 }
@@ -269,6 +262,30 @@ function Labelled({ label, hint, children }: { label: string; hint: string; chil
       <div className="mono text-[11px] uppercase tracking-wider text-ink-4">{label}</div>
       {children}
       <div className="text-[12px] text-ink-4">{hint}</div>
+    </div>
+  );
+}
+
+// The phones signed in, and when the last screenshot came; how to connect one
+// when there is none.
+function PhoneStatus({ lang }: { lang: UiLanguage }) {
+  const t = WORDS[lang];
+  const phone = useQuery(api.connectors.devices, {});
+  if (!phone) return null;
+  if (phone.devices.length === 0 && !phone.lastUpload) return <div className="text-[12px] text-ink-3">{t.iphone}</div>;
+  return (
+    <div className="space-y-1 text-[13px] text-ink-2">
+      {phone.devices.map((d, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <Check size={13} className="text-emerald-600" />
+          {d.label}
+        </div>
+      ))}
+      {phone.lastUpload && (
+        <div className="text-[12px] text-ink-3">
+          {t.lastUpload} · {new Date(phone.lastUpload).toLocaleString(lang === "ko" ? "ko-KR" : "en-GB")}
+        </div>
+      )}
     </div>
   );
 }
@@ -288,9 +305,14 @@ export function useConnectorState(lang: UiLanguage): (type: ConnectorType) => { 
   const t = WORDS[lang];
   const rows = useQuery(api.connectors.list, {});
   const settings = useQuery(api.settings.get, {});
+  const phone = useQuery(api.connectors.devices, {});
   return (type) => {
     if (type.auth.includes("none")) return { tone: "on", label: t.alwaysOn };
-    if (type.key === "iphone") return { tone: "off", label: t.onApp };
+    if (type.key === "iphone") {
+      const device = phone?.devices[0];
+      if (device) return { tone: "on", label: `${t.connected} · ${device.label}` };
+      return phone?.lastUpload ? { tone: "on", label: t.connected } : { tone: "off", label: t.notConnected };
+    }
     if (type.key === "gmail" || type.key === "github") {
       const cli = type.key === "gmail" ? settings?.google : settings?.github;
       return cli?.loggedIn ? { tone: "on", label: t.connected } : { tone: "off", label: t.notConnected };
@@ -327,7 +349,7 @@ export function ConnectorCard({
     ) : type.key === "github" ? (
       <CliConnect cli="gh" lang={lang} />
     ) : type.key === "iphone" ? (
-      <div className="text-[12px] text-ink-3">{WORDS[lang].iphone}</div>
+      <PhoneStatus lang={lang} />
     ) : null;
   return (
     <div className="rounded-xl border border-ink/10 bg-paper/60">

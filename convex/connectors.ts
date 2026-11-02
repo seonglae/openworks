@@ -32,6 +32,22 @@ export const list = query({
   },
 });
 
+// Whether the phone is connected, from what it leaves behind: the devices
+// that registered for push after signing in, and the last screenshot it sent.
+export const devices = query({
+  args: { serviceKey: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.serviceKey);
+    const rows = await ctx.db.query("deviceTokens").collect();
+    const recent = await ctx.db.query("jobs").withIndex("by_createdAt").order("desc").take(300);
+    const shot = recent.find((j) => j.emailId?.startsWith("screenshot:"));
+    return {
+      devices: rows.map((d) => ({ label: d.label ?? "iPhone", at: d.createdAt })),
+      lastUpload: shot?.createdAt ?? null,
+    };
+  },
+});
+
 const notionRow = (ctx: Pick<QueryCtx, "db">) =>
   ctx.db
     .query("connectors")

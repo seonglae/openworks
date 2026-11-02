@@ -57,7 +57,7 @@ export const CONNECTOR_TYPES = [
     auth: ["cli"],
     runsOn: "worker",
     stored: false,
-    blurb: { ko: "뉴스레터를 받고 digest를 보냄 (gws CLI)", en: "Newsletters in, the digest out (gws CLI)" },
+    blurb: { ko: "뉴스레터를 받고 digest를 보냄", en: "Newsletters in, the digest out" },
   },
   {
     key: "github",
@@ -66,7 +66,7 @@ export const CONNECTOR_TYPES = [
     auth: ["cli"],
     runsOn: "worker",
     stored: false,
-    blurb: { ko: "내 PR과 리뷰 요청 (gh CLI)", en: "Your pull requests and review requests (gh CLI)" },
+    blurb: { ko: "내 PR과 리뷰 요청", en: "Your pull requests and review requests" },
   },
   {
     key: "notion",
