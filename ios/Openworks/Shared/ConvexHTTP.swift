@@ -1,38 +1,23 @@
 import Foundation
 
-// Convex function API client. Queries and mutations POST to
-// {deployment}.convex.cloud/api/{query,mutation} with {path,args,format:"json"}
-// and answer {status:"success", value} or {errorMessage}.
-//
-// Auth is OPENWORKS_SERVICE_KEY, the same single-owner key the CLI workers and
-// the MCP server present (convex/auth.ts requireOwner). The phone is one more
-// owner-side caller, so it needs no Clerk session and no browser origin.
 enum ConvexError: LocalizedError {
-    case notConfigured, badURL, server(String), shape
+    case notConfigured, badURL, shape, server(String)
     var errorDescription: String? {
         switch self {
-        case .notConfigured: return String(localized: "No deployment configured")
-        case .badURL: return String(localized: "Bad URL")
-        case .server(let m): return m
-        case .shape: return String(localized: "Unexpected response shape")
+        case .notConfigured: return UIText.t("설정에서 서버 연결을 저장하세요.", "Save a server connection in Settings.")
+        case .badURL: return UIText.t("서버 주소를 확인하세요.", "Check the server address.")
+        case .shape: return UIText.t("불러오기에 실패했어요. 예상하지 못한 응답입니다.", "Load failed: unexpected server response.")
+        case .server(let message): return message
         }
     }
 }
 
-// One page of a Convex paginated query.
-struct Page {
-    let rows: [[String: Any]]
-    let cursor: String?
-    let isDone: Bool
-}
-
-struct Convex {
+struct ConvexHTTP {
     static let urlKey = "convexUrl"
     static let serviceKeyKey = "serviceKey"
 
     private static func plist(_ key: String) -> String {
         let v = Bundle.main.object(forInfoDictionaryKey: key) as? String ?? ""
-        // An unfilled xcconfig leaves the literal "$(KEY)" behind; treat that as empty.
         if v.hasPrefix("$(") { return "" }
         return v
     }
@@ -50,85 +35,140 @@ struct Convex {
     static func setURL(_ v: String) { UserDefaults.standard.set(v, forKey: urlKey) }
     static func setServiceKey(_ v: String) { UserDefaults.standard.set(v, forKey: serviceKeyKey) }
 
-    private static func post(_ kind: String, _ path: String, _ args: [String: Any]) async throws -> Any {
+    private static func call(_ kind: String, _ path: String, args: [String: Any]) async throws -> Any {
+        if DemoMode.isEnabled { return try await DemoMode.response(kind: kind, path: path, args: args) }
         guard configured else { throw ConvexError.notConfigured }
-        guard let url = URL(string: "\(cloudURL)/api/\(kind)") else { throw ConvexError.badURL }
-        var req = URLRequest(url: url)
-        req.httpMethod = "POST"
-        req.timeoutInterval = 25
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        guard let base = URL(string: cloudURL), let scheme = base.scheme,
+              ["https", "http"].contains(scheme), base.host != nil,
+              base.user == nil, base.password == nil else { throw ConvexError.badURL }
+        let url = base.appendingPathComponent("api").appendingPathComponent(kind)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 25
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         var keyed = args
         keyed["serviceKey"] = serviceKey
-        req.httpBody = try JSONSerialization.data(withJSONObject: ["path": path, "args": keyed, "format": "json"])
-        let (data, _) = try await URLSession.shared.data(for: req)
-        guard let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { throw ConvexError.shape }
-        if (obj["status"] as? String) == "success" { return obj["value"] as Any }
-        throw ConvexError.server((obj["errorMessage"] as? String) ?? "convex error")
+        request.httpBody = try JSONSerialization.data(withJSONObject: ["path": path, "args": keyed, "format": "json"])
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) else {
+            throw ConvexError.server(UIText.t("요청에 실패했어요. 연결을 확인하세요.", "Request failed. Check your connection."))
+        }
+        guard let result = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { throw ConvexError.shape }
+        guard result["status"] as? String == "success" else {
+            throw ConvexError.server((result["errorMessage"] as? String) ?? UIText.t("요청 실패", "Request failed"))
+        }
+        return result["value"] ?? NSNull()
     }
 
-    static func query(_ path: String, _ args: [String: Any] = [:]) async throws -> Any { try await post("query", path, args) }
+    static func query(_ path: String, args: [String: Any] = [:]) async throws -> Any {
+        try await call("query", path, args: args)
+    }
     @discardableResult
-    static func mutation(_ path: String, _ args: [String: Any] = [:]) async throws -> Any { try await post("mutation", path, args) }
-
-    private static func rows(_ value: Any) -> [[String: Any]] { (value as? [[String: Any]]) ?? [] }
-
-    // A paginated query wants {numItems, cursor}; a null cursor is the first page.
-    private static func paginated(_ path: String, _ args: [String: Any], numItems: Int, cursor: String?) async throws -> Page {
-        var withOpts = args
-        withOpts["paginationOpts"] = ["numItems": numItems, "cursor": cursor as Any? ?? NSNull()]
-        let v = try await query(path, withOpts)
-        guard let d = v as? [String: Any] else { throw ConvexError.shape }
-        return Page(rows: (d["page"] as? [[String: Any]]) ?? [],
-                    cursor: d["continueCursor"] as? String,
-                    isDone: (d["isDone"] as? Bool) ?? true)
+    static func mutation(_ path: String, args: [String: Any] = [:]) async throws -> Any {
+        try await call("mutation", path, args: args)
+    }
+    @discardableResult
+    static func action(_ path: String, args: [String: Any] = [:]) async throws -> Any {
+        try await call("action", path, args: args)
     }
 
-    // MARK: - reading
-    static func jobs(type: String, archived: Bool, numItems: Int = 30, cursor: String? = nil) async throws -> (items: [Job], cursor: String?, done: Bool) {
-        let page = try await paginated("jobs:list", ["type": type, "archived": archived], numItems: numItems, cursor: cursor)
-        return (page.rows.compactMap(Job.init), page.cursor, page.isDone)
+    static func listJobs(type: String, archived: Bool, skip: Int, limit: Int) async throws -> [[String: Any]] {
+        let args: [String: Any] = ["type": type, "archived": archived, "skip": skip, "limit": limit]
+        let value = try await query("jobs:listOffset", args: args)
+        guard let value = value as? [[String: Any]] else { throw ConvexError.shape }
+        return value
     }
-    static func jobCount(type: String, archived: Bool) async throws -> Int {
-        let v = try await query("jobs:count", ["type": type, "archived": archived])
-        return (v as? NSNumber)?.intValue ?? 0
+
+    static func search(type: String, archived: Bool, query text: String) async throws -> [[String: Any]] {
+        let value = try await query("jobs:searchWithContent", args: [
+            "type": type, "archived": archived, "query": text, "limit": 60,
+        ])
+        guard let value = value as? [[String: Any]] else { throw ConvexError.shape }
+        return value
     }
-    static func summaries(jobId: String) async throws -> [Summary] {
-        rows(try await query("summaries:listByJob", ["jobId": jobId])).compactMap(Summary.init)
+
+    static func job(id: String) async throws -> [String: Any]? {
+        let value = try await query("jobs:getById", args: ["jobId": id])
+        if value is NSNull { return nil }
+        guard let value = value as? [String: Any] else { throw ConvexError.shape }
+        return value
     }
-    // The two figures the browser draws: the overall-score distribution for
-    // papers and articles, and the newsletter arrival split.
-    static func scoreStats(archived: Bool) async throws -> [String: Any] {
-        (try await query("summaries:scoreStats", ["archived": archived]) as? [String: Any]) ?? [:]
+
+    static func summaries(jobId: String) async throws -> [[String: Any]] {
+        let value = try await query("summaries:listByJob", args: ["jobId": jobId])
+        guard let value = value as? [[String: Any]] else { throw ConvexError.shape }
+        return value
+    }
+
+    static func archive(jobId: String) async throws {
+        try await mutation("jobs:archive", args: ["jobId": jobId])
+    }
+
+    static func unarchive(jobId: String) async throws {
+        try await mutation("jobs:unarchive", args: ["jobId": jobId])
+    }
+
+    static func setType(jobId: String, type: String) async throws {
+        try await mutation("jobs:updateType", args: ["jobId": jobId, "type": type])
+    }
+
+    @discardableResult
+    static func createJob(url: String, content: String, type: String) async throws -> String? {
+        var args: [String: Any] = ["url": url, "type": type]
+        if !content.isEmpty { args["content"] = content }
+        let value = try await mutation("jobs:create", args: args)
+        return value as? String
+    }
+
+    static func imageUrls(jobId: String) async throws -> [String] {
+        let value = try await query("jobs:imageUrls", args: ["jobId": jobId])
+        guard let value = value as? [String] else { throw ConvexError.shape }
+        return value
+    }
+
+    @discardableResult
+    static func placeInsight(id: String) async throws -> URL? {
+        let value = try await call("action", "notion:placeInsight", args: ["insightId": id])
+        return ((value as? [String: Any])?["url"] as? String).flatMap(URL.init(string:))
+    }
+
+    static func dismissInsight(id: String) async throws {
+        try await mutation("insights:setStatus", args: ["id": id, "status": "dismissed"])
+    }
+
+    static func suggestions(jobId: String) async throws -> [[String: Any]] {
+        let value = try await query("suggestions:listByJob", args: ["jobId": jobId])
+        guard let value = value as? [[String: Any]] else { throw ConvexError.shape }
+        return value
+    }
+
+    @discardableResult
+    static func approveSuggestion(id: String) async throws -> URL? {
+        let value = try await call("action", "notion:approveAndExecute", args: ["suggestionId": id])
+        return ((value as? [String: Any])?["url"] as? String).flatMap(URL.init(string:))
+    }
+
+    static func approveAllSuggestions(jobId: String) async throws {
+        _ = try await call("action", "notion:approveAllAndExecute", args: ["jobId": jobId])
+    }
+
+    static func rejectSuggestion(id: String) async throws {
+        try await mutation("suggestions:updateStatus", args: ["suggestionId": id, "status": "rejected"])
+    }
+
+    static func rejectAllSuggestions(jobId: String) async throws {
+        try await mutation("suggestions:rejectAll", args: ["jobId": jobId])
     }
 
     static func newsletterStats(archived: Bool) async throws -> [String: Any] {
-        (try await query("jobs:newsletterStats", ["archived": archived]) as? [String: Any]) ?? [:]
+        let value = try await query("jobs:newsletterStats", args: ["archived": archived])
+        guard let value = value as? [String: Any] else { throw ConvexError.shape }
+        return value
     }
 
-    static func archive(jobId: String) async throws { try await mutation("jobs:archive", ["jobId": jobId]) }
-    static func unarchive(jobId: String) async throws { try await mutation("jobs:unarchive", ["jobId": jobId]) }
-
-    // MARK: - plan
-    static func plan() async throws -> (days: [PlanDay], items: [PlanItem]) {
-        guard let d = try await query("plans:allItems") as? [String: Any] else { return ([], []) }
-        return (rows(d["days"]).compactMap(PlanDay.init), rows(d["items"]).compactMap(PlanItem.init))
-    }
-    static func toggleDone(itemId: String) async throws { try await mutation("plans:toggleDone", ["itemId": itemId]) }
-
-    // MARK: - research
-    static func projects() async throws -> [Project] {
-        rows(try await query("research:listAllProjects")).compactMap(Project.init)
-    }
-    static func timeline(slug: String, limit: Int = 40) async throws -> [TimelineEntry] {
-        rows(try await query("research:getTimeline", ["slug": slug, "limit": limit])).compactMap(TimelineEntry.init)
-    }
-
-    // MARK: - connection
-    // settings:whoami answers about the *Clerk* identity, and a service-key
-    // caller has none, so it would report "not authenticated" on a perfectly
-    // good connection. A counted query goes through requireOwner and comes back
-    // with a number, which is the thing worth proving.
-    static func reachable() async throws -> Int {
-        try await jobCount(type: "newsletter", archived: false)
+    static func scoreStats(archived: Bool) async throws -> [String: Any] {
+        let value = try await query("summaries:scoreStats", args: ["archived": archived])
+        guard let value = value as? [String: Any] else { throw ConvexError.shape }
+        return value
     }
 }

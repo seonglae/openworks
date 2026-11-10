@@ -2,17 +2,6 @@ import SwiftUI
 import UIKit
 import UserNotifications
 
-// Getting the phone an APNs token and handing it to the deployment.
-//
-// The backend already broadcasts on a summary landing; before this it could
-// only reach a browser, because `convex/push.ts` is Web Push and a native app
-// cannot subscribe to that. The device token is the native half of the same
-// moment, and `push:registerDevice` is where it lands.
-//
-// Nothing here asks for permission on launch. A notification prompt on first
-// open, before the app has shown anything worth being notified about, is the
-// one that gets denied permanently, and iOS only asks once. Settings has a
-// switch instead.
 @MainActor
 final class Push: NSObject, ObservableObject {
     static let shared = Push()
@@ -28,10 +17,6 @@ final class Push: NSObject, ObservableObject {
 
     @Published private(set) var state: State = .unknown
 
-    // Sandbox or production is a property of how the binary was signed, not of
-    // the phone, and APNs answers BadDeviceToken when a token is sent to the
-    // wrong host. Xcode-to-device and TestFlight differ here, so the app reports
-    // what its own entitlement says rather than letting the server guess.
     private var environment: String {
         #if DEBUG
             return "sandbox"
@@ -43,11 +28,10 @@ final class Push: NSObject, ObservableObject {
     private var bundleId: String { Bundle.main.bundleIdentifier ?? "dev.openworks.ios" }
 
     func refreshState() async {
+        guard !DemoMode.isEnabled else { return }
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         switch settings.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
-            // Authorised is not the same as registered: the token arrives from
-            // APNs asynchronously and is not persisted across reinstalls.
             if case .registered = state {} else { state = .off }
             UIApplication.shared.registerForRemoteNotifications()
         case .denied:
@@ -58,6 +42,7 @@ final class Push: NSObject, ObservableObject {
     }
 
     func enable() async {
+        guard !DemoMode.isEnabled else { return }
         state = .asking
         do {
             let granted = try await UNUserNotificationCenter.current()
@@ -72,14 +57,14 @@ final class Push: NSObject, ObservableObject {
         }
     }
 
-    // Called by the app delegate once APNs answers.
     func received(deviceToken: Data) {
+        guard !DemoMode.isEnabled else { return }
         let hex = deviceToken.map { String(format: "%02x", $0) }.joined()
         Task {
             do {
-                _ = try await Convex.mutation(
+                _ = try await ConvexHTTP.mutation(
                     "push:registerDevice",
-                    [
+                    args: [
                         "token": hex,
                         "environment": environment,
                         "bundleId": bundleId,
@@ -98,15 +83,6 @@ final class Push: NSObject, ObservableObject {
     }
 }
 
-// iOS has no API for reading your own entitlements (SecTaskCopyValueForEntitlement
-// is macOS), so this reads the provisioning profile that ships inside the app
-// and takes the aps-environment out of it. The profile is a CMS blob with a
-// plain plist in the middle, which is why this scans for the plist rather than
-// parsing the container.
-//
-// An App Store build has no embedded profile at all, and that absence is itself
-// the answer: only App Store and TestFlight builds lack one, and both use the
-// production host.
 private func apsEnvironmentFromEntitlements() -> String? {
     guard let path = Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") else {
         return "production"
@@ -125,8 +101,6 @@ private func apsEnvironmentFromEntitlements() -> String? {
     return aps == "development" ? "sandbox" : "production"
 }
 
-// UIApplicationDelegate is what APNs calls back on; SwiftUI has no equivalent,
-// so the App adapts one in rather than owning the callbacks itself.
 final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(
         _: UIApplication,
@@ -144,8 +118,6 @@ final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCen
         Task { @MainActor in Push.shared.failed(error) }
     }
 
-    // A push that lands while the app is open should still be seen: the default
-    // is to swallow it, which reads as notifications being broken.
     func userNotificationCenter(
         _: UNUserNotificationCenter,
         willPresent _: UNNotification
@@ -153,12 +125,23 @@ final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCen
         [.banner, .sound]
     }
 
-    // Tapping one opens the queue, which is what every notification this sends
-    // is about.
     func userNotificationCenter(
         _: UNUserNotificationCenter,
-        didReceive _: UNNotificationResponse
+        didReceive response: UNNotificationResponse
     ) async {
-        await MainActor.run { AppState.shared.tab = .reading }
+        let payload = response.notification.request.content.userInfo
+        let destination = pushDestination(payload)
+        await MainActor.run {
+            if let id = destination.item { Shell.shared.pendingJob = id }
+            else { Shell.shared.tab = destination.tab ?? "newsletter" }
+        }
     }
+}
+
+func pushDestination(_ payload: [AnyHashable: Any]) -> (item: String?, tab: String?) {
+    let query = URLComponents(string: payload["url"] as? String ?? "")?.queryItems ?? []
+    let values = Dictionary(query.map { ($0.name, $0.value ?? "") }, uniquingKeysWith: { first, _ in first })
+    let item = (payload["jobId"] as? String ?? values["item"]).flatMap { $0.isEmpty ? nil : $0 }
+    let tab = values["tab"].flatMap { (AppTabsCatalog.modes + ["search", "settings", "authors", "mailbox", "drawings", "dashboard"]).contains($0) ? $0 : nil }
+    return (item, tab)
 }

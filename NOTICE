@@ -3,3 +3,9 @@ NOTICE
 
 openworks
 Copyright 2026 Seonglae Cho
+
+The iOS app bundles Pretendard v1.3.9 under the SIL Open Font License 1.1.
+Copyright (c) 2021, Kil Hyung-jin, with Reserved Font Name Pretendard.
+Source: https://github.com/orioncactus/pretendard/tree/v1.3.9
+The font tables are unpacked from the upstream WOFF2 distribution into TTF containers without changing their glyphs or names.
+The full license is included in ios/Openworks/Resources/Pretendard-LICENSE.txt.

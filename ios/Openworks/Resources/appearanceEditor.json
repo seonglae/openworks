@@ -1,0 +1,743 @@
+{
+  "groups": [
+    {
+      "label": "Typography",
+      "tokens": [
+        "textTitleSize",
+        "textTitleWeight",
+        "textTitleLineSpacing",
+        "textMetaSize",
+        "textMetaWeight",
+        "textMetaLineSpacing",
+        "textBadgeSize",
+        "textBadgeWeight",
+        "textBadgeLineSpacing",
+        "textActionSize",
+        "textActionWeight",
+        "textActionLineSpacing",
+        "textBodySize",
+        "textBodyWeight",
+        "textBodyLineSpacing",
+        "textHeadingSize",
+        "textHeadingWeight",
+        "textHeadingLineSpacing",
+        "textDisplaySize",
+        "textDisplayWeight",
+        "textDisplayLineSpacing"
+      ]
+    },
+    {
+      "label": "Icons",
+      "tokens": [
+        "iconBox",
+        "iconSymbolSize",
+        "iconWeight",
+        "iconStrokeWidth"
+      ]
+    },
+    {
+      "label": "Spacing and layout",
+      "tokens": [
+        "rowGap",
+        "rowTextGap",
+        "cardGap",
+        "actionGap",
+        "actionBox",
+        "pagePadding",
+        "cardPaddingX",
+        "cardPaddingY",
+        "badgePaddingX",
+        "badgePaddingY",
+        "actionPadding",
+        "spaceUnit"
+      ]
+    },
+    {
+      "label": "Corners",
+      "tokens": [
+        "radiusSmall",
+        "radiusControl",
+        "radiusCard",
+        "radiusPill"
+      ]
+    },
+    {
+      "label": "Island icons",
+      "tokens": [
+        "islandProductivityIcon",
+        "islandResearchIcon",
+        "islandHobbyIcon",
+        "islandFamilyIcon",
+        "islandFriendsIcon",
+        "islandInvestIcon",
+        "islandWorkIcon"
+      ]
+    },
+    {
+      "label": "Content icons",
+      "tokens": [
+        "kindPaperIcon",
+        "kindNewsletterIcon",
+        "kindArticleIcon",
+        "kindInsightIcon",
+        "kindPlanIcon",
+        "kindMailboxIcon",
+        "kindVocabIcon",
+        "kindResearchIcon",
+        "kindPrIcon",
+        "kindDietIcon",
+        "kindUsageIcon",
+        "kindMealIcon",
+        "kindExerciseIcon",
+        "kindStudyIcon",
+        "kindWorkIcon",
+        "kindProjectIcon",
+        "kindAdminIcon",
+        "kindRestIcon",
+        "kindOtherIcon"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "suffix": "Weight",
+      "min": 100,
+      "max": 900,
+      "step": 100
+    },
+    {
+      "suffix": "LineSpacing",
+      "min": 0,
+      "max": 24,
+      "step": 0.5
+    },
+    {
+      "suffix": "Height",
+      "min": 0,
+      "max": 600,
+      "step": 1
+    },
+    {
+      "suffix": "Size",
+      "min": 8,
+      "max": 64,
+      "step": 0.5
+    },
+    {
+      "name": "iconStrokeWidth",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.5
+    },
+    {
+      "name": "iconBox",
+      "min": 16,
+      "max": 80,
+      "step": 1
+    },
+    {
+      "name": "actionBox",
+      "min": 44,
+      "max": 96,
+      "step": 1
+    },
+    {
+      "name": "spaceUnit",
+      "min": 1,
+      "max": 12,
+      "step": 0.5
+    },
+    {
+      "name": "radiusPill",
+      "min": 0,
+      "max": 999,
+      "step": 1
+    }
+  ],
+  "defaultLimits": {
+    "min": 0,
+    "max": 64,
+    "step": 0.5
+  },
+  "icons": {
+    "target": "target",
+    "flask": "flask",
+    "palette": "paintpalette",
+    "house": "house",
+    "users": "person.2",
+    "trendingUp": "chart.line.uptrend.xyaxis",
+    "briefcase": "briefcase",
+    "bookOpen": "book",
+    "newspaper": "newspaper",
+    "scrollText": "doc.richtext",
+    "quote": "quote.opening",
+    "calendar": "calendar",
+    "mail": "envelope",
+    "camera": "camera",
+    "languages": "character.book.closed",
+    "utensils": "fork.knife",
+    "dumbbell": "dumbbell",
+    "hammer": "hammer",
+    "inbox": "tray",
+    "coffee": "cup.and.saucer",
+    "circle": "circle",
+    "sun": "sun.horizon",
+    "gitPullRequest": "arrow.triangle.pull",
+    "apple": "carrot",
+    "activity": "waveform.path.ecg"
+  },
+  "text": {
+    "kindWakeIcon": {
+      "ko": "기상 아이콘",
+      "en": "Wake icon"
+    },
+    "kindMealIcon": {
+      "ko": "식사 아이콘",
+      "en": "Meal icon"
+    },
+    "kindExerciseIcon": {
+      "ko": "운동 아이콘",
+      "en": "Exercise icon"
+    },
+    "kindStudyIcon": {
+      "ko": "공부 아이콘",
+      "en": "Study icon"
+    },
+    "kindWorkIcon": {
+      "ko": "업무 시간 아이콘",
+      "en": "Work block icon"
+    },
+    "kindProjectIcon": {
+      "ko": "프로젝트 아이콘",
+      "en": "Project icon"
+    },
+    "kindAdminIcon": {
+      "ko": "관리 아이콘",
+      "en": "Admin icon"
+    },
+    "kindRestIcon": {
+      "ko": "휴식 아이콘",
+      "en": "Rest icon"
+    },
+    "kindOtherIcon": {
+      "ko": "기타 종류 아이콘",
+      "en": "Other kind icon"
+    },
+    "appearanceIcon.utensils": {
+      "ko": "식기",
+      "en": "Utensils"
+    },
+    "appearanceIcon.dumbbell": {
+      "ko": "덤벨",
+      "en": "Dumbbell"
+    },
+    "appearanceIcon.hammer": {
+      "ko": "망치",
+      "en": "Hammer"
+    },
+    "appearanceIcon.inbox": {
+      "ko": "받은 편지함",
+      "en": "Tray"
+    },
+    "appearanceIcon.coffee": {
+      "ko": "잔",
+      "en": "Cup"
+    },
+    "appearanceIcon.circle": {
+      "ko": "원",
+      "en": "Circle"
+    },
+    "Appearance": {
+      "ko": "화면 스타일",
+      "en": "Appearance"
+    },
+    "Style token": {
+      "ko": "스타일 항목",
+      "en": "Style token"
+    },
+    "Value": {
+      "ko": "값",
+      "en": "Value"
+    },
+    "Reset to default": {
+      "ko": "기본값으로 재설정",
+      "en": "Reset to default"
+    },
+    "Appearance preview": {
+      "ko": "스타일 미리 보기",
+      "en": "Appearance preview"
+    },
+    "Preview": {
+      "ko": "미리 보기",
+      "en": "Preview"
+    },
+    "Details": {
+      "ko": "세부 정보",
+      "en": "Details"
+    },
+    "Web updates immediately. On iPhone, reopen the app or pull to refresh.": {
+      "ko": "웹에는 바로 적용돼요. iPhone에서는 앱을 다시 열거나 당겨서 새로고침하세요.",
+      "en": "Web updates immediately. On iPhone, reopen the app or pull to refresh."
+    },
+    "Default: {value}": {
+      "ko": "기본값: {value}",
+      "en": "Default: {value}"
+    },
+    "Choose a value within the allowed range.": {
+      "ko": "허용 범위 안의 값을 선택하세요.",
+      "en": "Choose a value within the allowed range."
+    },
+    "Appearance could not be saved. Try again.": {
+      "ko": "스타일을 저장하지 못했어요. 다시 시도하세요.",
+      "en": "Appearance could not be saved. Try again."
+    },
+    "Saved": {
+      "ko": "저장됨",
+      "en": "Saved"
+    },
+    "Save": {
+      "ko": "저장",
+      "en": "Save"
+    },
+    "Title": {
+      "ko": "제목",
+      "en": "Title"
+    },
+    "textTitleSize": {
+      "ko": "제목 크기",
+      "en": "Title size"
+    },
+    "textTitleWeight": {
+      "ko": "제목 굵기",
+      "en": "Title weight"
+    },
+    "textTitleLineSpacing": {
+      "ko": "제목 줄 간격",
+      "en": "Title line spacing"
+    },
+    "textMetaSize": {
+      "ko": "세부 정보 크기",
+      "en": "Details size"
+    },
+    "textMetaWeight": {
+      "ko": "세부 정보 굵기",
+      "en": "Details weight"
+    },
+    "textMetaLineSpacing": {
+      "ko": "세부 정보 줄 간격",
+      "en": "Details line spacing"
+    },
+    "textBadgeSize": {
+      "ko": "배지 크기",
+      "en": "Badge size"
+    },
+    "textBadgeWeight": {
+      "ko": "배지 굵기",
+      "en": "Badge weight"
+    },
+    "textBadgeLineSpacing": {
+      "ko": "배지 줄 간격",
+      "en": "Badge line spacing"
+    },
+    "textActionSize": {
+      "ko": "동작 크기",
+      "en": "Action size"
+    },
+    "textActionWeight": {
+      "ko": "동작 굵기",
+      "en": "Action weight"
+    },
+    "textActionLineSpacing": {
+      "ko": "동작 줄 간격",
+      "en": "Action line spacing"
+    },
+    "textBodySize": {
+      "ko": "본문 크기",
+      "en": "Body size"
+    },
+    "textBodyWeight": {
+      "ko": "본문 굵기",
+      "en": "Body weight"
+    },
+    "textBodyLineSpacing": {
+      "ko": "본문 줄 간격",
+      "en": "Body line spacing"
+    },
+    "textHeadingSize": {
+      "ko": "머리말 크기",
+      "en": "Heading size"
+    },
+    "textHeadingWeight": {
+      "ko": "머리말 굵기",
+      "en": "Heading weight"
+    },
+    "textHeadingLineSpacing": {
+      "ko": "머리말 줄 간격",
+      "en": "Heading line spacing"
+    },
+    "textDisplaySize": {
+      "ko": "큰 머리말 크기",
+      "en": "Large heading size"
+    },
+    "textDisplayWeight": {
+      "ko": "큰 머리말 굵기",
+      "en": "Large heading weight"
+    },
+    "textDisplayLineSpacing": {
+      "ko": "큰 머리말 줄 간격",
+      "en": "Large heading line spacing"
+    },
+    "iconBox": {
+      "ko": "아이콘 영역",
+      "en": "Icon box"
+    },
+    "iconSymbolSize": {
+      "ko": "아이콘 크기",
+      "en": "Icon symbol size"
+    },
+    "iconWeight": {
+      "ko": "아이콘 굵기",
+      "en": "Icon weight"
+    },
+    "iconStrokeWidth": {
+      "ko": "아이콘 선 굵기",
+      "en": "Icon stroke width"
+    },
+    "rowGap": {
+      "ko": "행 내부 간격",
+      "en": "Row spacing"
+    },
+    "rowTextGap": {
+      "ko": "제목과 세부 정보 간격",
+      "en": "Title and details gap"
+    },
+    "cardGap": {
+      "ko": "카드 간격",
+      "en": "Card spacing"
+    },
+    "feedImageHeight": {
+      "ko": "피드 스크린샷 높이 (iPhone)",
+      "en": "Feed screenshot height (iPhone)"
+    },
+    "feedImageWebHeight": {
+      "ko": "피드 스크린샷 높이 (웹)",
+      "en": "Feed screenshot height (web)"
+    },
+    "feedImageCompactHeight": {
+      "ko": "수정 제안이 있는 피드 스크린샷 높이",
+      "en": "Feed screenshot height with edits"
+    },
+    "actionGap": {
+      "ko": "동작 간격",
+      "en": "Action spacing"
+    },
+    "actionBox": {
+      "ko": "동작 버튼 영역",
+      "en": "Action target size"
+    },
+    "pagePadding": {
+      "ko": "화면 여백",
+      "en": "Page padding"
+    },
+    "cardPaddingX": {
+      "ko": "카드 좌우 여백",
+      "en": "Card horizontal padding"
+    },
+    "cardPaddingY": {
+      "ko": "카드 상하 여백",
+      "en": "Card vertical padding"
+    },
+    "badgePaddingX": {
+      "ko": "배지 좌우 여백",
+      "en": "Badge horizontal padding"
+    },
+    "badgePaddingY": {
+      "ko": "배지 상하 여백",
+      "en": "Badge vertical padding"
+    },
+    "actionPadding": {
+      "ko": "동작 버튼 여백",
+      "en": "Action padding"
+    },
+    "spaceUnit": {
+      "ko": "기본 간격",
+      "en": "Spacing unit"
+    },
+    "radiusSmall": {
+      "ko": "작은 모서리 반경",
+      "en": "Small corner radius"
+    },
+    "radiusControl": {
+      "ko": "컨트롤 모서리 반경",
+      "en": "Control corner radius"
+    },
+    "radiusCard": {
+      "ko": "카드 모서리 반경",
+      "en": "Card corner radius"
+    },
+    "radiusPill": {
+      "ko": "캡슐 모서리 반경",
+      "en": "Pill corner radius"
+    },
+    "islandProductivityIcon": {
+      "ko": "생산성 아이콘",
+      "en": "Productivity icon"
+    },
+    "islandResearchIcon": {
+      "ko": "리서치 아이콘",
+      "en": "Research icon"
+    },
+    "islandHobbyIcon": {
+      "ko": "취미 아이콘",
+      "en": "Hobby icon"
+    },
+    "islandFamilyIcon": {
+      "ko": "가족 아이콘",
+      "en": "Family icon"
+    },
+    "islandFriendsIcon": {
+      "ko": "친구 아이콘",
+      "en": "Friends icon"
+    },
+    "islandInvestIcon": {
+      "ko": "투자 아이콘",
+      "en": "Investing icon"
+    },
+    "islandWorkIcon": {
+      "ko": "업무 아이콘",
+      "en": "Work icon"
+    },
+    "kindPaperIcon": {
+      "ko": "논문 아이콘",
+      "en": "Papers icon"
+    },
+    "kindNewsletterIcon": {
+      "ko": "뉴스레터 아이콘",
+      "en": "Newsletters icon"
+    },
+    "kindArticleIcon": {
+      "ko": "아티클 아이콘",
+      "en": "Articles icon"
+    },
+    "kindInsightIcon": {
+      "ko": "인사이트 아이콘",
+      "en": "Insights icon"
+    },
+    "kindPlanIcon": {
+      "ko": "계획 아이콘",
+      "en": "Plans icon"
+    },
+    "kindMailboxIcon": {
+      "ko": "메일함 아이콘",
+      "en": "Mailbox icon"
+    },
+    "kindUploadsIcon": {
+      "ko": "업로드 아이콘",
+      "en": "Uploads icon"
+    },
+    "kindVocabIcon": {
+      "ko": "단어 아이콘",
+      "en": "Vocab icon"
+    },
+    "kindRoutineIcon": {
+      "ko": "루틴 아이콘",
+      "en": "Routine icon"
+    },
+    "kindFriendsIcon": {
+      "ko": "친구 아이콘",
+      "en": "Friends icon"
+    },
+    "kindResearchIcon": {
+      "ko": "연구 아이콘",
+      "en": "Research icon"
+    },
+    "kindPrIcon": {
+      "ko": "PR 아이콘",
+      "en": "Pull requests icon"
+    },
+    "kindDietIcon": {
+      "ko": "식단 아이콘",
+      "en": "Diet icon"
+    },
+    "kindUsageIcon": {
+      "ko": "사용량 아이콘",
+      "en": "Usage icon"
+    },
+    "appearanceIcon.target": {
+      "ko": "과녁",
+      "en": "Target"
+    },
+    "appearanceIcon.flask": {
+      "ko": "플라스크",
+      "en": "Flask"
+    },
+    "appearanceIcon.palette": {
+      "ko": "팔레트",
+      "en": "Palette"
+    },
+    "appearanceIcon.house": {
+      "ko": "집",
+      "en": "House"
+    },
+    "appearanceIcon.users": {
+      "ko": "사람",
+      "en": "People"
+    },
+    "appearanceIcon.trendingUp": {
+      "ko": "추세",
+      "en": "Trend"
+    },
+    "appearanceIcon.briefcase": {
+      "ko": "서류 가방",
+      "en": "Briefcase"
+    },
+    "appearanceIcon.bookOpen": {
+      "ko": "책",
+      "en": "Book"
+    },
+    "appearanceIcon.newspaper": {
+      "ko": "신문",
+      "en": "Newspaper"
+    },
+    "appearanceIcon.scrollText": {
+      "ko": "문서",
+      "en": "Document"
+    },
+    "appearanceIcon.quote": {
+      "ko": "인용",
+      "en": "Quote"
+    },
+    "appearanceIcon.calendar": {
+      "ko": "달력",
+      "en": "Calendar"
+    },
+    "appearanceIcon.mail": {
+      "ko": "봉투",
+      "en": "Envelope"
+    },
+    "appearanceIcon.camera": {
+      "ko": "카메라",
+      "en": "Camera"
+    },
+    "appearanceIcon.languages": {
+      "ko": "언어",
+      "en": "Languages"
+    },
+    "appearanceIcon.sun": {
+      "ko": "태양",
+      "en": "Sun"
+    },
+    "appearanceIcon.gitPullRequest": {
+      "ko": "PR",
+      "en": "Pull request"
+    },
+    "appearanceIcon.apple": {
+      "ko": "음식",
+      "en": "Food"
+    },
+    "appearanceIcon.activity": {
+      "ko": "활동",
+      "en": "Activity"
+    },
+    "Typography": {
+      "ko": "글자",
+      "en": "Typography"
+    },
+    "Icons": {
+      "ko": "아이콘",
+      "en": "Icons"
+    },
+    "Spacing and layout": {
+      "ko": "간격과 배치",
+      "en": "Spacing and layout"
+    },
+    "Corners": {
+      "ko": "모서리",
+      "en": "Corners"
+    },
+    "Island icons": {
+      "ko": "섬 아이콘",
+      "en": "Island icons"
+    },
+    "Content icons": {
+      "ko": "콘텐츠 아이콘",
+      "en": "Content icons"
+    },
+    "Reset all to defaults": {
+      "ko": "모두 기본값으로 재설정",
+      "en": "Reset all to defaults"
+    },
+    "Reset every appearance value on all devices?": {
+      "ko": "모든 기기의 화면 스타일을 기본값으로 재설정할까요?",
+      "en": "Reset every appearance value on all devices?"
+    },
+    "Cancel": {
+      "ko": "취소",
+      "en": "Cancel"
+    },
+    "Loading settings…": {
+      "ko": "설정을 불러오는 중…",
+      "en": "Loading settings…"
+    },
+    "Saving…": {
+      "ko": "저장 중…",
+      "en": "Saving…"
+    },
+    "Settings could not be loaded. Try again.": {
+      "ko": "설정을 불러오지 못했어요. 다시 시도하세요.",
+      "en": "Settings could not be loaded. Try again."
+    },
+    "Retry": {
+      "ko": "다시 시도",
+      "en": "Retry"
+    },
+    "Changes apply here and on the web as soon as you save.": {
+      "ko": "저장하면 이 기기와 웹에 바로 적용돼요.",
+      "en": "Changes apply here and on the web as soon as you save."
+    },
+    "Range: {min}–{max}, step {step}": {
+      "ko": "범위: {min}–{max}, 간격 {step}",
+      "en": "Range: {min}–{max}, step {step}"
+    },
+    "Icon symbol must fit inside its box.": {
+      "ko": "아이콘 크기는 아이콘 영역보다 클 수 없어요.",
+      "en": "Icon symbol must fit inside its box."
+    },
+    "Feed audio": {
+      "ko": "피드 음성",
+      "en": "Feed audio"
+    },
+    "Auto-play the item in view": {
+      "ko": "화면의 항목 자동 재생",
+      "en": "Auto-play the item in view"
+    },
+    "Monthly character cap": {
+      "ko": "월 문자 한도",
+      "en": "Monthly character cap"
+    },
+    "Save cap": {
+      "ko": "한도 저장",
+      "en": "Save cap"
+    },
+    "{characters} / {cap} characters this month (UTC). Voice: Typecast.": {
+      "ko": "이번 달 {characters} / {cap}자 (UTC). 음성: Typecast.",
+      "en": "{characters} / {cap} characters this month (UTC). Voice: Typecast."
+    },
+    "Uses the output connection’s language, or the Agents language. Older items generate when you tap Play.": {
+      "ko": "출력 연결의 언어를 사용하며, 설정이 없으면 Agent 언어를 사용합니다. 이전 항목은 재생을 누르면 생성합니다.",
+      "en": "Uses the output connection’s language, or the Agents language. Older items generate when you tap Play."
+    },
+    "Enter a whole number of zero or more.": {
+      "ko": "0 이상의 정수를 입력하세요.",
+      "en": "Enter a whole number of zero or more."
+    },
+    "Feed audio could not be saved. Try again.": {
+      "ko": "피드 음성 설정을 저장하지 못했어요. 다시 시도하세요.",
+      "en": "Feed audio could not be saved. Try again."
+    },
+    "Audio usage could not be loaded.": {
+      "ko": "음성 사용량을 불러오지 못했어요.",
+      "en": "Audio usage could not be loaded."
+    }
+  }
+}
