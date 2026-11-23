@@ -62,7 +62,7 @@ struct ReelsView: View {
                     .scrollIndicators(.hidden)
                     .accessibilityIdentifier("feed.scroll")
                     .liquidRefreshable(identifier: "feed.refresh.spinner") { await reload(reshuffle: true) }
-                    .ignoresSafeArea(edges: .bottom)
+                    .ignoresSafeArea()
                 }
             }
             .liquidSurface()
@@ -186,18 +186,25 @@ struct ReelsView: View {
 // never from what loads after: a page with Notion edits holds their space with
 // placeholders until they arrive, and a picture holds its frame at its own
 // aspect ratio, so nothing on the page moves once it is drawn.
+// The pager runs under the status bar, so a page reads its height from the window rather than from a safe area it ignores.
+@MainActor
+private var statusBarHeight: CGFloat {
+    let window = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.keyWindow }.first
+    return window?.safeAreaInsets.top ?? 47
+}
+
 struct ReelPageLayout<Content: View>: View {
     @Environment(\.appearanceTokens) private var theme
     @ViewBuilder let content: () -> Content
 
     var body: some View {
-        // From the top, with the same margin above as below: centred, a short card sat in an empty band, and the top
-        // margin was four times the gap left above the tab bar. The bottom clears the floating tab bar (about 96).
+        // Centred between the status bar and the floating tab bar (about 96), with the same room above as below.
+        // The old bottom margin left the top band four times the gap above the tab bar, so pages sat high.
         VStack(spacing: theme.space(4), content: content)
             .padding(.horizontal, theme.space(5))
-            .padding(.top, theme.space(3))
+            .padding(.top, statusBarHeight + theme.space(3))
             .padding(.bottom, 96 + theme.space(3))
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.paper)
     }
 }
@@ -246,7 +253,6 @@ private struct ReelPage: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    Spacer(minLength: 0)
                     if let notice {
                         Text(notice).themeText(.meta).foregroundStyle(.red).frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -261,8 +267,10 @@ private struct ReelPage: View {
                     }
                     .padding(.top, theme.space(0.5))
                 } else {
-                    ForEach(Array(item.card.enumerated()), id: \.offset) { _, block in
-                        blockView(block)
+                    ViewThatFits(in: .vertical) {
+                        cardBlocks(edits: nil)
+                        cardBlocks(edits: 1)
+                        cardBlocks(edits: 0)
                     }
                 }
             }
@@ -275,7 +283,16 @@ private struct ReelPage: View {
     // One block of the server's card, drawn natively; the order, labels,
     // colours and line limits all come from the server.
     @ViewBuilder
-    private func blockView(_ block: CardBlock) -> some View {
+    private func cardBlocks(edits: Int?) -> some View {
+        VStack(spacing: theme.space(4)) {
+            ForEach(Array(item.card.enumerated()), id: \.offset) { _, block in
+                blockView(block, edits: edits)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func blockView(_ block: CardBlock, edits: Int?) -> some View {
         switch block {
         case let .header(title, lines):
             VStack(spacing: theme.space(2.5)) {
@@ -297,9 +314,10 @@ private struct ReelPage: View {
                 Skeleton()
             }
             .aspectRatio(ratio, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-            .padding(theme.space(2))
-            .background(Color.white, in: RoundedRectangle(cornerRadius: theme.value("radiusCard"), style: .continuous))
+            .frame(maxWidth: .infinity, minHeight: 220)
+            .padding(theme.space(1))
+            .background(Color.white)
+            .padding(.horizontal, -theme.space(5))
             .contentShape(Rectangle())
             .onTapGesture { zoomed = ZoomTarget(url: url) }
             if let caption {
@@ -311,18 +329,23 @@ private struct ReelPage: View {
         case let .image(url, height):
             if height > 0 {
                 // The whole screenshot, taking the room the text leaves, rather than its top cropped into a strip.
-                AsyncImage(url: url) { phase in
-                    if let image = phase.image {
-                        image.resizable().scaledToFit()
-                    } else if phase.error != nil {
-                        Image(systemName: "photo").foregroundStyle(.tertiary)
-                    } else {
-                        Skeleton()
+                Color.clear
+                    .frame(maxWidth: .infinity, minHeight: height, maxHeight: .infinity)
+                    .overlay(alignment: .top) {
+                        AsyncImage(url: url) { phase in
+                            if let image = phase.image {
+                                image.resizable().scaledToFill()
+                            } else if phase.error != nil {
+                                Image(systemName: "photo").foregroundStyle(.tertiary)
+                            } else {
+                                Skeleton()
+                            }
+                        }
                     }
-                }
-                .frame(maxWidth: .infinity, minHeight: height * 0.6, maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .onTapGesture { zoomed = ZoomTarget(url: url) }
+                    .clipped()
+                    .padding(.horizontal, -theme.space(5))
+                    .contentShape(Rectangle())
+                    .onTapGesture { zoomed = ZoomTarget(url: url) }
             }
         case let .formula(tex, caption, note):
             VStack(alignment: .leading, spacing: theme.space(2)) {
@@ -368,9 +391,9 @@ private struct ReelPage: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .layoutPriority(1)
         case let .diffs(label, show, _, maxLines, more):
-            cardDiffs(label: label, show: show, maxLines: maxLines, more: more)
+            cardDiffs(label: label, show: min(show, edits ?? show), maxLines: maxLines,
+                      more: more ?? (edits.map { $0 < show } == true ? UIText.t("열어서 보기", "Open to see them") : nil))
         case let .actions(items):
-            Spacer(minLength: 0)
             if let notice {
                 Text(notice).themeText(.meta).foregroundStyle(.red).frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -671,7 +694,7 @@ private struct PlayerLayerView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> LayerView {
         let view = LayerView()
-        view.playerLayer.videoGravity = .resizeAspect
+        view.playerLayer.videoGravity = .resizeAspectFill
         view.playerLayer.player = player
         return view
     }
