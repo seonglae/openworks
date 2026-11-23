@@ -9,7 +9,18 @@ import { requireOwner } from "./auth";
 
 const DEFAULT_SLUG = "default";
 
-const TAB_KEYS = ["newsletter", "paper", "article", "pr", "research", "plan", "diet", "vocab", "insights"] as const;
+const TAB_KEYS = [
+  "feed",
+  "newsletter",
+  "paper",
+  "article",
+  "pr",
+  "research",
+  "plan",
+  "diet",
+  "vocab",
+  "insights",
+] as const;
 type TabKey = (typeof TAB_KEYS)[number];
 
 // Canonical default tab set (all tabs enabled). Any code path that seeds an
@@ -67,7 +78,7 @@ export const get = query({
       const known = new Set(row.tabs.map((t) => t.key));
       const merged = [
         ...row.tabs.filter((t) => (TAB_KEYS as readonly string[]).includes(t.key)),
-        ...TAB_KEYS.filter((k) => !known.has(k)).map((k) => ({ key: k, enabled: false })),
+        ...TAB_KEYS.filter((k) => !known.has(k)).map((k) => ({ key: k, enabled: k === "feed" })),
       ];
       return { ...row, language: row.language ?? "en", uiLanguage: asUiLanguage(row.uiLanguage), tabs: merged };
     }

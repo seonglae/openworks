@@ -6,6 +6,7 @@ import {
   GitBranch,
   GitPullRequest,
   Languages,
+  Layers,
   Newspaper,
   Quote,
   ScrollText,
@@ -16,6 +17,7 @@ import type { Mode } from "./types";
 // exports a non-component is not Fast Refreshable, and App.tsx holding these
 // made every edit to the shell full-reload the page instead of hot-updating.
 export const MODES: { key: Mode; label: string; icon: typeof Newspaper; placeholder: string }[] = [
+  { key: "feed", label: "Feed", icon: Layers, placeholder: "" },
   { key: "newsletter", label: "Newsletter", icon: Newspaper, placeholder: "Paste newsletter URL or content..." },
   { key: "paper", label: "Paper", icon: BookOpen, placeholder: "Paste arXiv URL, DOI, or paper title..." },
   { key: "article", label: "Article", icon: ScrollText, placeholder: "Paste article URL or text..." },

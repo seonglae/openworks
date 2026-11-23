@@ -28,6 +28,7 @@ import type * as drawings from "../drawings.js";
 import type * as emailDigests from "../emailDigests.js";
 import type * as embeddings from "../embeddings.js";
 import type * as expressions from "../expressions.js";
+import type * as feed from "../feed.js";
 import type * as feeds from "../feeds.js";
 import type * as github from "../github.js";
 import type * as http from "../http.js";
@@ -92,6 +93,7 @@ declare const fullApi: ApiFromModules<{
   emailDigests: typeof emailDigests;
   embeddings: typeof embeddings;
   expressions: typeof expressions;
+  feed: typeof feed;
   feeds: typeof feeds;
   github: typeof github;
   http: typeof http;

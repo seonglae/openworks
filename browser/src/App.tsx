@@ -10,6 +10,7 @@ import { DrawingsView } from "./DrawingsView";
 import { DietView } from "./views/DietView";
 import { VocabView } from "./views/VocabView";
 import { InsightsView } from "./views/InsightsView";
+import { FeedView } from "./views/FeedView";
 import { UsageView } from "./views/UsageView";
 import { useUsageTracker } from "./shared/usage";
 import { AuthorsView, PaperSubNav } from "./views/AuthorsView";
@@ -199,7 +200,7 @@ function readURL(): ViewState {
   const expr = p.get("expr");
   const pr = p.get("pr");
   const focusTab = research ? "research" : expr ? "vocab" : pr ? "pr" : null;
-  const mode: Mode = (tab && (MODE_KEYS as readonly string[]).includes(tab) ? tab : (focusTab ?? "newsletter")) as Mode;
+  const mode: Mode = (tab && (MODE_KEYS as readonly string[]).includes(tab) ? tab : (focusTab ?? "feed")) as Mode;
   // Drawing param: prefer the short `d` form; fall back to legacy `drawing`
   // for old shared links.
   const drawingId = (p.get("d") || p.get("drawing") || null) as Id<"drawings"> | null;
@@ -825,6 +826,13 @@ export default function App() {
               activeId={activeDrawingId}
               onActiveIdChange={setActiveDrawingId}
               backHref={buildURL(viewState({ drawingId: null, showDraw: true }))}
+            />
+          ) : mode === "feed" ? (
+            <FeedView
+              onOpen={(tab, item) => {
+                if (item) setOpenItem(item);
+                if ((MODE_KEYS as readonly string[]).includes(tab)) setMode(tab as Mode);
+              }}
             />
           ) : mode === "research" ? (
             <ResearchView focusSlug={focusResearch} />

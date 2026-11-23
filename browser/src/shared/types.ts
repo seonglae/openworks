@@ -1,6 +1,7 @@
 // Every tab a `?tab=` deep link may name. MODES (the nav bar) is a subset:
 // `authors` has no slot of its own and opens under the Paper tab's subnav.
 export const MODE_KEYS = [
+  "feed",
   "newsletter",
   "paper",
   "article",

@@ -28,7 +28,36 @@ beforeEach(() => {
 });
 
 describe("app shell", () => {
+  it("opens on the Feed, with an item's original a click away", () => {
+    convex.queries.set("feed:list", {
+      upcoming: [],
+      shorts: [],
+      more: false,
+      cursor: null,
+      items: [
+        {
+          key: "job:j1",
+          kind: "job",
+          island: "research",
+          at: Date.now(),
+          title: "A paper worth reading",
+          subtitle: "Paper",
+          lines: ["What it found, in plain words."],
+          jobId: "j1",
+          inputSource: { url: "https://arxiv.org/abs/1" },
+          open: { tab: "paper", item: "j1" },
+          notion: 0,
+        },
+      ],
+    });
+    render(<App />);
+    expect(screen.getByRole("heading", { name: "A paper worth reading" })).toBeInTheDocument();
+    expect(screen.getByText("What it found, in plain words.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Original" })).toBeInTheDocument();
+  });
+
   it("opens capture with c, closes with Escape and does not steal input keystrokes", () => {
+    window.history.replaceState(null, "", "/?tab=newsletter");
     render(<App />);
     fireEvent.keyDown(document.body, { key: "c" });
     expect(screen.getByRole("dialog", { name: "Add" })).toBeInTheDocument();
@@ -53,6 +82,7 @@ describe("app shell", () => {
   });
 
   it("captures a paste outside a field and leaves field pastes alone", () => {
+    window.history.replaceState(null, "", "/?tab=newsletter");
     render(<App />);
     const clipboardData = { items: [], getData: () => "https://arxiv.org/abs/123" };
     fireEvent.paste(screen.getByPlaceholderText("Filter... (/)"), { clipboardData });
@@ -79,6 +109,7 @@ describe("app shell", () => {
   });
 
   it("folds stats by default and restores a date filter with stats expanded", () => {
+    window.history.replaceState(null, "", "/?tab=newsletter");
     const first = render(<App />);
     expect(screen.getByRole("button", { name: "Stats" })).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(screen.getByRole("button", { name: "Stats" }));
