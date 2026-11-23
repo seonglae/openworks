@@ -73,8 +73,16 @@ private struct MathLabel: UIViewRepresentable {
         label.invalidateIntrinsicContentSize()
     }
 
+    // A displayed formula wider than the screen is set smaller until it fits,
+    // rather than scrolling sideways out of sight.
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: MTMathUILabel, context: Context) -> CGSize? {
-        uiView.intrinsicContentSize
+        uiView.fontSize = fontSize
+        var size = uiView.intrinsicContentSize
+        if display, let width = proposal.width, width > 0, size.width > width {
+            uiView.fontSize = fontSize * width / size.width
+            size = uiView.intrinsicContentSize
+        }
+        return size
     }
 }
 
@@ -126,10 +134,7 @@ struct RichText: View {
     }
 
     private func fitted(_ label: MathLabel, centred: Bool) -> some View {
-        ViewThatFits(in: .horizontal) {
-            label.frame(maxWidth: centred ? .infinity : nil)
-            ScrollView(.horizontal, showsIndicators: false) { label }
-        }
+        label.frame(maxWidth: centred ? .infinity : nil)
     }
 
     private func tokens(_ spans: [RichSpan]) -> [RichSpan] {

@@ -44,7 +44,7 @@ enum UIText {
 
     static func tab(_ key: String) -> String {
         let names: [String: (String, String)] = [
-            "newsletter": ("뉴스레터", "Newsletters"), "paper": ("논문", "Papers"), "article": ("아티클", "Articles"),
+            "feed": ("피드", "Feed"), "newsletter": ("뉴스레터", "Newsletters"), "paper": ("논문", "Papers"), "article": ("아티클", "Articles"),
             "pr": ("PR", "PRs"), "plan": ("계획", "Plans"), "research": ("연구", "Research"), "diet": ("식단", "Diet"),
             "vocab": ("단어", "Vocab"), "insights": ("인사이트", "Insights"), 
             "usage": ("사용량", "Usage"), "search": ("검색", "Search"), "settings": ("설정", "Settings"),

@@ -9,7 +9,7 @@ enum DemoMode {
         guard let index = args.firstIndex(of: key), args.indices.contains(index + 1) else { return nil }
         return args[index + 1]
     }
-    static var initialTab: String { isEnabled ? argument("-OpenworksDemoTab") ?? "newsletter" : "newsletter" }
+    static var initialTab: String { isEnabled ? argument("-OpenworksDemoTab") ?? "feed" : "feed" }
     static var empty: Bool { argument("-OpenworksDemoState") == "empty" }
 
     @MainActor

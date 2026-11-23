@@ -160,6 +160,25 @@ struct ConvexHTTP {
         try await mutation("suggestions:rejectAll", args: ["jobId": jobId])
     }
 
+    // The feed, a page at a time: a page after the first is asked for by the cursor the one before it ended on.
+    static func feed(today: String, island: String?, limit: Int, mix: Bool = false,
+                     cursor: String? = nil) async throws -> [String: Any] {
+        var args: [String: Any] = ["today": today, "limit": limit]
+        if let island { args["island"] = island }
+        if mix { args["mix"] = true }
+        if let cursor { args["cursor"] = cursor }
+        guard let value = try await query("feed:list", args: args) as? [String: Any] else { throw ConvexError.shape }
+        return value
+    }
+
+    static func approveVideo(id: String) async throws {
+        _ = try await mutation("videos:approve", args: ["id": id])
+    }
+
+    static func removeVideo(id: String) async throws {
+        _ = try await mutation("videos:remove", args: ["id": id])
+    }
+
     static func newsletterStats(archived: Bool) async throws -> [String: Any] {
         let value = try await query("jobs:newsletterStats", args: ["archived": archived])
         guard let value = value as? [String: Any] else { throw ConvexError.shape }

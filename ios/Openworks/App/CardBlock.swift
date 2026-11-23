@@ -9,7 +9,7 @@ enum CardBlock {
     case quote(text: String, lines: Int)
     case text(text: String, lines: Int, subheadline: Bool)
     case diffs(label: String, show: Int, total: Int, maxLines: Int, more: String?)
-    case actions([(kind: String, label: String, icon: String)])
+    case actions([(kind: String, label: String, icon: String, url: URL?)])
 
     init?(_ json: [String: Any]) {
         let int = { (key: String, fallback: Int) in (json[key] as? NSNumber)?.intValue ?? fallback }
@@ -46,9 +46,9 @@ enum CardBlock {
             self = .diffs(label: label, show: int("show", 1), total: int("total", 1), maxLines: int("maxLines", 4),
                           more: json["more"] as? String)
         case "actions":
-            let items = (json["items"] as? [[String: Any]] ?? []).compactMap { a -> (kind: String, label: String, icon: String)? in
+            let items = (json["items"] as? [[String: Any]] ?? []).compactMap { a -> (kind: String, label: String, icon: String, url: URL?)? in
                 guard let kind = a["kind"] as? String, let label = a["label"] as? String else { return nil }
-                return (kind, label, (a["icon"] as? String) ?? "circle")
+                return (kind, label, (a["icon"] as? String) ?? "circle", (a["url"] as? String).flatMap(URL.init(string:)))
             }
             self = .actions(items)
         default:

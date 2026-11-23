@@ -27,7 +27,7 @@ struct OpenworksApp: App {
 }
 
 enum AppTabsCatalog {
-    static let modes = ["newsletter", "paper", "article", "pr", "plan", "research", "diet", "vocab", "insights", "usage"]
+    static let modes = ["feed", "newsletter", "paper", "article", "pr", "plan", "research", "diet", "vocab", "insights", "usage"]
 }
 
 private struct AppTabs: View {
@@ -123,6 +123,7 @@ private struct AppTabs: View {
 
     private func icon(_ key: String) -> String {
         switch key {
+        case "feed": return "rectangle.stack"
         case "dashboard": return "square.grid.2x2"
         case "settings": return "gearshape"
         case "search": return "magnifyingglass"
@@ -138,6 +139,7 @@ private struct AppTabs: View {
     @ViewBuilder
     private func destination(_ key: String) -> some View {
         switch key {
+        case "feed": ReelsView()
         case "newsletter", "paper", "article": JobsTabView(type: key, title: UIText.tab(key))
         case "pr": PRView()
         case "plan": PlansView()
